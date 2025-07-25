@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudySync | Track, Achieve, Inspire</title>
+    <style>
+        /* Basic Reset and Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+        }
+        header {
+            background-color: #4a90e2;
+            color: white;
+            padding: 20px 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+        }
+        header h2 {
+            margin-top: 8px;
+            font-weight: 300;
+            font-style: italic;
+            font-size: 1.2rem;
+            opacity: 0.85;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        nav a {
+            padding: 15px 25px;
+            display: block;
+            color: #4a90e2;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        nav a:hover, nav a.active {
+            background: #4a90e2;
+            color: white;
+        }
+        main {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 15px 50px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(74,144,226,0.15);
+        }
+        section {
+            display: none;
+            padding: 20px;
+        }
+        section.active {
+            display: block;
+        }
+        h3 {
+            border-bottom: 2px solid #4a90e2;
+            padding-bottom: 6px;
+            margin-bottom: 16px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #4a90e2;
+            color: white;
+        }
+        /* Progress bar styles */
+        .progress-bar {
+            background-color: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 18px;
+            width: 100%;
+            margin-top: 5px;
+        }
+        .progress-fill {
+            display: block;
+            height: 100%;
+            background-color: #4a90e2;
+            width: 0;
+            transition: width 1s ease-in-out;
+            border-radius: 20px;
+        }
+        /* Form styles */
+        form {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        input[type=text], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #357ABD;
+        }
+        /* List and checkpoints */
+        ul { list-style-type: none; padding-left: 0; }
+        .checklist li {
+            padding: 6px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .checklist input[type=checkbox] {
+            margin-right: 12px;
+            transform: scale(1.3);
+            cursor: pointer;
+        }
+        /* Quote styles */
+        #quote {
+            font-style: italic;
+            font-weight: 400;
+            color: #10316b;
+            margin: 15px 0 25px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        /* Responsive tweaks */
+        @media(max-width: 600px) {
+            nav {
+                flex-wrap: wrap;
+            }
+            nav a {
+                flex: 1 0 100%;
+                text-align: center;
+            }
+            main {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to StudySync!</h1>
+        <h2 id="quote">"Success is the sum of small efforts, repeated day in and day out."</h2>
+    </header>
+    <nav>
+        <a href="#" class="active" data-section="home">Home</a>
+        <a href="#" data-section="dashboard">Dashboard</a>
+        <a href="#" data-section="goals">Goals</a>
+        <a href="#" data-section="journal">Journal</a>
+        <a href="#" data-section="motivation">Motivation</a>
+        <a href="#" data-section="resources">Resources</a>
+    </nav>
+    <main>
+        <section id="home" class="active">
+            <h3>Welcome & Motivation</h3>
+            <p style="text-align:center; font-weight: 600; font-size: 1.1rem;">Unlock Your Potential. Study Smart. Achieve More.</p>
+            <div style="max-width: 600px; margin: auto;">
+                <h4>Weekly Progress</h4>
+                <table>
+                    <thead>
+                        <tr><th>Subject</th><th>Progress</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Mathematics</td><td>
+                            <div class="progress-bar"><span class="progress-fill" style="width: 67%;"></span></div>
+                        </td></tr>
+                        <tr><td>Physics</td><td>
+                            <div class="progress-bar"><span class="progress-fill" style="width: 50%;"></span></div>
+                        </td></tr>
+                        <tr><td>Electronics</td><td>
+                            <div class="progress-bar"><span class="progress-fill" style="width: 50%;"></span></div>
+                        </td></tr>
+                        <tr><td>Python</td><td>
+                            <div class="progress-bar"><span class="progress-fill" style="width: 33%;"></span></div>
+                        </td></tr>
+                        <tr><td>Communication</td><td>
+                            <div class="progress-bar"><span class="progress-fill" style="width: 100%;"></span></div>
+                        </td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="dashboard">
+            <h3>Study Dashboard</h3>
+            <p>Track your subjects and see your progress below.</p>
+            <table>
+                <thead>
+                    <tr><th>Subject</th><th>This Week's Target</th><th>Done</th><th>Progress</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Mathematics</td><td>Differentiation, Integration, Matrix Operations</td><td>2/3 topics</td><td>
+                        <div class="progress-bar"><span class="progress-fill" style="width: 67%;"></span></div>
+                    </td></tr>
+                    <tr><td>Physics</td><td>Kinematics, Newton's Laws, Energy Conservation</td><td>1/2 topics</td><td>
+                        <div class="progress-bar"><span class="progress-fill" style="width: 50%;"></span></div>
+                    </td></tr>
+                    <tr><td>Electronics</td><td>Ohm's Law, Circuit Analysis, Semiconductors</td><td>1/2 topics</td><td>
+                        <div class="progress-bar"><span class="progress-fill" style="width: 50%;"></span></div>
+                    </td></tr>
+                    <tr><td>Python</td><td>Variables, Loops, Functions, Mini-project</td><td>1/3 goals</td><td>
+                        <div class="progress-bar"><span class="progress-fill" style="width: 33%;"></span></div>
+                    </td></tr>
+                    <tr><td>Communication</td><td>Email Writing, Presentation Skills</td><td>2/2 tasks</td><td>
+                        <div class="progress-bar"><span class="progress-fill" style="width: 100%;"></span></div>
+                    </td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="goals">
+            <h3>Set Your Study Goals</h3>
+            <form id="goal-form">
+                <label for="goal-input">New Goal:</label>
+                <input type="text" id="goal-input" placeholder="Enter your goal here..." required>
+                <button type="submit">Add Goal</button>
+            </form>
+            <ul id="goal-list" class="checklist"></ul>
+        </section>
+
+        <section id="journal">
+            <h3>Daily Journal & Reflection</h3>
+            <form id="journal-form">
+                <label for="journal-text">Write about your study day:</label>
+                <textarea id="journal-text" rows="6" placeholder="What went well? What can be improved? How do you feel about your progress?"></textarea>
+                <button type="submit">Save Entry</button>
+            </form>
+            <ul id="journal-entries"></ul>
+        </section>
+
+        <section id="motivation">
+            <h3>Motivation Zone</h3>
+            <p id="motivation-quote" style="font-style: italic; font-size: 1.2rem; color: #4a90e2; text-align: center;"></p>
+            <button id="new-quote-btn" style="display: block; margin: auto; padding: 8px 16px;">Get New Quote</button>
+            <ul id="quote-history" style="max-height: 200px; overflow-y: auto; margin-top: 20px;"></ul>
+        </section>
+
+        <section id="resources">
+            <h3>Knowledge Hub & Resources</h3>
+            <p>Access all your study materials quickly.</p>
+            
+            <h4>Mathematics</h4>
+            <ul>
+                <li><a href="https://ncert.nic.in/textbook.php" target="_blank">NCERT Class 12 Mathematics Books</a></li>
+                <li><a href="https://nptel.ac.in/courses/111/106/111106094/" target="_blank">NPTEL Engineering Mathematics</a></li>
+                <li><a href="https://www.youtube.com/user/gatesmashers" target="_blank">Gate Smashers YouTube</a></li>
+                <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">Neso Academy Mathematics</a></li>
+            </ul>
+
+            <h4>Physics</h4>
+            <ul>
+                <li><a href="https://ncert.nic.in/textbook.php" target="_blank">NCERT Physics (11th & 12th)</a></li>
+                <li><a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/" target="_blank">MIT OpenCourseWare - Classical Mechanics</a></li>
+                <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">Neso Academy Physics</a></li>
+                <li><a href="https://education.sakshi.com/en/eamcet/quick-review/physics" target="_blank">Sakshi Education Physics Review</a></li>
+            </ul>
+
+            <h4>Electronics & Electrical</h4>
+            <ul>
+                <li><a href="#" target="_blank">Electronic Devices & Circuit Theory - Boylestad</a></li>
+                <li><a href="https://www.scribd.com/document/722664013/Syllabus-of-First-Year-Basic-Electrical-and-Electronics" target="_blank">First Year Electronics Syllabus</a></li>
+                <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">Neso Academy Electronics</a></li>
+            </ul>
+
+            <h4>Python Programming</h4>
+            <ul>
+                <li><a href="https://www.coursera.org/learn/python" target="_blank">Python for Everybody (Coursera)</a></li>
+                <li><a href="https://www.youtube.com/watch?v=gfDE2a7MKjA" target="_blank">Python Full Course - YouTube</a></li>
+                <li><a href="https://www.codecademy.com/learn/learn-python-3" target="_blank">Codecademy Python 3</a></li>
+                <li><a href="https://automatetheboringstuff.com/" target="_blank">Automate the Boring Stuff with Python</a></li>
+            </ul>
+
+            <h4>Professional Communication</h4>
+            <ul>
+                <li><a href="https://eng.libretexts.org/Courses/California_State_Polytechnic_University_Humboldt/Engineering_Success:_A_Seminar_for_First-Year_Students/02:_Topic_02._Professional_Email_Communication_for_Engineers" target="_blank">Professional Email Communication</a></li>
+                <li><a href="https://open.lib.umn.edu/technicalcommunication/" target="_blank">Technical Communication Guide</a></li>
+                <li><a href="https://ocw.mit.edu/courses/writing-and-humanistic-studies/" target="_blank">MIT Technical Communication</a></li>
+            </ul>
+        </section>
+    </main>
+
+    <script>
+        // Navigation handling
+        const navLinks = document.querySelectorAll('nav a');
+        const sections = document.querySelectorAll('main section');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = link.getAttribute('data-section');
+                
+                // Remove active class from all
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                
+                // Add active
+                link.classList.add('active');
+                document.getElementById(target).classList.add('active');
+            });
+        });
+
+        // Study Goals App
+        const goalsForm = document.getElementById('goal-form');
+        const goalInput = document.getElementById('goal-input');
+        const goalList = document.getElementById('goal-list');
+
+        function loadGoals() {
+            const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
+            goalList.innerHTML = '';
+            
+            goals.forEach((goal, idx) => {
+                const li = document.createElement('li');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = goal.completed;
+                
+                checkbox.addEventListener('change', () => {
+                    goals[idx].completed = checkbox.checked;
+                    localStorage.setItem('studyGoals', JSON.stringify(goals));
+                });
+                
+                li.appendChild(checkbox);
+                const span = document.createElement('span');
+                span.textContent = goal.text;
+                li.appendChild(span);
+                goalList.appendChild(li);
+            });
+        }
+
+        goalsForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const newGoal = goalInput.value.trim();
+            if (newGoal) {
+                const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
+                goals.push({text: newGoal, completed: false});
+                localStorage.setItem('studyGoals', JSON.stringify(goals));
+                goalInput.value = '';
+                loadGoals();
+            }
+        });
+
+        loadGoals();
+
+        // Journal App
+        const journalForm = document.getElementById('journal-form');
+        const journalText = document.getElementById('journal-text');
+        const journalEntries = document.getElementById('journal-entries');
+
+        function loadJournal() {
+            const journals = JSON.parse(localStorage.getItem('studyJournal')) || [];
+            journalEntries.innerHTML = '';
+            
+            journals.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                li.style.padding = '6px 0';
+                li.style.borderBottom = '1px solid #eee';
+                journalEntries.appendChild(li);
+            });
+        }
+
+        journalForm.addEventListener('submit', e => {
+            e.preventDefault();
+            const entry = journalText.value.trim();
+            if(entry) {
+                const journals = JSON.parse(localStorage.getItem('studyJournal')) || [];
+                journals.push(`${new Date().toLocaleDateString()}: ${entry}`);
+                localStorage.setItem('studyJournal', JSON.stringify(journals));
+                journalText.value = '';
+                loadJournal();
+            }
+        });
+
+        loadJournal();
+
+        // Motivation Quotes
+        const quotes = [
+            "Success is the sum of small efforts, repeated day in and day out.",
+            "Don't watch the clock; do what it does. Keep going.",
+            "Believe in yourself and all that you are.",
+            "Your limitation—it's only your imagination.",
+            "Push yourself, because no one else is going to do it for you.",
+            "Great things never come from comfort zones.",
+            "Dream it. Wish it. Do it.",
+            "Stay positive, work hard, make it happen.",
+            "The secret of getting ahead is getting started.",
+            "It's going to be hard, but hard does not mean impossible."
+        ];
+
+        const motivationQuote = document.getElementById('motivation-quote');
+        const newQuoteBtn = document.getElementById('new-quote-btn');
+        const quoteHistory = document.getElementById('quote-history');
+        let usedQuotes = [];
+
+        function displayRandomQuote() {
+            if (usedQuotes.length === quotes.length) {
+                usedQuotes = [];
+                quoteHistory.innerHTML = '';
+            }
+            
+            let index = Math.floor(Math.random() * quotes.length);
+            while (usedQuotes.includes(index)) {
+                index = Math.floor(Math.random() * quotes.length);
+            }
+            
+            usedQuotes.push(index);
+            motivationQuote.textContent = quotes[index];
+            
+            const li = document.createElement('li');
+            li.textContent = quotes[index];
+            li.style.padding = '5px 0';
+            li.style.borderBottom = '1px solid #eee';
+            quoteHistory.appendChild(li);
+        }
+
+        newQuoteBtn.addEventListener('click', displayRandomQuote);
+        
+        // Initialize with a quote
+        displayRandomQuote();
+    </script>
+</body>
+</html>
