@@ -11,14 +11,41 @@
             margin: 0;
             background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
             color: #333;
+            transition: all 0.3s ease;
         }
+        
+        /* Dark mode styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #ffffff;
+        }
+        
         header {
             background-color: #4a90e2;
             color: white;
             padding: 20px 10px;
             text-align: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
         }
+        
+        .dark-mode header {
+            background-color: #0f3460;
+        }
+        
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
         header h1 {
             margin: 0;
             font-size: 2.5rem;
@@ -32,6 +59,35 @@
             opacity: 0.85;
         }
         
+        /* User Stats Bar */
+        .user-stats {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 5px 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
         /* Auth Bar Styles */
         #auth-bar {
             text-align: center;
@@ -40,6 +96,12 @@
             border-bottom: 1px solid #ddd;
             font-size: 0.95rem;
         }
+        
+        .dark-mode #auth-bar {
+            background: linear-gradient(90deg, #2d2d2d, #3d3d3d);
+            border-bottom: 1px solid #555;
+        }
+        
         #auth-bar button {
             margin: 0 8px;
             padding: 8px 16px;
@@ -59,18 +121,34 @@
             top: 0;
             z-index: 10;
         }
+        
+        .dark-mode nav {
+            background: #1e1e2e;
+        }
+        
         nav a {
-            padding: 15px 20px;
+            padding: 15px 18px;
             display: block;
             color: #4a90e2;
             font-weight: 600;
             text-decoration: none;
             transition: background 0.3s ease, color 0.3s ease;
+            font-size: 0.9rem;
         }
+        
+        .dark-mode nav a {
+            color: #64b5f6;
+        }
+        
         nav a:hover, nav a.active {
             background: #4a90e2;
             color: white;
         }
+        
+        .dark-mode nav a:hover, .dark-mode nav a.active {
+            background: #0f3460;
+        }
+        
         main {
             max-width: 1000px;
             margin: 20px auto;
@@ -79,6 +157,12 @@
             border-radius: 12px;
             box-shadow: 0 8px 20px rgba(74,144,226,0.15);
         }
+        
+        .dark-mode main {
+            background: #1e1e2e;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
         section {
             display: none;
             padding: 20px;
@@ -92,6 +176,149 @@
             margin-bottom: 16px;
             color: #333;
         }
+        
+        .dark-mode h3 {
+            color: #ffffff;
+            border-bottom-color: #64b5f6;
+        }
+        
+        /* Pomodoro Timer Styles */
+        .pomodoro-container {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .timer-display {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .timer-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .timer-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .timer-btn.active {
+            background: rgba(255,255,255,0.4);
+            border-color: rgba(255,255,255,0.6);
+        }
+        
+        .session-tracker {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .dark-mode .session-tracker {
+            background: #2d2d2d;
+        }
+        
+        /* Badge System */
+        .badges-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .badge {
+            background: linear-gradient(135deg, #ffd700, #ffed4a);
+            color: #333;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .badge:hover {
+            transform: translateY(-5px);
+        }
+        
+        .badge.locked {
+            background: #ccc;
+            color: #666;
+        }
+        
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .badge-name {
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* XP Progress Bar */
+        .xp-container {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .xp-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            height: 30px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .xp-fill {
+            background: linear-gradient(90deg, #00c851, #007e33);
+            height: 100%;
+            border-radius: 20px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* Study Session Cards */
+        .session-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #4a90e2;
+        }
+        
+        .dark-mode .session-card {
+            background: #2d2d2d;
+            color: white;
+        }
+        
         table {
             width: 100%;
             border-collapse: collapse;
@@ -102,10 +329,20 @@
             border: 1px solid #ddd;
             text-align: left;
         }
+        
+        .dark-mode th, .dark-mode td {
+            border-color: #555;
+        }
+        
         th {
             background-color: #4a90e2;
             color: white;
         }
+        
+        .dark-mode th {
+            background-color: #0f3460;
+        }
+        
         /* Progress bar styles */
         .progress-bar {
             background-color: #ddd;
@@ -115,6 +352,11 @@
             width: 100%;
             margin-top: 5px;
         }
+        
+        .dark-mode .progress-bar {
+            background-color: #555;
+        }
+        
         .progress-fill {
             display: block;
             height: 100%;
@@ -123,12 +365,13 @@
             transition: width 1s ease-in-out;
             border-radius: 20px;
         }
+        
         /* Form styles */
         form {
             margin-top: 10px;
             margin-bottom: 20px;
         }
-        input[type=text], textarea {
+        input[type=text], textarea, select {
             width: 100%;
             padding: 10px;
             margin-top: 6px;
@@ -138,6 +381,13 @@
             font-size: 1rem;
             box-sizing: border-box;
         }
+        
+        .dark-mode input[type=text], .dark-mode textarea, .dark-mode select {
+            background: #2d2d2d;
+            border-color: #555;
+            color: white;
+        }
+        
         button {
             background-color: #4a90e2;
             color: white;
@@ -151,6 +401,7 @@
         button:hover {
             background-color: #357ABD;
         }
+        
         /* List and checkpoints */
         ul { list-style-type: none; padding-left: 0; }
         .checklist li {
@@ -159,12 +410,18 @@
             display: flex;
             align-items: center;
         }
+        
+        .dark-mode .checklist li {
+            border-bottom-color: #555;
+        }
+        
         .checklist li:last-child { border-bottom: none; }
         .checklist input[type=checkbox] {
             margin-right: 12px;
             transform: scale(1.3);
             cursor: pointer;
         }
+        
         /* Quote styles */
         #quote {
             font-style: italic;
@@ -173,6 +430,10 @@
             margin: 15px 0 25px;
             font-size: 1.2rem;
             text-align: center;
+        }
+        
+        .dark-mode #quote {
+            color: #64b5f6;
         }
         
         /* Stats and Analytics Styles */
@@ -195,11 +456,20 @@
             box-shadow: 0 4px 8px rgba(74,144,226,0.2);
         }
         
+        .dark-mode #streak-counter {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #64b5f6;
+        }
+        
         .chart-container {
             background: white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .chart-container {
+            background: #2d2d2d;
         }
         
         canvas {
@@ -213,6 +483,11 @@
             border-radius: 12px;
             margin-top: 30px;
             border-left: 4px solid #4a90e2;
+        }
+        
+        .dark-mode #weekly-summary {
+            background: linear-gradient(135deg, #2d2d2d, #3d3d3d);
+            border-left-color: #64b5f6;
         }
         
         .summary-grid {
@@ -229,6 +504,11 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
+        .dark-mode .summary-item {
+            background: #1e1e2e;
+            color: white;
+        }
+        
         /* Loading and offline states */
         .loading {
             opacity: 0.6;
@@ -242,6 +522,11 @@
             font-size: 0.9rem;
         }
         
+        .dark-mode .offline-notice {
+            background: #3d1a00;
+            color: #ff6b6b;
+        }
+        
         /* Responsive tweaks */
         @media(max-width: 600px) {
             nav {
@@ -251,7 +536,7 @@
                 flex: 1 0 33.33%;
                 text-align: center;
                 padding: 12px 8px;
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
             main {
                 margin: 10px;
@@ -267,14 +552,42 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+            .timer-display {
+                font-size: 2.5rem;
+            }
+            .user-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
+        <button class="theme-toggle" id="theme-toggle">🌙 Dark</button>
         <h1>Welcome to StudySync!</h1>
         <h2 id="quote">"Success is the sum of small efforts, repeated day in and day out."</h2>
     </header>
+    
+    <!-- User Stats Bar -->
+    <div class="user-stats" id="user-stats" style="display:none;">
+        <div class="stat-item">
+            <div class="stat-value" id="user-level">1</div>
+            <div class="stat-label">Level</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="user-xp">0</div>
+            <div class="stat-label">XP</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="total-study-time">0h</div>
+            <div class="stat-label">Study Time</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value" id="badges-earned">0</div>
+            <div class="stat-label">Badges</div>
+        </div>
+    </div>
     
     <!-- Authentication Bar -->
     <div id="auth-bar">
@@ -290,10 +603,12 @@
     
     <nav>
         <a href="#" class="active" data-section="home">Home</a>
+        <a href="#" data-section="timer">Timer</a>
         <a href="#" data-section="dashboard">Dashboard</a>
         <a href="#" data-section="goals">Goals</a>
         <a href="#" data-section="journal">Journal</a>
         <a href="#" data-section="stats">Stats</a>
+        <a href="#" data-section="achievements">Badges</a>
         <a href="#" data-section="motivation">Motivation</a>
         <a href="#" data-section="resources">Resources</a>
     </nav>
@@ -302,6 +617,21 @@
         <section id="home" class="active">
             <h3>Welcome & Motivation</h3>
             <p style="text-align:center; font-weight: 600; font-size: 1.1rem;">Unlock Your Potential. Study Smart. Achieve More.</p>
+            
+            <!-- XP Progress Bar -->
+            <div class="xp-container">
+                <h4>🎯 Your Progress</h4>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>Level <span id="current-level">1</span></span>
+                    <span><span id="current-xp">0</span> / <span id="next-level-xp">100</span> XP</span>
+                </div>
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xp-fill" style="width: 0%;">
+                        <span id="xp-percentage">0%</span>
+                    </div>
+                </div>
+            </div>
+            
             <div style="max-width: 600px; margin: auto;">
                 <h4>Weekly Progress</h4>
                 <table>
@@ -326,6 +656,49 @@
                         </td></tr>
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <!-- Pomodoro Timer Section -->
+        <section id="timer">
+            <h3>🍅 Pomodoro Study Timer</h3>
+            
+            <div class="pomodoro-container">
+                <h4 id="timer-mode">Focus Session</h4>
+                <div class="timer-display" id="timer-display">25:00</div>
+                
+                <div class="timer-controls">
+                    <button class="timer-btn" id="start-btn">▶️ Start</button>
+                    <button class="timer-btn" id="pause-btn">⏸️ Pause</button>
+                    <button class="timer-btn" id="reset-btn">🔄 Reset</button>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <button class="timer-btn" id="focus-btn">🎯 Focus (25min)</button>
+                    <button class="timer-btn" id="short-break-btn">☕ Short Break (5min)</button>
+                    <button class="timer-btn" id="long-break-btn">🛋️ Long Break (15min)</button>
+                </div>
+            </div>
+            
+            <div class="session-tracker">
+                <h4>📊 Today's Study Sessions</h4>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <div>
+                        <label for="session-subject">Subject:</label>
+                        <select id="session-subject">
+                            <option value="mathematics">Mathematics</option>
+                            <option value="physics">Physics</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="python">Python</option>
+                            <option value="communication">Communication</option>
+                        </select>
+                    </div>
+                    <div>
+                        <strong>Sessions Today: <span id="sessions-count">0</span></strong>
+                    </div>
+                </div>
+                
+                <div id="session-log"></div>
             </div>
         </section>
 
@@ -419,6 +792,22 @@
             </div>
         </section>
 
+        <!-- Achievements/Badges Section -->
+        <section id="achievements">
+            <h3>🏆 Achievements & Badges</h3>
+            
+            <div class="badges-container" id="badges-container">
+                <!-- Badges will be populated by JavaScript -->
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <h4>🎖️ Recent Achievements</h4>
+                <div id="recent-achievements">
+                    <p style="text-align: center; color: #666;">Complete your first goal to earn your first badge!</p>
+                </div>
+            </div>
+        </section>
+
         <section id="motivation">
             <h3>Motivation Zone</h3>
             <p id="motivation-quote" style="font-style: italic; font-size: 1.2rem; color: #4a90e2; text-align: center;"></p>
@@ -501,6 +890,50 @@
         let isOnline = navigator.onLine;
         let goalChart = null;
         let timeChart = null;
+        let timerInterval = null;
+        let currentTime = 25 * 60; // 25 minutes in seconds
+        let isTimerRunning = false;
+        let currentMode = 'focus'; // focus, short-break, long-break
+        let sessionCount = 0;
+
+        // User progress data
+        let userProgress = {
+            level: 1,
+            xp: 0,
+            totalStudyTime: 0,
+            badges: [],
+            sessions: []
+        };
+
+        // Badge definitions
+        const badges = [
+            { id: 'first-goal', name: 'First Goal', icon: '🎯', description: 'Complete your first goal', threshold: 1, type: 'goals' },
+            { id: 'study-streak-3', name: '3-Day Streak', icon: '🔥', description: '3 consecutive days of study', threshold: 3, type: 'streak' },
+            { id: 'study-streak-7', name: 'Week Warrior', icon: '⚡', description: '7 consecutive days of study', threshold: 7, type: 'streak' },
+            { id: 'pomodoro-master', name: 'Pomodoro Master', icon: '🍅', description: 'Complete 10 Pomodoro sessions', threshold: 10, type: 'sessions' },
+            { id: 'time-tracker', name: 'Time Tracker', icon: '⏱️', description: 'Log 10 hours of study time', threshold: 10, type: 'time' },
+            { id: 'journal-keeper', name: 'Journal Keeper', icon: '📝', description: 'Write 5 journal entries', threshold: 5, type: 'journal' },
+            { id: 'goal-crusher', name: 'Goal Crusher', icon: '💪', description: 'Complete 10 goals', threshold: 10, type: 'goals' },
+            { id: 'level-up', name: 'Level Up!', icon: '⭐', description: 'Reach Level 5', threshold: 5, type: 'level' }
+        ];
+
+        // --- Dark Mode Toggle ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️ Light';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const isDark = body.classList.contains('dark-mode');
+            themeToggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
 
         // --- Navigation handling ---
         const navLinks = document.querySelectorAll('nav a');
@@ -519,12 +952,13 @@
                 link.classList.add('active');
                 document.getElementById(target).classList.add('active');
                 
-                // Load stats when stats section is opened
+                // Load specific section data
                 if (target === 'stats' && currentUser) {
-                    console.log('Loading analytics...');
                     setTimeout(async () => {
                         await renderStats();
                     }, 100);
+                } else if (target === 'achievements') {
+                    renderBadges();
                 }
             });
         });
@@ -535,6 +969,7 @@
         const userInfo = document.getElementById('user-info');
         const userName = document.getElementById('user-name');
         const offlineNotice = document.getElementById('offline-notice');
+        const userStats = document.getElementById('user-stats');
 
         loginBtn.onclick = async () => {
             try {
@@ -581,22 +1016,376 @@
                 userName.textContent = user.displayName ? user.displayName.split(' ')[0] : 'User';
                 loginBtn.style.display = 'none';
                 userInfo.style.display = 'inline';
+                userStats.style.display = 'flex';
                 
                 // Load user data
+                await loadUserProgress();
                 await loadGoals();
                 await loadJournal();
+                
+                // Update UI
+                updateUserStats();
+                updateXPBar();
                 
                 // Set up notifications
                 await setupNotifications();
             } else {
                 loginBtn.style.display = 'inline';
                 userInfo.style.display = 'none';
+                userStats.style.display = 'none';
                 
                 // Clear data display
                 document.getElementById('goal-list').innerHTML = '';
                 document.getElementById('journal-entries').innerHTML = '';
             }
         });
+
+        // --- User Progress Management ---
+        async function loadUserProgress() {
+            if (!currentUser) return;
+            
+            try {
+                const doc = await db.collection('userProgress').doc(currentUser.uid).get();
+                if (doc.exists) {
+                    userProgress = { ...userProgress, ...doc.data() };
+                } else {
+                    // Initialize new user
+                    await saveUserProgress();
+                }
+            } catch (error) {
+                console.error('Error loading user progress:', error);
+            }
+        }
+
+        async function saveUserProgress() {
+            if (!currentUser) return;
+            
+            try {
+                await db.collection('userProgress').doc(currentUser.uid).set({
+                    ...userProgress,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (error) {
+                console.error('Error saving user progress:', error);
+            }
+        }
+
+        function addXP(amount, reason) {
+            userProgress.xp += amount;
+            
+            // Check for level up
+            const newLevel = Math.floor(userProgress.xp / 100) + 1;
+            if (newLevel > userProgress.level) {
+                userProgress.level = newLevel;
+                showNotification(`🎉 Level Up! You're now Level ${newLevel}!`, 'success');
+                checkBadges();
+            }
+            
+            updateXPBar();
+            updateUserStats();
+            saveUserProgress();
+            
+            // Show XP gain notification
+            showNotification(`+${amount} XP - ${reason}`, 'xp');
+        }
+
+        function updateXPBar() {
+            const currentXP = userProgress.xp % 100;
+            const percentage = currentXP;
+            
+            document.getElementById('current-level').textContent = userProgress.level;
+            document.getElementById('current-xp').textContent = userProgress.xp;
+            document.getElementById('next-level-xp').textContent = userProgress.level * 100;
+            document.getElementById('xp-fill').style.width = `${percentage}%`;
+            document.getElementById('xp-percentage').textContent = `${currentXP}/100`;
+        }
+
+        function updateUserStats() {
+            document.getElementById('user-level').textContent = userProgress.level;
+            document.getElementById('user-xp').textContent = userProgress.xp;
+            document.getElementById('total-study-time').textContent = `${Math.floor(userProgress.totalStudyTime / 60)}h`;
+            document.getElementById('badges-earned').textContent = userProgress.badges.length;
+        }
+
+        // --- Pomodoro Timer Functions ---
+        const timerDisplay = document.getElementById('timer-display');
+        const timerMode = document.getElementById('timer-mode');
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const focusBtn = document.getElementById('focus-btn');
+        const shortBreakBtn = document.getElementById('short-break-btn');
+        const longBreakBtn = document.getElementById('long-break-btn');
+        const sessionSubject = document.getElementById('session-subject');
+        const sessionsCount = document.getElementById('sessions-count');
+        const sessionLog = document.getElementById('session-log');
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(currentTime / 60);
+            const seconds = currentTime % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!isTimerRunning) {
+                isTimerRunning = true;
+                startBtn.textContent = '⏸️ Pause';
+                
+                timerInterval = setInterval(() => {
+                    currentTime--;
+                    updateTimerDisplay();
+                    
+                    if (currentTime <= 0) {
+                        completeSession();
+                    }
+                }, 1000);
+            } else {
+                pauseTimer();
+            }
+        }
+
+        function pauseTimer() {
+            isTimerRunning = false;
+            startBtn.textContent = '▶️ Start';
+            clearInterval(timerInterval);
+        }
+
+        function resetTimer() {
+            pauseTimer();
+            setTimerMode(currentMode);
+        }
+
+        function setTimerMode(mode) {
+            currentMode = mode;
+            pauseTimer();
+            
+            // Remove active class from all mode buttons
+            document.querySelectorAll('.timer-btn').forEach(btn => btn.classList.remove('active'));
+            
+            switch (mode) {
+                case 'focus':
+                    currentTime = 25 * 60;
+                    timerMode.textContent = 'Focus Session';
+                    focusBtn.classList.add('active');
+                    break;
+                case 'short-break':
+                    currentTime = 5 * 60;
+                    timerMode.textContent = 'Short Break';
+                    shortBreakBtn.classList.add('active');
+                    break;
+                case 'long-break':
+                    currentTime = 15 * 60;
+                    timerMode.textContent = 'Long Break';
+                    longBreakBtn.classList.add('active');
+                    break;
+            }
+            
+            updateTimerDisplay();
+        }
+
+        function completeSession() {
+            pauseTimer();
+            
+            if (currentMode === 'focus') {
+                sessionCount++;
+                const subject = sessionSubject.value;
+                const duration = 25; // minutes
+                
+                // Log the session
+                const session = {
+                    subject: subject,
+                    duration: duration,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toDateString()
+                };
+                
+                userProgress.sessions.push(session);
+                userProgress.totalStudyTime += duration;
+                
+                // Add XP for completing a session
+                addXP(25, 'Completed Pomodoro session');
+                
+                // Update session log
+                updateSessionLog();
+                
+                // Check for badges
+                checkBadges();
+                
+                // Play notification sound (if available)
+                showNotification('🎉 Focus session completed! Time for a break.', 'success');
+                
+                // Auto-switch to break
+                setTimerMode(sessionCount % 4 === 0 ? 'long-break' : 'short-break');
+            } else {
+                showNotification('Break completed! Ready for another focus session?', 'info');
+                setTimerMode('focus');
+            }
+            
+            saveUserProgress();
+        }
+
+        function updateSessionLog() {
+            sessionsCount.textContent = sessionCount;
+            
+            const todaySessions = userProgress.sessions.filter(session => 
+                session.date === new Date().toDateString()
+            );
+            
+            sessionLog.innerHTML = '';
+            todaySessions.slice(-5).reverse().forEach(session => {
+                const sessionCard = document.createElement('div');
+                sessionCard.className = 'session-card';
+                sessionCard.innerHTML = `
+                    <strong>${session.subject.charAt(0).toUpperCase() + session.subject.slice(1)}</strong>
+                    <br>
+                    <small>${session.duration} minutes • ${new Date(session.timestamp).toLocaleTimeString()}</small>
+                `;
+                sessionLog.appendChild(sessionCard);
+            });
+            
+            if (todaySessions.length === 0) {
+                sessionLog.innerHTML = '<p style="text-align: center; color: #666;">No sessions today. Start your first Pomodoro!</p>';
+            }
+        }
+
+        // Timer event listeners
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        focusBtn.addEventListener('click', () => setTimerMode('focus'));
+        shortBreakBtn.addEventListener('click', () => setTimerMode('short-break'));
+        longBreakBtn.addEventListener('click', () => setTimerMode('long-break'));
+
+        // Initialize timer
+        setTimerMode('focus');
+
+        // --- Badge System ---
+        function checkBadges() {
+            badges.forEach(badge => {
+                if (!userProgress.badges.includes(badge.id)) {
+                    let earned = false;
+                    
+                    switch (badge.type) {
+                        case 'goals':
+                            // Count completed goals
+                            const completedGoals = goalsData.filter(g => g.completed).length;
+                            earned = completedGoals >= badge.threshold;
+                            break;
+                        case 'streak':
+                            // Check streak (simplified - could be more sophisticated)
+                            earned = calculateCurrentStreak() >= badge.threshold;
+                            break;
+                        case 'sessions':
+                            earned = userProgress.sessions.length >= badge.threshold;
+                            break;
+                        case 'time':
+                            earned = Math.floor(userProgress.totalStudyTime / 60) >= badge.threshold;
+                            break;
+                        case 'journal':
+                            earned = journalData.length >= badge.threshold;
+                            break;
+                        case 'level':
+                            earned = userProgress.level >= badge.threshold;
+                            break;
+                    }
+                    
+                    if (earned) {
+                        userProgress.badges.push(badge.id);
+                        showNotification(`🏆 Badge Earned: ${badge.name}!`, 'badge');
+                        addXP(50, `Earned ${badge.name} badge`);
+                    }
+                }
+            });
+            
+            saveUserProgress();
+        }
+
+        function renderBadges() {
+            const container = document.getElementById('badges-container');
+            container.innerHTML = '';
+            
+            badges.forEach(badge => {
+                const badgeElement = document.createElement('div');
+                const isEarned = userProgress.badges.includes(badge.id);
+                
+                badgeElement.className = `badge ${!isEarned ? 'locked' : ''}`;
+                badgeElement.innerHTML = `
+                    <div class="badge-icon">${badge.icon}</div>
+                    <div class="badge-name">${badge.name}</div>
+                    <div style="font-size: 0.7rem; margin-top: 5px;">${badge.description}</div>
+                `;
+                
+                container.appendChild(badgeElement);
+            });
+        }
+
+        function calculateCurrentStreak() {
+            if (journalData.length === 0) return 0;
+            
+            const today = new Date();
+            let streak = 0;
+            let currentDate = new Date(today);
+            
+            for (let i = 0; i < 30; i++) {
+                const dateStr = currentDate.toDateString();
+                const hasEntry = journalData.some(entry => {
+                    const entryDate = new Date(entry.date || entry);
+                    return entryDate.toDateString() === dateStr;
+                });
+                
+                if (hasEntry) {
+                    streak++;
+                } else if (i > 0) {
+                    break;
+                }
+                
+                currentDate.setDate(currentDate.getDate() - 1);
+            }
+            
+            return streak;
+        }
+
+        // --- Notification System ---
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4CAF50' : type === 'badge' ? '#FFD700' : type === 'xp' ? '#9C27B0' : '#2196F3'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Add CSS for notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
 
         // --- Push Notifications Setup ---
         async function setupNotifications() {
@@ -615,10 +1404,7 @@
                         });
                         
                         setTimeout(() => {
-                            new Notification('StudySync Ready!', {
-                                body: 'Your study tracker is set up and ready to go! 🚀',
-                                icon: '/favicon.ico'
-                            });
+                            showNotification('StudySync is ready! Start your productive journey! 🚀', 'success');
                         }, 2000);
                     }
                 }
@@ -627,7 +1413,7 @@
             }
         }
 
-        // --- FIXED ANALYTICS FUNCTIONS ---
+        // --- Analytics Functions (from Phase 3) ---
         async function renderStats() {
             if (!currentUser) {
                 console.log('No user logged in');
@@ -637,7 +1423,6 @@
             try {
                 console.log('Loading analytics data...');
                 
-                // Show loading states
                 document.getElementById('streak-counter').innerHTML = 'Loading streak...';
                 document.getElementById('goals-summary').innerHTML = 'Loading...';
                 document.getElementById('total-time').textContent = 'Loading...';
@@ -645,7 +1430,6 @@
                 document.getElementById('best-day').textContent = 'Loading...';
                 document.getElementById('top-subject').textContent = 'Loading...';
                 
-                // Load all analytics
                 await updateStreakCounter();
                 await renderGoalChart();
                 await renderTimeChart();
@@ -659,13 +1443,12 @@
             }
         }
 
-        // Calculate and display study streak
         async function updateStreakCounter() {
             try {
                 const journalDoc = await db.collection('journal').doc(currentUser.uid).get();
                 const entries = journalDoc.exists ? journalDoc.data().entries || [] : [];
                 
-                let streak = calculateStreak(entries);
+                let streak = calculateCurrentStreak();
                 document.getElementById('streak-counter').innerHTML = `${streak} day${streak !== 1 ? 's' : ''} 🔥`;
             } catch (error) {
                 console.error('Error updating streak:', error);
@@ -673,33 +1456,6 @@
             }
         }
 
-        function calculateStreak(entries) {
-            if (entries.length === 0) return 0;
-            
-            const today = new Date();
-            let streak = 0;
-            let currentDate = new Date(today);
-            
-            for (let i = 0; i < 30; i++) {
-                const dateStr = currentDate.toDateString();
-                const hasEntry = entries.some(entry => {
-                    const entryDate = new Date(entry.date || entry);
-                    return entryDate.toDateString() === dateStr;
-                });
-                
-                if (hasEntry) {
-                    streak++;
-                } else if (i > 0) {
-                    break; // Streak broken
-                }
-                
-                currentDate.setDate(currentDate.getDate() - 1);
-            }
-            
-            return streak;
-        }
-
-        // Render goal completion chart
         async function renderGoalChart() {
             try {
                 const goalsDoc = await db.collection('goals').doc(currentUser.uid).get();
@@ -711,7 +1467,6 @@
                 
                 document.getElementById('goals-summary').innerHTML = `${completed}/${total}`;
                 
-                // Destroy existing chart
                 if (goalChart) {
                     goalChart.destroy();
                 }
@@ -722,7 +1477,7 @@
                     data: {
                         labels: ['Completed', 'Pending'],
                         datasets: [{
-                            data: [completed, pending || 1], // Ensure at least 1 to show chart
+                            data: [completed, pending || 1],
                             backgroundColor: ['#28a745', '#dc3545'],
                             borderWidth: 2,
                             borderColor: '#fff'
@@ -736,9 +1491,7 @@
                                 position: 'bottom',
                                 labels: {
                                     padding: 20,
-                                    font: {
-                                        size: 14
-                                    }
+                                    font: { size: 14 }
                                 }
                             }
                         }
@@ -750,20 +1503,26 @@
             }
         }
 
-        // Render study hours chart
         async function renderTimeChart() {
             try {
                 const subjects = ['Math', 'Physics', 'Electronics', 'Python', 'Communication'];
                 
-                // Try to get real data or use sample data
-                const progressDoc = await db.collection('progress').doc(currentUser.uid).get();
-                let hours = [4.5, 3.2, 2.8, 1.5, 2.1]; // Default sample data
+                // Use real session data if available
+                let hours = [0, 0, 0, 0, 0];
                 
-                if (progressDoc.exists && progressDoc.data().weeklyHours) {
-                    hours = progressDoc.data().weeklyHours;
+                if (userProgress.sessions && userProgress.sessions.length > 0) {
+                    userProgress.sessions.forEach(session => {
+                        const subjectIndex = subjects.findIndex(s => 
+                            s.toLowerCase() === session.subject.toLowerCase()
+                        );
+                        if (subjectIndex !== -1) {
+                            hours[subjectIndex] += session.duration / 60; // Convert to hours
+                        }
+                    });
+                } else {
+                    hours = [4.5, 3.2, 2.8, 1.5, 2.1]; // Default sample data
                 }
                 
-                // Destroy existing chart
                 if (timeChart) {
                     timeChart.destroy();
                 }
@@ -796,27 +1555,19 @@
                                 title: {
                                     display: true,
                                     text: 'Hours',
-                                    font: {
-                                        size: 14,
-                                        weight: 'bold'
-                                    }
+                                    font: { size: 14, weight: 'bold' }
                                 }
                             },
                             x: {
                                 title: {
                                     display: true,
                                     text: 'Subjects',
-                                    font: {
-                                        size: 14,
-                                        weight: 'bold'
-                                    }
+                                    font: { size: 14, weight: 'bold' }
                                 }
                             }
                         },
                         plugins: {
-                            legend: {
-                                display: false
-                            }
+                            legend: { display: false }
                         }
                     }
                 });
@@ -826,24 +1577,19 @@
             }
         }
 
-        // Update weekly summary stats
         async function updateWeeklySummary() {
             try {
                 const goalsDoc = await db.collection('goals').doc(currentUser.uid).get();
                 const goalsData = goalsDoc.exists ? goalsDoc.data().items || [] : [];
                 const completed = goalsData.filter(g => g.completed).length;
                 
-                const progressDoc = await db.collection('progress').doc(currentUser.uid).get();
-                const hours = progressDoc.exists && progressDoc.data().weeklyHours ? 
-                              progressDoc.data().weeklyHours : [4.5, 3.2, 2.8, 1.5, 2.1];
-                
-                const totalTime = hours.reduce((a, b) => a + b, 0).toFixed(1);
+                const totalTime = Math.floor(userProgress.totalStudyTime / 60);
                 const subjects = ['Mathematics', 'Physics', 'Electronics', 'Python', 'Communication'];
-                const topSubject = subjects[hours.indexOf(Math.max(...hours))];
+                const topSubject = subjects[0]; // Could be calculated from session data
                 
                 document.getElementById('total-time').textContent = `${totalTime} hours`;
                 document.getElementById('completed-goals').textContent = `${completed}/${goalsData.length}`;
-                document.getElementById('best-day').textContent = 'Wednesday';
+                document.getElementById('best-day').textContent = 'Today';
                 document.getElementById('top-subject').textContent = topSubject;
                 
             } catch (error) {
@@ -908,8 +1654,16 @@
                 checkbox.checked = goal.completed;
                 
                 checkbox.addEventListener('change', async () => {
+                    const wasCompleted = goalsData[idx].completed;
                     goalsData[idx].completed = checkbox.checked;
                     goalsData[idx].updatedAt = new Date().toISOString();
+                    
+                    // Add XP for completing a goal
+                    if (!wasCompleted && checkbox.checked) {
+                        addXP(20, 'Completed a goal');
+                        checkBadges();
+                    }
+                    
                     await saveGoals();
                 });
                 
@@ -949,6 +1703,10 @@
                     createdAt: new Date().toISOString(),
                     id: Date.now().toString()
                 });
+                
+                // Add XP for creating a goal
+                addXP(5, 'Created a new goal');
+                
                 await saveGoals();
                 goalInput.value = '';
                 renderGoals();
@@ -1020,6 +1778,11 @@
                     id: Date.now().toString()
                 };
                 journalData.push(newEntry);
+                
+                // Add XP for journal entry
+                addXP(10, 'Wrote a journal entry');
+                checkBadges();
+                
                 await saveJournal();
                 journalText.value = '';
                 renderJournal();
@@ -1125,6 +1888,9 @@
             if (!isOnline) {
                 offlineNotice.style.display = 'block';
             }
+            
+            // Load session count from today's sessions
+            updateSessionLog();
         });
     </script>
 </body>
