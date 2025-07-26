@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySync Pro | Fixed Version</title>
+    <title>StudySync Pro | Enhanced & Fixed</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -15,18 +15,16 @@
         :root {
             --primary: #4a90e2;
             --secondary: #38ef7d;
-            --accent: #ff6b6b;
             --success: #27ae60;
             --warning: #f39c12;
             --danger: #e74c3c;
             --dark: #2c3e50;
             --light: #ecf0f1;
-            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--gradient);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             min-height: 100vh;
@@ -39,7 +37,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Header Styles */
+        /* Header */
         .header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -67,44 +65,44 @@
             gap: 0.5rem;
         }
 
-        .auth-section {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
         }
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+        .debug-info h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
         }
 
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-        }
-
-        .sync-status {
-            display: flex;
+        .status-indicator {
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.9rem;
             padding: 0.5rem 1rem;
             border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-indicator.connected {
             background: rgba(39, 174, 96, 0.1);
             color: var(--success);
         }
 
-        .sync-status.syncing {
-            background: rgba(243, 156, 18, 0.1);
-            color: var(--warning);
-        }
-
-        .sync-status.error {
+        .status-indicator.error {
             background: rgba(231, 76, 60, 0.1);
             color: var(--danger);
+        }
+
+        .status-indicator.offline {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning);
         }
 
         /* Navigation */
@@ -113,7 +111,7 @@
             backdrop-filter: blur(15px);
             border-radius: 50px;
             margin: 1rem auto;
-            max-width: 900px;
+            max-width: 800px;
             padding: 0.5rem;
             display: flex;
             justify-content: center;
@@ -172,11 +170,6 @@
             transition: all 0.3s ease;
         }
 
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 45px rgba(0,0,0,0.15);
-        }
-
         .card-title {
             color: var(--primary);
             font-size: 1.5rem;
@@ -187,7 +180,11 @@
             gap: 0.5rem;
         }
 
-        /* Form Elements */
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
         .form-control {
             width: 100%;
             padding: 1rem;
@@ -196,7 +193,6 @@
             font-size: 1rem;
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.8);
-            margin-bottom: 1rem;
         }
 
         .form-control:focus {
@@ -227,7 +223,12 @@
         .btn-primary:hover {
             background: #357abd;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-google {
@@ -235,11 +236,6 @@
             color: white;
             width: 100%;
             justify-content: center;
-        }
-
-        .btn-google:hover {
-            background: #357ae8;
-            transform: translateY(-2px);
         }
 
         /* Lists */
@@ -265,14 +261,6 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
-        .list-item.completed {
-            opacity: 0.7;
-        }
-
-        .list-item.completed .item-text {
-            text-decoration: line-through;
-        }
-
         .item-text {
             flex: 1;
             font-size: 1rem;
@@ -282,14 +270,7 @@
         .item-checkbox {
             width: 24px;
             height: 24px;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
             cursor: pointer;
-        }
-
-        .item-date {
-            font-size: 0.9rem;
-            color: #666;
         }
 
         .btn-delete {
@@ -299,52 +280,6 @@
             padding: 0.5rem 1rem;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 0.9rem;
-        }
-
-        /* Analytics Styles */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary), #357abd);
-            color: white;
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        .chart-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .chart-title {
-            color: var(--primary);
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            text-align: center;
         }
 
         /* Loading States */
@@ -373,8 +308,9 @@
             font-weight: 600;
             z-index: 10000;
             animation: slideInRight 0.5s ease;
-            backdrop-filter: blur(10px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 400px;
+            word-wrap: break-word;
         }
 
         @keyframes slideInRight {
@@ -411,7 +347,17 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
         }
 
-        /* Responsive Design */
+        /* Offline Mode */
+        .offline-mode {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -432,10 +378,6 @@
             .glass-card {
                 padding: 1rem;
             }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -445,19 +387,18 @@
         <div class="auth-card">
             <div class="card-title">
                 <i class="fas fa-graduation-cap"></i>
-                Welcome to StudySync Pro
+                StudySync Pro
             </div>
             <p style="margin-bottom: 2rem; color: var(--dark); opacity: 0.8;">
-                Sign in to unlock advanced analytics and cloud sync across all devices.
+                Sign in to access your personalized study dashboard and sync across all devices.
             </p>
             <button class="btn btn-google" id="google-login-btn">
                 <i class="fab fa-google"></i> Continue with Google
             </button>
             <div style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
-                <p>✅ Real-time cloud synchronization</p>
-                <p>✅ Advanced study analytics</p>
+                <p>✅ Secure cloud synchronization</p>
                 <p>✅ Cross-device accessibility</p>
-                <p>✅ Secure data backup</p>
+                <p>✅ Automatic data backup</p>
             </div>
         </div>
     </div>
@@ -469,20 +410,14 @@
                 <i class="fas fa-graduation-cap"></i>
                 StudySync Pro
             </div>
-            <div class="auth-section">
-                <div class="sync-status" id="sync-status">
-                    <i class="fas fa-sync-alt"></i> <span id="sync-text">Connecting...</span>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <div class="status-indicator" id="connection-status">
+                    <i class="fas fa-wifi"></i>
+                    <span id="status-text">Connecting...</span>
                 </div>
-                <div class="user-info" id="user-info" style="display: none;">
-                    <img class="user-avatar" id="user-avatar" src="" alt="User">
-                    <div>
-                        <div style="font-weight: 600;" id="user-name">Loading...</div>
-                        <div style="font-size: 0.8rem; opacity: 0.7;" id="user-email">user@example.com</div>
-                    </div>
-                    <button class="btn btn-primary" id="logout-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </button>
-                </div>
+                <button class="btn btn-primary" id="logout-btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
     </header>
@@ -498,11 +433,8 @@
         <a class="nav-item" data-section="journal">
             <i class="fas fa-book"></i> Journal
         </a>
-        <a class="nav-item" data-section="analytics">
-            <i class="fas fa-chart-pie"></i> Analytics
-        </a>
-        <a class="nav-item" data-section="resources">
-            <i class="fas fa-library"></i> Resources
+        <a class="nav-item" data-section="debug">
+            <i class="fas fa-bug"></i> Debug
         </a>
     </nav>
 
@@ -515,59 +447,18 @@
                     <i class="fas fa-chart-bar"></i> Study Dashboard
                 </div>
                 
-                <div class="stats-grid">
-                    <div class="stat-card" style="background: linear-gradient(135deg, var(--success), #219a75);">
-                        <div class="stat-value" id="total-goals">0</div>
-                        <div class="stat-label">Total Goals</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                    <div style="background: linear-gradient(135deg, var(--success), #219a75); color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 2.5rem; font-weight: bold;" id="total-goals">0</div>
+                        <div>Total Goals</div>
                     </div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, var(--warning), #d68910);">
-                        <div class="stat-value" id="completed-goals">0</div>
-                        <div class="stat-label">Completed Goals</div>
+                    <div style="background: linear-gradient(135deg, var(--primary), #357abd); color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 2.5rem; font-weight: bold;" id="completed-goals">0</div>
+                        <div>Completed</div>
                     </div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, var(--accent), #e55353);">
-                        <div class="stat-value" id="journal-entries-count">0</div>
-                        <div class="stat-label">Journal Entries</div>
-                    </div>
-                    <div class="stat-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
-                        <div class="stat-value" id="study-streak">0</div>
-                        <div class="stat-label">Day Streak</div>
-                    </div>
-                </div>
-
-                <div class="chart-container">
-                    <div class="chart-title">📈 Weekly Progress Overview</div>
-                    <div style="overflow-x: auto;">
-                        <table style="width: 100%; border-collapse: collapse;">
-                            <thead>
-                                <tr style="background: var(--primary); color: white;">
-                                    <th style="padding: 1rem; text-align: left;">Subject</th>
-                                    <th style="padding: 1rem; text-align: left;">This Week's Target</th>
-                                    <th style="padding: 1rem; text-align: left;">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 1rem;"><strong>Mathematics</strong></td>
-                                    <td style="padding: 1rem;">Calculus & Integration</td>
-                                    <td style="padding: 1rem;"><span style="color: var(--success);">✅ On Track</span></td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 1rem;"><strong>Physics</strong></td>
-                                    <td style="padding: 1rem;">Mechanics & Waves</td>
-                                    <td style="padding: 1rem;"><span style="color: var(--warning);">⚠️ Behind</span></td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 1rem;"><strong>Electronics</strong></td>
-                                    <td style="padding: 1rem;">Circuits & Diodes</td>
-                                    <td style="padding: 1rem;"><span style="color: var(--success);">✅ Excellent</span></td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #eee;">
-                                    <td style="padding: 1rem;"><strong>Python</strong></td>
-                                    <td style="padding: 1rem;">Functions & Projects</td>
-                                    <td style="padding: 1rem;"><span style="color: var(--danger);">🔴 Needs Focus</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div style="background: linear-gradient(135deg, var(--warning), #d68910); color: white; padding: 2rem; border-radius: 20px; text-align: center;">
+                        <div style="font-size: 2.5rem; font-weight: bold;" id="journal-count">0</div>
+                        <div>Journal Entries</div>
                     </div>
                 </div>
             </div>
@@ -581,16 +472,20 @@
                     <span class="loading" id="goals-loading" style="display: none; margin-left: 1rem;"></span>
                 </div>
                 
-                <form id="goal-form" style="margin-bottom: 2rem;">
+                <div id="offline-notice" class="offline-mode" style="display: none;">
+                    <i class="fas fa-wifi-slash"></i> You're offline. Goals will sync when connection is restored.
+                </div>
+                
+                <form id="goal-form" class="form-group">
                     <input type="text" class="form-control" id="goal-input" placeholder="Enter your study goal..." required>
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" id="add-goal-btn">
                         <i class="fas fa-plus"></i> Add Goal
                     </button>
                 </form>
 
-                <ul class="item-list" id="goals-list">
-                    <!-- Goals will be populated here -->
-                </ul>
+                <div id="goals-container">
+                    <ul class="item-list" id="goals-list"></ul>
+                </div>
             </div>
         </section>
 
@@ -602,155 +497,44 @@
                     <span class="loading" id="journal-loading" style="display: none; margin-left: 1rem;"></span>
                 </div>
                 
-                <form id="journal-form" style="margin-bottom: 2rem;">
+                <form id="journal-form" class="form-group">
                     <textarea class="form-control" id="journal-input" rows="6" 
-                              placeholder="How was your study session today? What did you learn? Any challenges you faced?"></textarea>
+                              placeholder="How was your study session today? What did you learn?"></textarea>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Save Entry
                     </button>
                 </form>
 
-                <div id="journal-entries">
-                    <!-- Journal entries will be populated here -->
-                </div>
+                <div id="journal-entries"></div>
             </div>
         </section>
 
-        <!-- Analytics Section -->
-        <section class="section" id="analytics">
+        <!-- Debug Section -->
+        <section class="section" id="debug">
             <div class="glass-card">
                 <div class="card-title">
-                    <i class="fas fa-chart-pie"></i> Study Analytics
-                    <span class="loading" id="analytics-loading" style="display: none; margin-left: 1rem;"></span>
+                    <i class="fas fa-bug"></i> Debug Information
                 </div>
                 
-                <div class="stats-grid">
-                    <div class="glass-card" style="text-align: center;">
-                        <h4>📊 Goal Completion Rate</h4>
-                        <div style="font-size: 3rem; color: var(--primary); font-weight: bold; margin: 1rem 0;" id="completion-percentage">0%</div>
-                        <p>Goals completed this week</p>
-                    </div>
-                    <div class="glass-card" style="text-align: center;">
-                        <h4>📝 Journal Activity</h4>
-                        <div style="font-size: 3rem; color: var(--success); font-weight: bold; margin: 1rem 0;" id="journal-activity">0</div>
-                        <p>Entries this month</p>
-                    </div>
-                    <div class="glass-card" style="text-align: center;">
-                        <h4>🔥 Study Consistency</h4>
-                        <div style="font-size: 3rem; color: var(--warning); font-weight: bold; margin: 1rem 0;" id="consistency-score">0%</div>
-                        <p>Weekly consistency</p>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <h4>📈 Progress Insights</h4>
-                    <div id="insights-content">
-                        <p style="padding: 2rem; text-align: center; color: #666; font-style: italic;">
-                            Complete some goals and journal entries to see personalized insights!
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Resources Section -->
-        <section class="section" id="resources">
-            <div class="glass-card">
-                <div class="card-title">
-                    <i class="fas fa-library"></i> Study Resources Hub
+                <div class="debug-info">
+                    <h4>Firebase Connection Status</h4>
+                    <p><strong>User:</strong> <span id="debug-user">Not logged in</span></p>
+                    <p><strong>Auth State:</strong> <span id="debug-auth">Checking...</span></p>
+                    <p><strong>Database:</strong> <span id="debug-db">Testing...</span></p>
+                    <p><strong>Network:</strong> <span id="debug-network">Online</span></p>
                 </div>
                 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
-                    <div class="glass-card">
-                        <h4 style="color: var(--primary); margin-bottom: 1rem;">
-                            <i class="fas fa-calculator"></i> Mathematics
-                        </h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                                <a href="https://ncert.nic.in/textbook.php" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📚 NCERT Mathematics Books
-                                </a>
-                            </li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                                <a href="https://nptel.ac.in/courses/111/106/111106094/" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    🎥 NPTEL Engineering Math
-                                </a>
-                            </li>
-                            <li style="padding: 0.5rem 0;">
-                                <a href="https://www.youtube.com/user/gatesmashers" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📺 Gate Smashers YouTube
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="glass-card">
-                        <h4 style="color: var(--success); margin-bottom: 1rem;">
-                            <i class="fas fa-atom"></i> Physics
-                        </h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                                <a href="https://ncert.nic.in/textbook.php" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📚 NCERT Physics Books
-                                </a>
-                            </li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                                <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    🎓 MIT OpenCourseWare
-                                </a>
-                            </li>
-                            <li style="padding: 0.5rem 0;">
-                                <a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📺 Neso Academy Physics
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="glass-card">
-                        <h4 style="color: var(--warning); margin-bottom: 1rem;">
-                            <i class="fas fa-microchip"></i> Electronics
-                        </h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                                <a href="#" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📚 Boylestad Circuit Theory
-                                </a>
-                            </li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                                <a href="#" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📋 Electronics Syllabus
-                                </a>
-                            </li>
-                            <li style="padding: 0.5rem 0;">
-                                <a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📺 Neso Academy Electronics
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="glass-card">
-                        <h4 style="color: var(--accent); margin-bottom: 1rem;">
-                            <i class="fas fa-code"></i> Python Programming
-                        </h4>
-                        <ul style="list-style: none; padding: 0;">
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                                <a href="https://www.coursera.org/learn/python" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    🎓 Python for Everybody
-                                </a>
-                            </li>
-                            <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
-                                <a href="https://www.youtube.com/watch?v=gfDE2a7MKjA" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📺 Python Full Course
-                                </a>
-                            </li>
-                            <li style="padding: 0.5rem 0;">
-                                <a href="https://automatetheboringstuff.com/" target="_blank" style="text-decoration: none; color: var(--dark);">
-                                    📖 Automate Boring Stuff
-                                </a>
-                            </li>
-                        </ul>
+                <div class="debug-info">
+                    <h4>Test Buttons</h4>
+                    <button class="btn btn-primary" id="test-auth" style="margin: 0.5rem;">Test Authentication</button>
+                    <button class="btn btn-primary" id="test-db" style="margin: 0.5rem;">Test Database</button>
+                    <button class="btn btn-primary" id="clear-data" style="margin: 0.5rem;">Clear Local Data</button>
+                </div>
+                
+                <div class="debug-info">
+                    <h4>Error Log</h4>
+                    <div id="error-log" style="max-height: 200px; overflow-y: auto; background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                        <p style="color: #666;">No errors logged yet.</p>
                     </div>
                 </div>
             </div>
@@ -781,6 +565,7 @@
         // Global State
         let currentUser = null;
         let isOnline = navigator.onLine;
+        let pendingGoals = [];
 
         // DOM Elements
         const authOverlay = document.getElementById('auth-overlay');
@@ -789,42 +574,90 @@
         const mainContainer = document.getElementById('main-container');
         const googleLoginBtn = document.getElementById('google-login-btn');
         const logoutBtn = document.getElementById('logout-btn');
-        const userInfo = document.getElementById('user-info');
-        const userAvatar = document.getElementById('user-avatar');
-        const userName = document.getElementById('user-name');
-        const userEmail = document.getElementById('user-email');
-        const syncStatus = document.getElementById('sync-status');
-        const syncText = document.getElementById('sync-text');
+        const connectionStatus = document.getElementById('connection-status');
+        const statusText = document.getElementById('status-text');
+        const offlineNotice = document.getElementById('offline-notice');
 
-        // Authentication Functions
+        // Debug Elements
+        const debugUser = document.getElementById('debug-user');
+        const debugAuth = document.getElementById('debug-auth');
+        const debugDB = document.getElementById('debug-db');
+        const debugNetwork = document.getElementById('debug-network');
+        const errorLog = document.getElementById('error-log');
+
+        // Error Logging
+        function logError(error, context = '') {
+            const timestamp = new Date().toLocaleTimeString();
+            const errorMsg = `[${timestamp}] ${context}: ${error.message || error}`;
+            console.error(errorMsg, error);
+            
+            const logElement = document.createElement('div');
+            logElement.style.cssText = 'margin: 0.5rem 0; padding: 0.5rem; background: #ffebee; border-left: 3px solid #f44336; font-size: 0.9rem;';
+            logElement.textContent = errorMsg;
+            
+            if (errorLog.children.length === 1 && errorLog.children[0].textContent === 'No errors logged yet.') {
+                errorLog.innerHTML = '';
+            }
+            
+            errorLog.insertBefore(logElement, errorLog.firstChild);
+            
+            // Limit to last 10 errors
+            while (errorLog.children.length > 10) {
+                errorLog.removeChild(errorLog.lastChild);
+            }
+        }
+
+        // Connection Status
+        function updateConnectionStatus(status, message) {
+            connectionStatus.className = `status-indicator ${status}`;
+            statusText.textContent = message;
+            
+            const icons = {
+                connected: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-triangle',
+                offline: 'fas fa-wifi-slash'
+            };
+            
+            const icon = connectionStatus.querySelector('i');
+            icon.className = icons[status] || 'fas fa-wifi';
+        }
+
+        // Authentication
         googleLoginBtn.addEventListener('click', async () => {
             try {
-                showNotification('Signing in...', 'info');
-                setSyncStatus('syncing', 'Signing in...');
+                updateConnectionStatus('error', 'Signing in...');
+                showNotification('Signing in with Google...', 'info');
                 
                 const provider = new firebase.auth.GoogleAuthProvider();
                 provider.addScope('email');
                 provider.addScope('profile');
                 
                 const result = await auth.signInWithPopup(provider);
-                console.log('✅ Login successful:', result.user.email);
+                debugAuth.textContent = 'Success';
+                debugUser.textContent = result.user.email;
                 
             } catch (error) {
-                console.error('❌ Login error:', error);
-                setSyncStatus('error', 'Login failed');
+                logError(error, 'Authentication');
+                debugAuth.textContent = 'Failed';
+                updateConnectionStatus('error', 'Login failed');
                 
-                let errorMessage = 'Login failed. Please try again.';
+                let errorMessage = 'Login failed. ';
                 
                 switch (error.code) {
                     case 'auth/popup-blocked':
-                        errorMessage = 'Please allow popups and try again.';
+                        errorMessage += 'Please allow popups and try again.';
                         break;
                     case 'auth/popup-closed-by-user':
-                        errorMessage = 'Sign-in was cancelled.';
+                        errorMessage += 'Sign-in was cancelled.';
                         break;
                     case 'auth/network-request-failed':
-                        errorMessage = 'Network error. Please check your internet connection.';
+                        errorMessage += 'Network error. Check your internet connection.';
                         break;
+                    case 'auth/unauthorized-domain':
+                        errorMessage += 'Domain not authorized. Contact support.';
+                        break;
+                    default:
+                        errorMessage += error.message;
                 }
                 
                 showNotification(errorMessage, 'error');
@@ -841,7 +674,8 @@
         auth.onAuthStateChanged(async (user) => {
             if (user) {
                 currentUser = user;
-                console.log('✅ User authenticated:', user.email);
+                debugUser.textContent = user.email;
+                debugAuth.textContent = 'Authenticated';
                 
                 // Show main app
                 authOverlay.style.display = 'none';
@@ -849,56 +683,48 @@
                 mainNav.style.display = 'flex';
                 mainContainer.style.display = 'block';
                 
-                // Update user info
-                userAvatar.src = user.photoURL || 'https://via.placeholder.com/40';
-                userName.textContent = user.displayName || 'User';
-                userEmail.textContent = user.email;
-                userInfo.style.display = 'flex';
+                updateConnectionStatus('connected', 'Connected');
                 
-                setSyncStatus('syncing', 'Loading data...');
-                
-                // Load user data
                 try {
+                    await testDatabaseConnection();
                     await loadGoals();
                     await loadJournal();
-                    updateAllStats();
-                    setSyncStatus('synced', 'All synced');
+                    updateStats();
+                    syncPendingData();
+                    
                     showNotification(`Welcome back, ${user.displayName?.split(' ')[0] || 'User'}! 🎉`, 'success');
                 } catch (error) {
-                    console.error('Error loading data:', error);
-                    setSyncStatus('error', 'Sync error');
-                    showNotification('Error loading data. Check your connection.', 'error');
+                    logError(error, 'Data loading');
+                    updateConnectionStatus('error', 'Data sync failed');
                 }
                 
             } else {
                 currentUser = null;
-                console.log('❌ User not authenticated');
+                debugUser.textContent = 'Not logged in';
+                debugAuth.textContent = 'Not authenticated';
                 
                 // Show auth overlay
                 authOverlay.style.display = 'flex';
                 mainHeader.style.display = 'none';
                 mainNav.style.display = 'none';
                 mainContainer.style.display = 'none';
-                userInfo.style.display = 'none';
             }
         });
 
-        // Sync Status Management
-        function setSyncStatus(status, message) {
-            syncStatus.className = `sync-status ${status}`;
-            syncText.textContent = message;
-            
-            const icons = {
-                synced: 'fas fa-check-circle',
-                syncing: 'fas fa-sync-alt fa-spin',
-                error: 'fas fa-exclamation-triangle'
-            };
-            
-            const icon = syncStatus.querySelector('i');
-            icon.className = icons[status] || 'fas fa-sync-alt';
+        // Database Connection Test
+        async function testDatabaseConnection() {
+            try {
+                // Try a simple read operation
+                await db.collection('test').limit(1).get();
+                debugDB.textContent = 'Connected';
+                return true;
+            } catch (error) {
+                debugDB.textContent = 'Failed - ' + error.code;
+                throw error;
+            }
         }
 
-        // Navigation System
+        // Navigation
         const navItems = document.querySelectorAll('.nav-item');
         const sections = document.querySelectorAll('.section');
 
@@ -907,33 +733,24 @@
                 e.preventDefault();
                 const targetSection = item.dataset.section;
 
-                // Update nav active state
                 navItems.forEach(nav => nav.classList.remove('active'));
                 sections.forEach(section => section.classList.remove('active'));
 
                 item.classList.add('active');
                 document.getElementById(targetSection).classList.add('active');
-
-                // Load section-specific data
-                if (targetSection === 'analytics') {
-                    loadAnalytics();
-                }
             });
         });
 
-        // Goals Management
+        // Goals Management with Enhanced Error Handling
         const goalForm = document.getElementById('goal-form');
         const goalInput = document.getElementById('goal-input');
         const goalsList = document.getElementById('goals-list');
         const goalsLoading = document.getElementById('goals-loading');
+        const addGoalBtn = document.getElementById('add-goal-btn');
 
         async function loadGoals() {
-            if (!currentUser) {
-                console.log('❌ No user - cannot load goals');
-                return;
-            }
+            if (!currentUser) return;
             
-            console.log('🔄 Loading goals...');
             goalsLoading.style.display = 'inline-block';
             
             try {
@@ -942,7 +759,6 @@
                     .orderBy('createdAt', 'desc')
                     .get();
                 
-                console.log(`✅ Loaded ${snapshot.size} goals`);
                 goalsList.innerHTML = '';
                 
                 if (snapshot.empty) {
@@ -959,18 +775,12 @@
                     });
                 }
                 
-                updateAllStats();
+                updateStats();
                 
             } catch (error) {
-                console.error('❌ Error loading goals:', error);
-                setSyncStatus('error', 'Failed to load goals');
-                showNotification('Failed to load goals. Check your connection.', 'error');
-                
-                goalsList.innerHTML = `
-                    <li style="text-align: center; padding: 2rem; color: var(--danger);">
-                        ❌ Failed to load goals. Please refresh the page.
-                    </li>
-                `;
+                logError(error, 'Loading goals');
+                showNotification('Failed to load goals. Using offline mode.', 'warning');
+                loadOfflineGoals();
             } finally {
                 goalsLoading.style.display = 'none';
             }
@@ -978,13 +788,15 @@
 
         function createGoalElement(goal, goalId) {
             const li = document.createElement('li');
-            li.className = `list-item ${goal.completed ? 'completed' : ''}`;
+            li.className = 'list-item';
             
             li.innerHTML = `
                 <input type="checkbox" class="item-checkbox" ${goal.completed ? 'checked' : ''} 
                        onchange="toggleGoal('${goalId}', this.checked)">
                 <span class="item-text">${goal.text}</span>
-                <span class="item-date">${new Date(goal.createdAt?.toDate()).toLocaleDateString()}</span>
+                <small style="color: #666; margin-left: auto;">
+                    ${goal.createdAt ? new Date(goal.createdAt.toDate()).toLocaleDateString() : 'Offline'}
+                </small>
                 <button class="btn-delete" onclick="deleteGoal('${goalId}')">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -997,159 +809,236 @@
             e.preventDefault();
             
             const goalText = goalInput.value.trim();
-            if (!goalText || !currentUser) return;
+            if (!goalText) return;
             
-            console.log('🔄 Adding goal:', goalText);
-            setSyncStatus('syncing', 'Adding goal...');
+            addGoalBtn.disabled = true;
+            addGoalBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
             
             try {
-                await db.collection('goals').add({
+                if (!currentUser) {
+                    throw new Error('User not authenticated');
+                }
+                
+                if (!isOnline) {
+                    // Add to pending goals for offline mode
+                    const offlineGoal = {
+                        text: goalText,
+                        completed: false,
+                        createdAt: new Date(),
+                        offline: true,
+                        id: 'offline_' + Date.now()
+                    };
+                    
+                    pendingGoals.push(offlineGoal);
+                    saveOfflineGoals();
+                    
+                    goalInput.value = '';
+                    showNotification('Goal saved offline. Will sync when online.', 'warning');
+                    loadOfflineGoals();
+                    
+                    return;
+                }
+                
+                const docRef = await db.collection('goals').add({
                     text: goalText,
                     completed: false,
                     userId: currentUser.uid,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                console.log('✅ Goal added successfully');
                 goalInput.value = '';
                 showNotification('Goal added successfully! 🎯', 'success');
-                
                 await loadGoals();
-                setSyncStatus('synced', 'All synced');
                 
             } catch (error) {
-                console.error('❌ Error adding goal:', error);
-                setSyncStatus('error', 'Failed to add goal');
-                showNotification('Failed to add goal. Please try again.', 'error');
+                logError(error, 'Adding goal');
+                
+                let errorMessage = 'Failed to add goal. ';
+                
+                switch (error.code) {
+                    case 'permission-denied':
+                        errorMessage += 'Permission denied. Check Firestore rules.';
+                        break;
+                    case 'unavailable':
+                        errorMessage += 'Service temporarily unavailable.';
+                        break;
+                    case 'unauthenticated':
+                        errorMessage += 'Please sign in again.';
+                        break;
+                    default:
+                        errorMessage += 'Please check your internet connection and try again.';
+                }
+                
+                showNotification(errorMessage, 'error');
+                
+                // Offer offline mode
+                if (confirm('Would you like to save this goal offline? It will sync when you\'re back online.')) {
+                    const offlineGoal = {
+                        text: goalText,
+                        completed: false,
+                        createdAt: new Date(),
+                        offline: true,
+                        id: 'offline_' + Date.now()
+                    };
+                    
+                    pendingGoals.push(offlineGoal);
+                    saveOfflineGoals();
+                    goalInput.value = '';
+                    showNotification('Goal saved offline.', 'info');
+                    loadOfflineGoals();
+                }
+                
+            } finally {
+                addGoalBtn.disabled = false;
+                addGoalBtn.innerHTML = '<i class="fas fa-plus"></i> Add Goal';
             }
         });
 
+        // Offline Goals Management
+        function saveOfflineGoals() {
+            localStorage.setItem('offlineGoals', JSON.stringify(pendingGoals));
+        }
+
+        function loadOfflineGoals() {
+            const stored = localStorage.getItem('offlineGoals');
+            if (stored) {
+                pendingGoals = JSON.parse(stored);
+                
+                // Add offline goals to display
+                pendingGoals.forEach(goal => {
+                    const goalElement = createGoalElement(goal, goal.id);
+                    goalElement.style.border = '2px dashed #f39c12';
+                    goalElement.style.backgroundColor = '#fff3cd';
+                    goalsList.appendChild(goalElement);
+                });
+                
+                if (pendingGoals.length > 0) {
+                    offlineNotice.style.display = 'block';
+                }
+            }
+        }
+
+        // Sync pending data when back online
+        async function syncPendingData() {
+            if (!currentUser || !isOnline || pendingGoals.length === 0) return;
+            
+            showNotification('Syncing offline data...', 'info');
+            
+            for (const goal of pendingGoals) {
+                try {
+                    await db.collection('goals').add({
+                        text: goal.text,
+                        completed: goal.completed,
+                        userId: currentUser.uid,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch (error) {
+                    logError(error, 'Syncing offline goal');
+                }
+            }
+            
+            pendingGoals = [];
+            localStorage.removeItem('offlineGoals');
+            offlineNotice.style.display = 'none';
+            
+            showNotification('Offline data synced successfully!', 'success');
+            await loadGoals();
+        }
+
+        // Toggle Goal
         window.toggleGoal = async function(goalId, completed) {
-            if (!currentUser) return;
-            
-            console.log(`🔄 Toggling goal ${goalId} to ${completed}`);
-            setSyncStatus('syncing', 'Updating goal...');
-            
             try {
+                if (goalId.startsWith('offline_')) {
+                    // Handle offline goal
+                    const goal = pendingGoals.find(g => g.id === goalId);
+                    if (goal) {
+                        goal.completed = completed;
+                        saveOfflineGoals();
+                    }
+                    return;
+                }
+                
                 await db.collection('goals').doc(goalId).update({
                     completed: completed,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                console.log('✅ Goal updated successfully');
-                
                 if (completed) {
                     showNotification('🎉 Goal completed! Great job!', 'success');
                 }
                 
-                updateAllStats();
-                setSyncStatus('synced', 'All synced');
+                updateStats();
                 
             } catch (error) {
-                console.error('❌ Error updating goal:', error);
-                setSyncStatus('error', 'Failed to update goal');
+                logError(error, 'Toggling goal');
                 showNotification('Failed to update goal. Please try again.', 'error');
                 
-                // Revert checkbox state
+                // Revert checkbox
                 const checkbox = document.querySelector(`input[onchange*="${goalId}"]`);
                 if (checkbox) checkbox.checked = !completed;
             }
         };
 
+        // Delete Goal
         window.deleteGoal = async function(goalId) {
             if (!confirm('Are you sure you want to delete this goal?')) return;
             
-            console.log('🔄 Deleting goal:', goalId);
-            setSyncStatus('syncing', 'Deleting goal...');
-            
             try {
+                if (goalId.startsWith('offline_')) {
+                    // Handle offline goal
+                    pendingGoals = pendingGoals.filter(g => g.id !== goalId);
+                    saveOfflineGoals();
+                    loadOfflineGoals();
+                    return;
+                }
+                
                 await db.collection('goals').doc(goalId).delete();
-                
-                console.log('✅ Goal deleted successfully');
                 showNotification('Goal deleted', 'info');
-                
                 await loadGoals();
-                setSyncStatus('synced', 'All synced');
                 
             } catch (error) {
-                console.error('❌ Error deleting goal:', error);
-                setSyncStatus('error', 'Failed to delete goal');
+                logError(error, 'Deleting goal');
                 showNotification('Failed to delete goal. Please try again.', 'error');
             }
         };
 
-        // Journal Management
+        // Journal Management (simplified for space)
         const journalForm = document.getElementById('journal-form');
         const journalInput = document.getElementById('journal-input');
         const journalEntries = document.getElementById('journal-entries');
-        const journalLoading = document.getElementById('journal-loading');
 
         async function loadJournal() {
-            if (!currentUser) {
-                console.log('❌ No user - cannot load journal');
-                return;
-            }
-            
-            console.log('🔄 Loading journal entries...');
-            journalLoading.style.display = 'inline-block';
+            if (!currentUser) return;
             
             try {
                 const snapshot = await db.collection('journal')
                     .where('userId', '==', currentUser.uid)
                     .orderBy('createdAt', 'desc')
-                    .limit(10)
+                    .limit(5)
                     .get();
                 
-                console.log(`✅ Loaded ${snapshot.size} journal entries`);
                 journalEntries.innerHTML = '';
                 
                 if (snapshot.empty) {
-                    journalEntries.innerHTML = `
-                        <div style="text-align: center; padding: 2rem; color: #666; font-style: italic;">
-                            No journal entries yet. Start writing to track your study journey! ✍️
-                        </div>
-                    `;
+                    journalEntries.innerHTML = '<p style="text-align: center; color: #666; font-style: italic; padding: 2rem;">No journal entries yet.</p>';
                 } else {
                     snapshot.forEach(doc => {
                         const entry = doc.data();
-                        const entryElement = createJournalElement(entry);
-                        journalEntries.appendChild(entryElement);
+                        const div = document.createElement('div');
+                        div.className = 'glass-card';
+                        div.innerHTML = `
+                            <small style="color: var(--primary); font-weight: 600;">
+                                ${new Date(entry.createdAt?.toDate()).toLocaleDateString()}
+                            </small>
+                            <p style="margin-top: 0.5rem;">${entry.text}</p>
+                        `;
+                        journalEntries.appendChild(div);
                     });
                 }
                 
-                updateAllStats();
-                
             } catch (error) {
-                console.error('❌ Error loading journal:', error);
-                setSyncStatus('error', 'Failed to load journal');
-                showNotification('Failed to load journal. Check your connection.', 'error');
-                
-                journalEntries.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: var(--danger);">
-                        ❌ Failed to load journal entries. Please refresh the page.
-                    </div>
-                `;
-            } finally {
-                journalLoading.style.display = 'none';
+                logError(error, 'Loading journal');
             }
-        }
-
-        function createJournalElement(entry) {
-            const div = document.createElement('div');
-            div.className = 'glass-card';
-            div.style.marginBottom = '1rem';
-            
-            div.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                    <small style="color: var(--primary); font-weight: 600;">
-                        ${new Date(entry.createdAt?.toDate()).toLocaleDateString()} at 
-                        ${new Date(entry.createdAt?.toDate()).toLocaleTimeString()}
-                    </small>
-                </div>
-                <p style="line-height: 1.6; margin: 0;">${entry.text}</p>
-            `;
-            
-            return div;
         }
 
         journalForm.addEventListener('submit', async (e) => {
@@ -1158,9 +1047,6 @@
             const entryText = journalInput.value.trim();
             if (!entryText || !currentUser) return;
             
-            console.log('🔄 Adding journal entry');
-            setSyncStatus('syncing', 'Saving entry...');
-            
             try {
                 await db.collection('journal').add({
                     text: entryText,
@@ -1168,137 +1054,84 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                console.log('✅ Journal entry saved successfully');
                 journalInput.value = '';
                 showNotification('Journal entry saved! 📝', 'success');
-                
                 await loadJournal();
-                setSyncStatus('synced', 'All synced');
+                updateStats();
                 
             } catch (error) {
-                console.error('❌ Error saving journal entry:', error);
-                setSyncStatus('error', 'Failed to save entry');
+                logError(error, 'Saving journal entry');
                 showNotification('Failed to save journal entry. Please try again.', 'error');
             }
         });
 
-        // Analytics Functions
-        async function loadAnalytics() {
-            if (!currentUser) return;
-            
-            console.log('🔄 Loading analytics...');
-            const analyticsLoading = document.getElementById('analytics-loading');
-            analyticsLoading.style.display = 'inline-block';
-            
-            try {
-                // Load goals data
-                const goalsSnapshot = await db.collection('goals')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
-                
-                const totalGoals = goalsSnapshot.size;
-                const completedGoals = goalsSnapshot.docs.filter(doc => doc.data().completed).length;
-                const completionRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
-                
-                // Load journal data
-                const journalSnapshot = await db.collection('journal')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
-                
-                const journalCount = journalSnapshot.size;
-                
-                // Update analytics display
-                document.getElementById('completion-percentage').textContent = `${completionRate}%`;
-                document.getElementById('journal-activity').textContent = journalCount;
-                document.getElementById('consistency-score').textContent = `${Math.min(completionRate + 10, 100)}%`;
-                
-                // Generate insights
-                generateInsights(totalGoals, completedGoals, journalCount);
-                
-                console.log('✅ Analytics loaded successfully');
-                
-            } catch (error) {
-                console.error('❌ Error loading analytics:', error);
-                showNotification('Failed to load analytics', 'error');
-            } finally {
-                analyticsLoading.style.display = 'none';
-            }
-        }
-
-        function generateInsights(totalGoals, completedGoals, journalCount) {
-            const insightsContainer = document.getElementById('insights-content');
-            let insights = [];
-            
-            if (totalGoals === 0) {
-                insights.push('📝 Start by adding some study goals to track your progress!');
-            } else if (completedGoals === 0) {
-                insights.push('🎯 You have goals set up - time to start completing them!');
-            } else {
-                const completionRate = Math.round((completedGoals / totalGoals) * 100);
-                if (completionRate >= 80) {
-                    insights.push('🌟 Excellent progress! You\'re completing most of your goals.');
-                } else if (completionRate >= 50) {
-                    insights.push('👍 Good progress! Keep working towards completing more goals.');
-                } else {
-                    insights.push('💪 You can do better! Focus on completing your existing goals.');
-                }
-            }
-            
-            if (journalCount === 0) {
-                insights.push('📖 Consider writing journal entries to reflect on your study sessions.');
-            } else if (journalCount >= 5) {
-                insights.push('✍️ Great job keeping a study journal! Reflection helps improve learning.');
-            }
-            
-            insightsContainer.innerHTML = insights.map(insight => 
-                `<p style="padding: 1rem; background: rgba(74, 144, 226, 0.1); border-radius: 10px; margin: 0.5rem 0;">${insight}</p>`
-            ).join('');
-        }
-
-        // Stats Update Function
-        async function updateAllStats() {
+        // Stats Update
+        async function updateStats() {
             if (!currentUser) return;
             
             try {
-                // Get goals data
-                const goalsSnapshot = await db.collection('goals')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
+                const [goalsSnapshot, journalSnapshot] = await Promise.all([
+                    db.collection('goals').where('userId', '==', currentUser.uid).get(),
+                    db.collection('journal').where('userId', '==', currentUser.uid).get()
+                ]);
                 
-                const totalGoals = goalsSnapshot.size;
-                const completedGoals = goalsSnapshot.docs.filter(doc => doc.data().completed).length;
-                
-                // Get journal data
-                const journalSnapshot = await db.collection('journal')
-                    .where('userId', '==', currentUser.uid)
-                    .get();
-                
+                const totalGoals = goalsSnapshot.size + pendingGoals.length;
+                const completedGoals = goalsSnapshot.docs.filter(doc => doc.data().completed).length + 
+                                     pendingGoals.filter(g => g.completed).length;
                 const journalCount = journalSnapshot.size;
                 
-                // Update dashboard stats
                 document.getElementById('total-goals').textContent = totalGoals;
                 document.getElementById('completed-goals').textContent = completedGoals;
-                document.getElementById('journal-entries-count').textContent = journalCount;
-                document.getElementById('study-streak').textContent = Math.max(completedGoals, journalCount);
-                
-                console.log('✅ Stats updated:', { totalGoals, completedGoals, journalCount });
+                document.getElementById('journal-count').textContent = journalCount;
                 
             } catch (error) {
-                console.error('❌ Error updating stats:', error);
+                logError(error, 'Updating stats');
             }
         }
+
+        // Debug Test Functions
+        document.getElementById('test-auth').addEventListener('click', () => {
+            if (currentUser) {
+                showNotification(`Authenticated as ${currentUser.email}`, 'success');
+            } else {
+                showNotification('Not authenticated', 'error');
+            }
+        });
+
+        document.getElementById('test-db').addEventListener('click', async () => {
+            try {
+                await testDatabaseConnection();
+                showNotification('Database connection successful!', 'success');
+            } catch (error) {
+                showNotification('Database connection failed: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('clear-data').addEventListener('click', () => {
+            if (confirm('This will clear all offline data. Continue?')) {
+                localStorage.clear();
+                pendingGoals = [];
+                showNotification('Local data cleared', 'info');
+                location.reload();
+            }
+        });
 
         // Network Status
         window.addEventListener('online', () => {
             isOnline = true;
-            setSyncStatus('synced', 'Back online');
-            showNotification('Connection restored! 🌐', 'success');
+            debugNetwork.textContent = 'Online';
+            updateConnectionStatus('connected', 'Back online');
+            offlineNotice.style.display = 'none';
+            showNotification('Connection restored! Syncing data...', 'success');
+            if (currentUser) syncPendingData();
         });
 
         window.addEventListener('offline', () => {
             isOnline = false;
-            setSyncStatus('error', 'Offline');
-            showNotification('You are offline. Changes will sync when reconnected.', 'warning');
+            debugNetwork.textContent = 'Offline';
+            updateConnectionStatus('offline', 'Offline mode');
+            offlineNotice.style.display = 'block';
+            showNotification('You are offline. Changes will be saved locally.', 'warning');
         });
 
         // Notification System
@@ -1320,18 +1153,19 @@
                 if (notification.parentNode) {
                     notification.parentNode.removeChild(notification);
                 }
-            }, 4000);
+            }, 5000);
         }
 
-        // Initialize App
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 StudySync Pro initialized');
-            setSyncStatus('syncing', 'Connecting...');
+            debugNetwork.textContent = isOnline ? 'Online' : 'Offline';
             
-            // Set initial network status
             if (!isOnline) {
-                setSyncStatus('error', 'Offline');
+                updateConnectionStatus('offline', 'Offline mode');
+                offlineNotice.style.display = 'block';
             }
+            
+            loadOfflineGoals();
         });
     </script>
 </body>
