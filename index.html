@@ -3,1894 +3,1134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySync | Track, Achieve, Inspire</title>
+    <title>StudySync | Next-Gen Study Tracker</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Basic Reset and Styles */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --dark-gradient: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --card-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            --hover-transform: translateY(-5px);
+        }
+
+        * {
             margin: 0;
-            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
-            color: #333;
-            transition: all 0.3s ease;
-        }
-        
-        /* Dark mode styles */
-        body.dark-mode {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #ffffff;
-        }
-        
-        header {
-            background-color: #4a90e2;
-            color: white;
-            padding: 20px 10px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: relative;
-        }
-        
-        .dark-mode header {
-            background-color: #0f3460;
-        }
-        
-        .theme-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            letter-spacing: 2px;
-        }
-        header h2 {
-            margin-top: 8px;
-            font-weight: 300;
-            font-style: italic;
-            font-size: 1.2rem;
-            opacity: 0.85;
-        }
-        
-        /* User Stats Bar */
-        .user-stats {
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .stat-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 5px 10px;
-        }
-        
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .stat-label {
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-        
-        /* Auth Bar Styles */
-        #auth-bar {
-            text-align: center;
-            padding: 12px;
-            background: linear-gradient(90deg, #ffe4b5, #f0f8ff);
-            border-bottom: 1px solid #ddd;
-            font-size: 0.95rem;
-        }
-        
-        .dark-mode #auth-bar {
-            background: linear-gradient(90deg, #2d2d2d, #3d3d3d);
-            border-bottom: 1px solid #555;
-        }
-        
-        #auth-bar button {
-            margin: 0 8px;
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-        #user-info {
-            color: #2c5aa0;
-            font-weight: 500;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: center;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .dark-mode nav {
-            background: #1e1e2e;
-        }
-        
-        nav a {
-            padding: 15px 18px;
-            display: block;
-            color: #4a90e2;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background 0.3s ease, color 0.3s ease;
-            font-size: 0.9rem;
-        }
-        
-        .dark-mode nav a {
-            color: #64b5f6;
-        }
-        
-        nav a:hover, nav a.active {
-            background: #4a90e2;
-            color: white;
-        }
-        
-        .dark-mode nav a:hover, .dark-mode nav a.active {
-            background: #0f3460;
-        }
-        
-        main {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 15px 50px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(74,144,226,0.15);
-        }
-        
-        .dark-mode main {
-            background: #1e1e2e;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-        
-        section {
-            display: none;
-            padding: 20px;
-        }
-        section.active {
-            display: block;
-        }
-        h3 {
-            border-bottom: 2px solid #4a90e2;
-            padding-bottom: 6px;
-            margin-bottom: 16px;
-            color: #333;
-        }
-        
-        .dark-mode h3 {
-            color: #ffffff;
-            border-bottom-color: #64b5f6;
-        }
-        
-        /* Pomodoro Timer Styles */
-        .pomodoro-container {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            margin: 20px 0;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .timer-display {
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .timer-controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .timer-btn {
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .timer-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-        
-        .timer-btn.active {
-            background: rgba(255,255,255,0.4);
-            border-color: rgba(255,255,255,0.6);
-        }
-        
-        .session-tracker {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-        
-        .dark-mode .session-tracker {
-            background: #2d2d2d;
-        }
-        
-        /* Badge System */
-        .badges-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .badge {
-            background: linear-gradient(135deg, #ffd700, #ffed4a);
-            color: #333;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
-            transition: transform 0.3s ease;
-        }
-        
-        .badge:hover {
-            transform: translateY(-5px);
-        }
-        
-        .badge.locked {
-            background: #ccc;
-            color: #666;
-        }
-        
-        .badge-icon {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-        
-        .badge-name {
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        
-        /* XP Progress Bar */
-        .xp-container {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-        
-        .xp-bar {
-            background: rgba(255,255,255,0.2);
-            border-radius: 20px;
-            height: 30px;
-            margin: 15px 0;
-            overflow: hidden;
-        }
-        
-        .xp-fill {
-            background: linear-gradient(90deg, #00c851, #007e33);
-            height: 100%;
-            border-radius: 20px;
-            transition: width 1s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-        
-        /* Study Session Cards */
-        .session-card {
-            background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 10px 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-left: 4px solid #4a90e2;
-        }
-        
-        .dark-mode .session-card {
-            background: #2d2d2d;
-            color: white;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-        
-        .dark-mode th, .dark-mode td {
-            border-color: #555;
-        }
-        
-        th {
-            background-color: #4a90e2;
-            color: white;
-        }
-        
-        .dark-mode th {
-            background-color: #0f3460;
-        }
-        
-        /* Progress bar styles */
-        .progress-bar {
-            background-color: #ddd;
-            border-radius: 20px;
-            overflow: hidden;
-            height: 18px;
-            width: 100%;
-            margin-top: 5px;
-        }
-        
-        .dark-mode .progress-bar {
-            background-color: #555;
-        }
-        
-        .progress-fill {
-            display: block;
-            height: 100%;
-            background-color: #4a90e2;
-            width: 0;
-            transition: width 1s ease-in-out;
-            border-radius: 20px;
-        }
-        
-        /* Form styles */
-        form {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-        input[type=text], textarea, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 6px;
-            margin-bottom: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
+            padding: 0;
             box-sizing: border-box;
         }
-        
-        .dark-mode input[type=text], .dark-mode textarea, .dark-mode select {
-            background: #2d2d2d;
-            border-color: #555;
-            color: white;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text-primary);
+            overflow-x: hidden;
         }
-        
-        button {
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            font-size: 1rem;
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Glassmorphism Header */
+        header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #fff, #f0f8ff, #e6f3ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(255,255,255,0.5);
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        /* Dynamic Stats Bar */
+        .user-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            min-width: 120px;
+            transform: translateY(0);
+            transition: all 0.3s ease;
             cursor: pointer;
-            border-radius: 6px;
-            transition: background-color 0.3s ease;
         }
-        button:hover {
-            background-color: #357ABD;
+
+        .stat-card:hover {
+            transform: var(--hover-transform);
+            box-shadow: 0 15px 30px rgba(255,255,255,0.2);
         }
-        
-        /* List and checkpoints */
-        ul { list-style-type: none; padding-left: 0; }
-        .checklist li {
-            padding: 6px 0;
-            border-bottom: 1px solid #eee;
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Creative Navigation */
+        nav {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            padding: 20px 25px;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            border-bottom-color: #38ef7d;
+        }
+
+        .nav-item i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        /* Main Container */
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: var(--hover-transform);
+            box-shadow: 0 25px 50px rgba(255,255,255,0.2);
+        }
+
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h3 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
+            gap: 15px;
         }
-        
-        .dark-mode .checklist li {
-            border-bottom-color: #555;
+
+        h3 i {
+            font-size: 1.5rem;
+            color: #38ef7d;
         }
-        
-        .checklist li:last-child { border-bottom: none; }
-        .checklist input[type=checkbox] {
-            margin-right: 12px;
-            transform: scale(1.3);
-            cursor: pointer;
+
+        /* Creative Progress Bars */
+        .progress-container {
+            background: rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 5px;
+            margin: 10px 0;
+            overflow: hidden;
         }
-        
-        /* Quote styles */
-        #quote {
-            font-style: italic;
-            font-weight: 400;
-            color: #10316b;
-            margin: 15px 0 25px;
-            font-size: 1.2rem;
-            text-align: center;
+
+        .progress-bar {
+            height: 12px;
+            border-radius: 20px;
+            background: linear-gradient(90deg, #11998e, #38ef7d);
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .dark-mode #quote {
-            color: #64b5f6;
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
         }
-        
-        /* Stats and Analytics Styles */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Creative Tables */
+        .creative-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
             margin: 20px 0;
         }
-        
-        #streak-counter {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #4a90e2;
-            text-align: center;
-            padding: 30px;
-            background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(74,144,226,0.2);
-        }
-        
-        .dark-mode #streak-counter {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #64b5f6;
-        }
-        
-        .chart-container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .dark-mode .chart-container {
-            background: #2d2d2d;
-        }
-        
-        canvas {
-            max-width: 100%;
-            height: 300px !important;
-        }
-        
-        #weekly-summary {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 30px;
-            border-left: 4px solid #4a90e2;
-        }
-        
-        .dark-mode #weekly-summary {
-            background: linear-gradient(135deg, #2d2d2d, #3d3d3d);
-            border-left-color: #64b5f6;
-        }
-        
-        .summary-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
-        }
-        
-        .summary-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .dark-mode .summary-item {
-            background: #1e1e2e;
+
+        .creative-table th {
+            background: var(--primary-gradient);
             color: white;
+            padding: 20px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 1.1rem;
         }
-        
-        /* Loading and offline states */
-        .loading {
-            opacity: 0.6;
-            pointer-events: none;
+
+        .creative-table th:first-child {
+            border-radius: 15px 0 0 15px;
         }
-        .offline-notice {
-            background: #ffebee;
-            color: #c62828;
-            padding: 8px;
-            text-align: center;
-            font-size: 0.9rem;
+
+        .creative-table th:last-child {
+            border-radius: 0 15px 15px 0;
         }
-        
-        .dark-mode .offline-notice {
-            background: #3d1a00;
-            color: #ff6b6b;
+
+        .creative-table td {
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
-        
-        /* Responsive tweaks */
-        @media(max-width: 600px) {
+
+        .creative-table tr:hover td {
+            background: rgba(255,255,255,1);
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .creative-table td:first-child {
+            border-radius: 15px 0 0 15px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .creative-table td:last-child {
+            border-radius: 0 15px 15px 0;
+        }
+
+        /* Creative Forms */
+        .creative-form {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 18px 25px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #38ef7d;
+            background: rgba(255,255,255,0.2);
+            box-shadow: 0 0 20px rgba(56, 239, 125, 0.3);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        .creative-btn {
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(56, 239, 125, 0.3);
+        }
+
+        .creative-btn:hover {
+            transform: var(--hover-transform);
+            box-shadow: 0 15px 35px rgba(56, 239, 125, 0.4);
+        }
+
+        .creative-btn:active {
+            transform: translateY(-2px);
+        }
+
+        /* Creative Lists */
+        .creative-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .list-item {
+            background: rgba(255,255,255,0.9);
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            border-left: 5px solid #38ef7d;
+        }
+
+        .list-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .list-item.completed {
+            opacity: 0.7;
+            text-decoration: line-through;
+            border-left-color: #cbd5e0;
+        }
+
+        .creative-checkbox {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 3px solid #38ef7d;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .creative-checkbox:checked {
+            background: #38ef7d;
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(56, 239, 125, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(180deg);
+            box-shadow: 0 15px 35px rgba(56, 239, 125, 0.6);
+        }
+
+        /* Creative Animations */
+        .bounce-in {
+            animation: bounceIn 0.8s ease;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(56, 239, 125, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(56, 239, 125, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(56, 239, 125, 0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .user-stats {
+                gap: 15px;
+            }
+            
+            .stat-card {
+                min-width: 100px;
+                padding: 15px;
+            }
+            
             nav {
                 flex-wrap: wrap;
             }
-            nav a {
-                flex: 1 0 33.33%;
+            
+            .nav-item {
+                flex: 1;
                 text-align: center;
-                padding: 12px 8px;
-                font-size: 0.8rem;
+                padding: 15px 10px;
+                font-size: 0.9rem;
             }
+            
             main {
-                margin: 10px;
+                margin: 20px auto;
+                padding: 0 15px;
             }
-            header h1 {
-                font-size: 2rem;
-            }
-            #streak-counter {
-                font-size: 2rem;
+            
+            .glass-card {
                 padding: 20px;
             }
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            .timer-display {
-                font-size: 2.5rem;
-            }
-            .user-stats {
+            
+            .creative-form {
                 flex-direction: column;
-                gap: 10px;
             }
+        }
+
+        /* Success Animations */
+        .success-animation {
+            animation: successPop 0.6s ease;
+        }
+
+        @keyframes successPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Quote Styling */
+        .quote-container {
+            text-align: center;
+            padding: 30px;
+            background: var(--glass-bg);
+            border-radius: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--glass-border);
+        }
+
+        .quote-text {
+            font-size: 1.3rem;
+            color: white;
+            font-style: italic;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .quote-author {
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
         }
     </style>
 </head>
 <body>
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
     <header>
-        <button class="theme-toggle" id="theme-toggle">🌙 Dark</button>
-        <h1>Welcome to StudySync!</h1>
-        <h2 id="quote">"Success is the sum of small efforts, repeated day in and day out."</h2>
-    </header>
-    
-    <!-- User Stats Bar -->
-    <div class="user-stats" id="user-stats" style="display:none;">
-        <div class="stat-item">
-            <div class="stat-value" id="user-level">1</div>
-            <div class="stat-label">Level</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="user-xp">0</div>
-            <div class="stat-label">XP</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="total-study-time">0h</div>
-            <div class="stat-label">Study Time</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-value" id="badges-earned">0</div>
-            <div class="stat-label">Badges</div>
-        </div>
-    </div>
-    
-    <!-- Authentication Bar -->
-    <div id="auth-bar">
-        <button id="login-btn">🔐 Sign in with Google</button>
-        <span id="user-info" style="display:none;">
-            Welcome back, <strong id="user-name"></strong>! 
-            <button id="logout-btn">Log out</button>
-        </span>
-        <div id="offline-notice" class="offline-notice" style="display:none;">
-            📶 Offline mode - Data will sync when connection returns
-        </div>
-    </div>
-    
-    <nav>
-        <a href="#" class="active" data-section="home">Home</a>
-        <a href="#" data-section="timer">Timer</a>
-        <a href="#" data-section="dashboard">Dashboard</a>
-        <a href="#" data-section="goals">Goals</a>
-        <a href="#" data-section="journal">Journal</a>
-        <a href="#" data-section="stats">Stats</a>
-        <a href="#" data-section="achievements">Badges</a>
-        <a href="#" data-section="motivation">Motivation</a>
-        <a href="#" data-section="resources">Resources</a>
-    </nav>
-    
-    <main>
-        <section id="home" class="active">
-            <h3>Welcome & Motivation</h3>
-            <p style="text-align:center; font-weight: 600; font-size: 1.1rem;">Unlock Your Potential. Study Smart. Achieve More.</p>
+        <div class="header-content">
+            <div class="logo">✨ StudySync</div>
+            <div class="tagline">Next-Generation Study Tracking Experience</div>
             
-            <!-- XP Progress Bar -->
-            <div class="xp-container">
-                <h4>🎯 Your Progress</h4>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>Level <span id="current-level">1</span></span>
-                    <span><span id="current-xp">0</span> / <span id="next-level-xp">100</span> XP</span>
+            <!-- Dynamic User Stats -->
+            <div class="user-stats" id="user-stats" style="display:none;">
+                <div class="stat-card" data-tooltip="Your current level">
+                    <div class="stat-value" id="user-level">1</div>
+                    <div class="stat-label">Level</div>
                 </div>
-                <div class="xp-bar">
-                    <div class="xp-fill" id="xp-fill" style="width: 0%;">
-                        <span id="xp-percentage">0%</span>
-                    </div>
+                <div class="stat-card" data-tooltip="Experience points earned">
+                    <div class="stat-value" id="user-xp">0</div>
+                    <div class="stat-label">XP</div>
+                </div>
+                <div class="stat-card" data-tooltip="Total study time">
+                    <div class="stat-value" id="total-study-time">0h</div>
+                    <div class="stat-label">Study Time</div>
+                </div>
+                <div class="stat-card" data-tooltip="Badges collected">
+                    <div class="stat-value" id="badges-earned">0</div>
+                    <div class="stat-label">Badges</div>
+                </div>
+                <div class="stat-card" data-tooltip="Current study streak">
+                    <div class="stat-value" id="study-streak">0</div>
+                    <div class="stat-label">Day Streak</div>
                 </div>
             </div>
-            
-            <div style="max-width: 600px; margin: auto;">
-                <h4>Weekly Progress</h4>
-                <table>
+        </div>
+    </header>
+
+    <nav>
+        <a href="#" class="nav-item active" data-section="home">
+            <i class="fas fa-home"></i> Home
+        </a>
+        <a href="#" class="nav-item" data-section="dashboard">
+            <i class="fas fa-chart-line"></i> Dashboard
+        </a>
+        <a href="#" class="nav-item" data-section="goals">
+            <i class="fas fa-target"></i> Goals
+        </a>
+        <a href="#" class="nav-item" data-section="timer">
+            <i class="fas fa-clock"></i> Timer
+        </a>
+        <a href="#" class="nav-item" data-section="journal">
+            <i class="fas fa-book"></i> Journal
+        </a>
+        <a href="#" class="nav-item" data-section="stats">
+            <i class="fas fa-analytics"></i> Analytics
+        </a>
+        <a href="#" class="nav-item" data-section="achievements">
+            <i class="fas fa-trophy"></i> Badges
+        </a>
+        <a href="#" class="nav-item" data-section="resources">
+            <i class="fas fa-library"></i> Resources
+        </a>
+    </nav>
+
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="active">
+            <div class="glass-card bounce-in">
+                <h3><i class="fas fa-rocket"></i> Welcome to Your Study Universe</h3>
+                
+                <!-- Motivational Quote -->
+                <div class="quote-container">
+                    <div class="quote-text" id="home-quote">
+                        "Success is the sum of small efforts, repeated day in and day out."
+                    </div>
+                    <div class="quote-author">— Robert Collier</div>
+                </div>
+
+                <!-- Weekly Progress Overview -->
+                <h4 style="color: white; margin: 30px 0 20px 0; font-size: 1.5rem;">
+                    <i class="fas fa-chart-bar" style="color: #38ef7d; margin-right: 10px;"></i>
+                    Weekly Progress Overview
+                </h4>
+                
+                <table class="creative-table">
                     <thead>
-                        <tr><th>Subject</th><th>Progress</th></tr>
+                        <tr>
+                            <th><i class="fas fa-book-open"></i> Subject</th>
+                            <th><i class="fas fa-target"></i> This Week's Target</th>
+                            <th><i class="fas fa-check-circle"></i> Completed</th>
+                            <th><i class="fas fa-chart-line"></i> Progress</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        <tr><td>Mathematics</td><td>
-                            <div class="progress-bar"><span class="progress-fill" style="width: 67%;"></span></div>
-                        </td></tr>
-                        <tr><td>Physics</td><td>
-                            <div class="progress-bar"><span class="progress-fill" style="width: 50%;"></span></div>
-                        </td></tr>
-                        <tr><td>Electronics</td><td>
-                            <div class="progress-bar"><span class="progress-fill" style="width: 50%;"></span></div>
-                        </td></tr>
-                        <tr><td>Python</td><td>
-                            <div class="progress-bar"><span class="progress-fill" style="width: 33%;"></span></div>
-                        </td></tr>
-                        <tr><td>Communication</td><td>
-                            <div class="progress-bar"><span class="progress-fill" style="width: 100%;"></span></div>
-                        </td></tr>
+                        <tr>
+                            <td><strong>Mathematics</strong></td>
+                            <td>Calculus, Integration, Matrix Operations</td>
+                            <td><span style="color: #38ef7d; font-weight: bold;">2/3 topics</span></td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 67%"></div>
+                                </div>
+                                <small style="color: #38ef7d; font-weight: bold;">67%</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Physics</strong></td>
+                            <td>Kinematics, Newton's Laws, Energy</td>
+                            <td><span style="color: #f093fb; font-weight: bold;">1/2 topics</span></td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 50%"></div>
+                                </div>
+                                <small style="color: #f093fb; font-weight: bold;">50%</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Electronics</strong></td>
+                            <td>Circuits, Semiconductors, Diodes</td>
+                            <td><span style="color: #f093fb; font-weight: bold;">1/2 topics</span></td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 50%"></div>
+                                </div>
+                                <small style="color: #f093fb; font-weight: bold;">50%</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Python</strong></td>
+                            <td>Functions, Loops, Mini-projects</td>
+                            <td><span style="color: #667eea; font-weight: bold;">1/3 goals</span></td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 33%"></div>
+                                </div>
+                                <small style="color: #667eea; font-weight: bold;">33%</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Communication</strong></td>
+                            <td>Email Writing, Presentations</td>
+                            <td><span style="color: #38ef7d; font-weight: bold;">2/2 tasks</span></td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 100%"></div>
+                                </div>
+                                <small style="color: #38ef7d; font-weight: bold;">100%</small>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Pomodoro Timer Section -->
-        <section id="timer">
-            <h3>🍅 Pomodoro Study Timer</h3>
-            
-            <div class="pomodoro-container">
-                <h4 id="timer-mode">Focus Session</h4>
-                <div class="timer-display" id="timer-display">25:00</div>
-                
-                <div class="timer-controls">
-                    <button class="timer-btn" id="start-btn">▶️ Start</button>
-                    <button class="timer-btn" id="pause-btn">⏸️ Pause</button>
-                    <button class="timer-btn" id="reset-btn">🔄 Reset</button>
-                </div>
-                
-                <div style="margin-top: 20px;">
-                    <button class="timer-btn" id="focus-btn">🎯 Focus (25min)</button>
-                    <button class="timer-btn" id="short-break-btn">☕ Short Break (5min)</button>
-                    <button class="timer-btn" id="long-break-btn">🛋️ Long Break (15min)</button>
-                </div>
-            </div>
-            
-            <div class="session-tracker">
-                <h4>📊 Today's Study Sessions</h4>
-                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                    <div>
-                        <label for="session-subject">Subject:</label>
-                        <select id="session-subject">
-                            <option value="mathematics">Mathematics</option>
-                            <option value="physics">Physics</option>
-                            <option value="electronics">Electronics</option>
-                            <option value="python">Python</option>
-                            <option value="communication">Communication</option>
-                        </select>
-                    </div>
-                    <div>
-                        <strong>Sessions Today: <span id="sessions-count">0</span></strong>
-                    </div>
-                </div>
-                
-                <div id="session-log"></div>
-            </div>
-        </section>
-
-        <section id="dashboard">
-            <h3>Study Dashboard</h3>
-            <p>Track your subjects and see your progress below.</p>
-            <table>
-                <thead>
-                    <tr><th>Subject</th><th>This Week's Target</th><th>Done</th><th>Progress</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td>Mathematics</td><td>Differentiation, Integration, Matrix Operations</td><td>2/3 topics</td><td>
-                        <div class="progress-bar"><span class="progress-fill" style="width: 67%;"></span></div>
-                    </td></tr>
-                    <tr><td>Physics</td><td>Kinematics, Newton's Laws, Energy Conservation</td><td>1/2 topics</td><td>
-                        <div class="progress-bar"><span class="progress-fill" style="width: 50%;"></span></div>
-                    </td></tr>
-                    <tr><td>Electronics</td><td>Ohm's Law, Circuit Analysis, Semiconductors</td><td>1/2 topics</td><td>
-                        <div class="progress-bar"><span class="progress-fill" style="width: 50%;"></span></div>
-                    </td></tr>
-                    <tr><td>Python</td><td>Variables, Loops, Functions, Mini-project</td><td>1/3 goals</td><td>
-                        <div class="progress-bar"><span class="progress-fill" style="width: 33%;"></span></div>
-                    </td></tr>
-                    <tr><td>Communication</td><td>Email Writing, Presentation Skills</td><td>2/2 tasks</td><td>
-                        <div class="progress-bar"><span class="progress-fill" style="width: 100%;"></span></div>
-                    </td></tr>
-                </tbody>
-            </table>
-        </section>
-
+        <!-- Goals Section -->
         <section id="goals">
-            <h3>Set Your Study Goals</h3>
-            <form id="goal-form">
-                <label for="goal-input">New Goal:</label>
-                <input type="text" id="goal-input" placeholder="Enter your goal here..." required>
-                <button type="submit">Add Goal</button>
-            </form>
-            <ul id="goal-list" class="checklist"></ul>
-        </section>
-
-        <section id="journal">
-            <h3>Daily Journal & Reflection</h3>
-            <form id="journal-form">
-                <label for="journal-text">Write about your study day:</label>
-                <textarea id="journal-text" rows="6" placeholder="What went well? What can be improved? How do you feel about your progress?"></textarea>
-                <button type="submit">Save Entry</button>
-            </form>
-            <ul id="journal-entries"></ul>
-        </section>
-
-        <section id="stats">
-            <h3>📊 Analytics & Insights</h3>
-            
-            <div id="streak-counter">Loading streak...</div>
-            
-            <div class="stats-grid">
-                <div class="chart-container">
-                    <h4>🎯 Goal Completion Rate</h4>
-                    <canvas id="goalChart"></canvas>
-                    <div style="text-align: center; margin-top: 10px;">
-                        <strong>Goals This Week: <span id="goals-summary">Loading...</span></strong>
-                    </div>
-                </div>
+            <div class="glass-card">
+                <h3><i class="fas fa-bullseye"></i> Smart Goal Management</h3>
                 
-                <div class="chart-container">
-                    <h4>⏱️ Study Hours by Subject</h4>
-                    <canvas id="timeChart"></canvas>
-                </div>
-            </div>
-            
-            <div id="weekly-summary">
-                <h4>📈 Weekly Study Summary</h4>
-                <div class="summary-grid">
-                    <div class="summary-item">
-                        <strong>Total Study Time</strong><br>
-                        <span id="total-time">Loading...</span>
+                <form class="creative-form" id="goal-form">
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="goal-input" placeholder="What's your next achievement?" required>
                     </div>
-                    <div class="summary-item">
-                        <strong>Goals Completed</strong><br>
-                        <span id="completed-goals">Loading...</span>
-                    </div>
-                    <div class="summary-item">
-                        <strong>Most Productive Day</strong><br>
-                        <span id="best-day">Loading...</span>
-                    </div>
-                    <div class="summary-item">
-                        <strong>Top Subject</strong><br>
-                        <span id="top-subject">Loading...</span>
-                    </div>
+                    <button type="submit" class="creative-btn pulse">
+                        <i class="fas fa-plus"></i> Add Goal
+                    </button>
+                </form>
+
+                <div id="goals-container">
+                    <ul class="creative-list" id="goal-list"></ul>
                 </div>
             </div>
         </section>
 
-        <!-- Achievements/Badges Section -->
-        <section id="achievements">
-            <h3>🏆 Achievements & Badges</h3>
-            
-            <div class="badges-container" id="badges-container">
-                <!-- Badges will be populated by JavaScript -->
-            </div>
-            
-            <div style="margin-top: 30px;">
-                <h4>🎖️ Recent Achievements</h4>
-                <div id="recent-achievements">
-                    <p style="text-align: center; color: #666;">Complete your first goal to earn your first badge!</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="motivation">
-            <h3>Motivation Zone</h3>
-            <p id="motivation-quote" style="font-style: italic; font-size: 1.2rem; color: #4a90e2; text-align: center;"></p>
-            <button id="new-quote-btn" style="display: block; margin: auto; padding: 8px 16px;">Get New Quote</button>
-            <ul id="quote-history" style="max-height: 200px; overflow-y: auto; margin-top: 20px;"></ul>
-        </section>
-
-        <section id="resources">
-            <h3>Knowledge Hub & Resources</h3>
-            <p>Access all your study materials quickly.</p>
-            
-            <h4>Mathematics</h4>
-            <ul>
-                <li><a href="https://ncert.nic.in/textbook.php" target="_blank">NCERT Class 12 Mathematics Books</a></li>
-                <li><a href="https://nptel.ac.in/courses/111/106/111106094/" target="_blank">NPTEL Engineering Mathematics</a></li>
-                <li><a href="https://www.youtube.com/user/gatesmashers" target="_blank">Gate Smashers YouTube</a></li>
-                <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">Neso Academy Mathematics</a></li>
-            </ul>
-
-            <h4>Physics</h4>
-            <ul>
-                <li><a href="https://ncert.nic.in/textbook.php" target="_blank">NCERT Physics (11th & 12th)</a></li>
-                <li><a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/" target="_blank">MIT OpenCourseWare - Classical Mechanics</a></li>
-                <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">Neso Academy Physics</a></li>
-                <li><a href="https://education.sakshi.com/en/eamcet/quick-review/physics" target="_blank">Sakshi Education Physics Review</a></li>
-            </ul>
-
-            <h4>Electronics & Electrical</h4>
-            <ul>
-                <li><a href="#" target="_blank">Electronic Devices & Circuit Theory - Boylestad</a></li>
-                <li><a href="https://www.scribd.com/document/722664013/Syllabus-of-First-Year-Basic-Electrical-and-Electronics" target="_blank">First Year Electronics Syllabus</a></li>
-                <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">Neso Academy Electronics</a></li>
-            </ul>
-
-            <h4>Python Programming</h4>
-            <ul>
-                <li><a href="https://www.coursera.org/learn/python" target="_blank">Python for Everybody (Coursera)</a></li>
-                <li><a href="https://www.youtube.com/watch?v=gfDE2a7MKjA" target="_blank">Python Full Course - YouTube</a></li>
-                <li><a href="https://www.codecademy.com/learn/learn-python-3" target="_blank">Codecademy Python 3</a></li>
-                <li><a href="https://automatetheboringstuff.com/" target="_blank">Automate the Boring Stuff with Python</a></li>
-            </ul>
-
-            <h4>Professional Communication</h4>
-            <ul>
-                <li><a href="https://eng.libretexts.org/Courses/California_State_Polytechnic_University_Humboldt/Engineering_Success:_A_Seminar_for_First-Year_Students/02:_Topic_02._Professional_Email_Communication_for_Engineers" target="_blank">Professional Email Communication</a></li>
-                <li><a href="https://open.lib.umn.edu/technicalcommunication/" target="_blank">Technical Communication Guide</a></li>
-                <li><a href="https://ocw.mit.edu/courses/writing-and-humanistic-studies/" target="_blank">MIT Technical Communication</a></li>
-            </ul>
-        </section>
+        <!-- More sections would continue here... -->
     </main>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="motivate-btn" title="Get Motivated!">
+        <i class="fas fa-heart"></i>
+    </button>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-messaging-compat.js"></script>
     
     <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
     <script>
-        // --- Firebase Configuration & Initialization ---
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyArjKxUfvehNSA-GLXuuiOpChe55c4MQDE",
             authDomain: "studysync-prod-acfc6.firebaseapp.com",
             projectId: "studysync-prod-acfc6",
             storageBucket: "studysync-prod-acfc6.firebasestorage.app",
             messagingSenderId: "372359765372",
-            appId: "1:372359765372:web:bb5252996a4c98597758f9",
-            measurementId: "G-3E4Z5L962V"
+            appId: "1:372359765372:web:bb5252996a4c98597758f9"
         };
 
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
-        const messaging = firebase.messaging();
 
-        // Global variables
+        // Global State
         let currentUser = null;
-        let isOnline = navigator.onLine;
-        let goalChart = null;
-        let timeChart = null;
-        let timerInterval = null;
-        let currentTime = 25 * 60; // 25 minutes in seconds
-        let isTimerRunning = false;
-        let currentMode = 'focus'; // focus, short-break, long-break
-        let sessionCount = 0;
-
-        // User progress data
         let userProgress = {
             level: 1,
             xp: 0,
             totalStudyTime: 0,
             badges: [],
+            streak: 0,
+            goals: [],
             sessions: []
         };
 
-        // Badge definitions
-        const badges = [
-            { id: 'first-goal', name: 'First Goal', icon: '🎯', description: 'Complete your first goal', threshold: 1, type: 'goals' },
-            { id: 'study-streak-3', name: '3-Day Streak', icon: '🔥', description: '3 consecutive days of study', threshold: 3, type: 'streak' },
-            { id: 'study-streak-7', name: 'Week Warrior', icon: '⚡', description: '7 consecutive days of study', threshold: 7, type: 'streak' },
-            { id: 'pomodoro-master', name: 'Pomodoro Master', icon: '🍅', description: 'Complete 10 Pomodoro sessions', threshold: 10, type: 'sessions' },
-            { id: 'time-tracker', name: 'Time Tracker', icon: '⏱️', description: 'Log 10 hours of study time', threshold: 10, type: 'time' },
-            { id: 'journal-keeper', name: 'Journal Keeper', icon: '📝', description: 'Write 5 journal entries', threshold: 5, type: 'journal' },
-            { id: 'goal-crusher', name: 'Goal Crusher', icon: '💪', description: 'Complete 10 goals', threshold: 10, type: 'goals' },
-            { id: 'level-up', name: 'Level Up!', icon: '⭐', description: 'Reach Level 5', threshold: 5, type: 'level' }
-        ];
+        // Create Floating Particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
 
-        // --- Dark Mode Toggle ---
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        if (savedTheme === 'dark') {
-            body.classList.add('dark-mode');
-            themeToggle.textContent = '☀️ Light';
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
         }
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            const isDark = body.classList.contains('dark-mode');
-            themeToggle.textContent = isDark ? '☀️ Light' : '🌙 Dark';
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-        });
+        // Navigation System
+        function initNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('main section');
 
-        // --- Navigation handling ---
-        const navLinks = document.querySelectorAll('nav a');
-        const sections = document.querySelectorAll('main section');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetSection = item.getAttribute('data-section');
 
-        navLinks.forEach(link => {
-            link.addEventListener('click', async (e) => {
+                    // Update active states
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    sections.forEach(section => section.classList.remove('active'));
+
+                    item.classList.add('active');
+                    document.getElementById(targetSection).classList.add('active');
+
+                    // Add entrance animation
+                    const activeSection = document.getElementById(targetSection);
+                    activeSection.style.animation = 'none';
+                    setTimeout(() => {
+                        activeSection.style.animation = 'fadeInUp 0.6s ease';
+                    }, 10);
+                });
+            });
+        }
+
+        // Goal Management System
+        function initGoalSystem() {
+            const goalForm = document.getElementById('goal-form');
+            const goalInput = document.getElementById('goal-input');
+            const goalList = document.getElementById('goal-list');
+
+            // Load existing goals
+            function loadGoals() {
+                const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
+                goalList.innerHTML = '';
+
+                goals.forEach((goal, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'list-item';
+                    if (goal.completed) li.classList.add('completed');
+
+                    li.innerHTML = `
+                        <input type="checkbox" class="creative-checkbox" ${goal.completed ? 'checked' : ''} 
+                               onchange="toggleGoal(${index})">
+                        <span style="flex: 1; color: #2d3748; font-weight: 500;">${goal.text}</span>
+                        <button onclick="deleteGoal(${index})" style="background: #f56565; color: white; border: none; 
+                                padding: 8px 12px; border-radius: 8px; cursor: pointer;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+
+                    goalList.appendChild(li);
+                });
+
+                updateStats();
+            }
+
+            // Add new goal
+            goalForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                const target = link.getAttribute('data-section');
+                const goalText = goalInput.value.trim();
                 
-                // Remove active class from all
-                navLinks.forEach(l => l.classList.remove('active'));
-                sections.forEach(s => s.classList.remove('active'));
-                
-                // Add active
-                link.classList.add('active');
-                document.getElementById(target).classList.add('active');
-                
-                // Load specific section data
-                if (target === 'stats' && currentUser) {
-                    setTimeout(async () => {
-                        await renderStats();
-                    }, 100);
-                } else if (target === 'achievements') {
-                    renderBadges();
+                if (goalText) {
+                    const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
+                    goals.push({
+                        text: goalText,
+                        completed: false,
+                        createdAt: new Date().toISOString(),
+                        id: Date.now()
+                    });
+                    
+                    localStorage.setItem('studyGoals', JSON.stringify(goals));
+                    goalInput.value = '';
+                    loadGoals();
+                    
+                    // Add XP for creating goals
+                    addXP(5, 'Created a new goal');
+                    showNotification('🎯 New goal added!', 'success');
                 }
             });
-        });
 
-        // --- Authentication Logic ---
-        const loginBtn = document.getElementById('login-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const userInfo = document.getElementById('user-info');
-        const userName = document.getElementById('user-name');
-        const offlineNotice = document.getElementById('offline-notice');
-        const userStats = document.getElementById('user-stats');
-
-        loginBtn.onclick = async () => {
-            try {
-                console.log('Starting login process...');
-                const provider = new firebase.auth.GoogleAuthProvider();
-                provider.addScope('email');
-                provider.addScope('profile');
+            // Global functions for goal management
+            window.toggleGoal = function(index) {
+                const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
+                const wasCompleted = goals[index].completed;
+                goals[index].completed = !goals[index].completed;
                 
-                const result = await auth.signInWithPopup(provider);
-                console.log('Login successful:', result.user.email);
-            } catch (error) {
-                console.error('Login error details:', error);
+                localStorage.setItem('studyGoals', JSON.stringify(goals));
+                loadGoals();
                 
-                if (error.code === 'auth/popup-closed-by-user') {
-                    alert('Login cancelled. Please try again.');
-                } else if (error.code === 'auth/unauthorized-domain') {
-                    alert('Domain not authorized. Please contact support.');
-                } else if (error.code === 'auth/popup-blocked') {
-                    alert('Popup blocked. Please allow popups and try again.');
-                } else {
-                    alert(`Login failed: ${error.message}`);
+                if (!wasCompleted && goals[index].completed) {
+                    addXP(20, 'Completed a goal');
+                    showNotification('🎉 Goal completed! Well done!', 'success');
+                    createConfetti();
                 }
-            }
-        };
+            };
 
-        logoutBtn.onclick = () => auth.signOut();
+            window.deleteGoal = function(index) {
+                const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
+                goals.splice(index, 1);
+                localStorage.setItem('studyGoals', JSON.stringify(goals));
+                loadGoals();
+                showNotification('🗑️ Goal deleted', 'info');
+            };
 
-        // Monitor online/offline status
-        window.addEventListener('online', () => {
-            isOnline = true;
-            offlineNotice.style.display = 'none';
-            if (currentUser) syncOfflineData();
-        });
-
-        window.addEventListener('offline', () => {
-            isOnline = false;
-            offlineNotice.style.display = 'block';
-        });
-
-        // Auth state listener
-        auth.onAuthStateChanged(async user => {
-            currentUser = user;
-            if (user) {
-                userName.textContent = user.displayName ? user.displayName.split(' ')[0] : 'User';
-                loginBtn.style.display = 'none';
-                userInfo.style.display = 'inline';
-                userStats.style.display = 'flex';
-                
-                // Load user data
-                await loadUserProgress();
-                await loadGoals();
-                await loadJournal();
-                
-                // Update UI
-                updateUserStats();
-                updateXPBar();
-                
-                // Set up notifications
-                await setupNotifications();
-            } else {
-                loginBtn.style.display = 'inline';
-                userInfo.style.display = 'none';
-                userStats.style.display = 'none';
-                
-                // Clear data display
-                document.getElementById('goal-list').innerHTML = '';
-                document.getElementById('journal-entries').innerHTML = '';
-            }
-        });
-
-        // --- User Progress Management ---
-        async function loadUserProgress() {
-            if (!currentUser) return;
-            
-            try {
-                const doc = await db.collection('userProgress').doc(currentUser.uid).get();
-                if (doc.exists) {
-                    userProgress = { ...userProgress, ...doc.data() };
-                } else {
-                    // Initialize new user
-                    await saveUserProgress();
-                }
-            } catch (error) {
-                console.error('Error loading user progress:', error);
-            }
+            loadGoals();
         }
 
-        async function saveUserProgress() {
-            if (!currentUser) return;
-            
-            try {
-                await db.collection('userProgress').doc(currentUser.uid).set({
-                    ...userProgress,
-                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } catch (error) {
-                console.error('Error saving user progress:', error);
-            }
-        }
-
+        // XP and Level System
         function addXP(amount, reason) {
             userProgress.xp += amount;
-            
-            // Check for level up
             const newLevel = Math.floor(userProgress.xp / 100) + 1;
+            
             if (newLevel > userProgress.level) {
                 userProgress.level = newLevel;
-                showNotification(`🎉 Level Up! You're now Level ${newLevel}!`, 'success');
-                checkBadges();
+                showNotification(`🌟 Level Up! You're now Level ${newLevel}!`, 'level-up');
+                createLevelUpEffect();
             }
             
-            updateXPBar();
-            updateUserStats();
+            updateStats();
             saveUserProgress();
             
-            // Show XP gain notification
+            // Show XP notification
             showNotification(`+${amount} XP - ${reason}`, 'xp');
         }
 
-        function updateXPBar() {
-            const currentXP = userProgress.xp % 100;
-            const percentage = currentXP;
+        function updateStats() {
+            const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
+            const completedGoals = goals.filter(g => g.completed).length;
             
-            document.getElementById('current-level').textContent = userProgress.level;
-            document.getElementById('current-xp').textContent = userProgress.xp;
-            document.getElementById('next-level-xp').textContent = userProgress.level * 100;
-            document.getElementById('xp-fill').style.width = `${percentage}%`;
-            document.getElementById('xp-percentage').textContent = `${currentXP}/100`;
-        }
-
-        function updateUserStats() {
             document.getElementById('user-level').textContent = userProgress.level;
             document.getElementById('user-xp').textContent = userProgress.xp;
-            document.getElementById('total-study-time').textContent = `${Math.floor(userProgress.totalStudyTime / 60)}h`;
+            document.getElementById('total-study-time').textContent = Math.floor(userProgress.totalStudyTime / 60) + 'h';
             document.getElementById('badges-earned').textContent = userProgress.badges.length;
-        }
-
-        // --- Pomodoro Timer Functions ---
-        const timerDisplay = document.getElementById('timer-display');
-        const timerMode = document.getElementById('timer-mode');
-        const startBtn = document.getElementById('start-btn');
-        const pauseBtn = document.getElementById('pause-btn');
-        const resetBtn = document.getElementById('reset-btn');
-        const focusBtn = document.getElementById('focus-btn');
-        const shortBreakBtn = document.getElementById('short-break-btn');
-        const longBreakBtn = document.getElementById('long-break-btn');
-        const sessionSubject = document.getElementById('session-subject');
-        const sessionsCount = document.getElementById('sessions-count');
-        const sessionLog = document.getElementById('session-log');
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(currentTime / 60);
-            const seconds = currentTime % 60;
-            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function startTimer() {
-            if (!isTimerRunning) {
-                isTimerRunning = true;
-                startBtn.textContent = '⏸️ Pause';
-                
-                timerInterval = setInterval(() => {
-                    currentTime--;
-                    updateTimerDisplay();
-                    
-                    if (currentTime <= 0) {
-                        completeSession();
-                    }
-                }, 1000);
-            } else {
-                pauseTimer();
+            document.getElementById('study-streak').textContent = userProgress.streak;
+            
+            // Show stats if user has data
+            if (userProgress.xp > 0 || goals.length > 0) {
+                document.getElementById('user-stats').style.display = 'flex';
             }
         }
 
-        function pauseTimer() {
-            isTimerRunning = false;
-            startBtn.textContent = '▶️ Start';
-            clearInterval(timerInterval);
+        function saveUserProgress() {
+            localStorage.setItem('userProgress', JSON.stringify(userProgress));
         }
 
-        function resetTimer() {
-            pauseTimer();
-            setTimerMode(currentMode);
-        }
-
-        function setTimerMode(mode) {
-            currentMode = mode;
-            pauseTimer();
-            
-            // Remove active class from all mode buttons
-            document.querySelectorAll('.timer-btn').forEach(btn => btn.classList.remove('active'));
-            
-            switch (mode) {
-                case 'focus':
-                    currentTime = 25 * 60;
-                    timerMode.textContent = 'Focus Session';
-                    focusBtn.classList.add('active');
-                    break;
-                case 'short-break':
-                    currentTime = 5 * 60;
-                    timerMode.textContent = 'Short Break';
-                    shortBreakBtn.classList.add('active');
-                    break;
-                case 'long-break':
-                    currentTime = 15 * 60;
-                    timerMode.textContent = 'Long Break';
-                    longBreakBtn.classList.add('active');
-                    break;
+        function loadUserProgress() {
+            const saved = localStorage.getItem('userProgress');
+            if (saved) {
+                userProgress = { ...userProgress, ...JSON.parse(saved) };
             }
-            
-            updateTimerDisplay();
+            updateStats();
         }
 
-        function completeSession() {
-            pauseTimer();
-            
-            if (currentMode === 'focus') {
-                sessionCount++;
-                const subject = sessionSubject.value;
-                const duration = 25; // minutes
-                
-                // Log the session
-                const session = {
-                    subject: subject,
-                    duration: duration,
-                    timestamp: new Date().toISOString(),
-                    date: new Date().toDateString()
-                };
-                
-                userProgress.sessions.push(session);
-                userProgress.totalStudyTime += duration;
-                
-                // Add XP for completing a session
-                addXP(25, 'Completed Pomodoro session');
-                
-                // Update session log
-                updateSessionLog();
-                
-                // Check for badges
-                checkBadges();
-                
-                // Play notification sound (if available)
-                showNotification('🎉 Focus session completed! Time for a break.', 'success');
-                
-                // Auto-switch to break
-                setTimerMode(sessionCount % 4 === 0 ? 'long-break' : 'short-break');
-            } else {
-                showNotification('Break completed! Ready for another focus session?', 'info');
-                setTimerMode('focus');
-            }
-            
-            saveUserProgress();
-        }
-
-        function updateSessionLog() {
-            sessionsCount.textContent = sessionCount;
-            
-            const todaySessions = userProgress.sessions.filter(session => 
-                session.date === new Date().toDateString()
-            );
-            
-            sessionLog.innerHTML = '';
-            todaySessions.slice(-5).reverse().forEach(session => {
-                const sessionCard = document.createElement('div');
-                sessionCard.className = 'session-card';
-                sessionCard.innerHTML = `
-                    <strong>${session.subject.charAt(0).toUpperCase() + session.subject.slice(1)}</strong>
-                    <br>
-                    <small>${session.duration} minutes • ${new Date(session.timestamp).toLocaleTimeString()}</small>
-                `;
-                sessionLog.appendChild(sessionCard);
-            });
-            
-            if (todaySessions.length === 0) {
-                sessionLog.innerHTML = '<p style="text-align: center; color: #666;">No sessions today. Start your first Pomodoro!</p>';
-            }
-        }
-
-        // Timer event listeners
-        startBtn.addEventListener('click', startTimer);
-        pauseBtn.addEventListener('click', pauseTimer);
-        resetBtn.addEventListener('click', resetTimer);
-        focusBtn.addEventListener('click', () => setTimerMode('focus'));
-        shortBreakBtn.addEventListener('click', () => setTimerMode('short-break'));
-        longBreakBtn.addEventListener('click', () => setTimerMode('long-break'));
-
-        // Initialize timer
-        setTimerMode('focus');
-
-        // --- Badge System ---
-        function checkBadges() {
-            badges.forEach(badge => {
-                if (!userProgress.badges.includes(badge.id)) {
-                    let earned = false;
-                    
-                    switch (badge.type) {
-                        case 'goals':
-                            // Count completed goals
-                            const completedGoals = goalsData.filter(g => g.completed).length;
-                            earned = completedGoals >= badge.threshold;
-                            break;
-                        case 'streak':
-                            // Check streak (simplified - could be more sophisticated)
-                            earned = calculateCurrentStreak() >= badge.threshold;
-                            break;
-                        case 'sessions':
-                            earned = userProgress.sessions.length >= badge.threshold;
-                            break;
-                        case 'time':
-                            earned = Math.floor(userProgress.totalStudyTime / 60) >= badge.threshold;
-                            break;
-                        case 'journal':
-                            earned = journalData.length >= badge.threshold;
-                            break;
-                        case 'level':
-                            earned = userProgress.level >= badge.threshold;
-                            break;
-                    }
-                    
-                    if (earned) {
-                        userProgress.badges.push(badge.id);
-                        showNotification(`🏆 Badge Earned: ${badge.name}!`, 'badge');
-                        addXP(50, `Earned ${badge.name} badge`);
-                    }
-                }
-            });
-            
-            saveUserProgress();
-        }
-
-        function renderBadges() {
-            const container = document.getElementById('badges-container');
-            container.innerHTML = '';
-            
-            badges.forEach(badge => {
-                const badgeElement = document.createElement('div');
-                const isEarned = userProgress.badges.includes(badge.id);
-                
-                badgeElement.className = `badge ${!isEarned ? 'locked' : ''}`;
-                badgeElement.innerHTML = `
-                    <div class="badge-icon">${badge.icon}</div>
-                    <div class="badge-name">${badge.name}</div>
-                    <div style="font-size: 0.7rem; margin-top: 5px;">${badge.description}</div>
-                `;
-                
-                container.appendChild(badgeElement);
-            });
-        }
-
-        function calculateCurrentStreak() {
-            if (journalData.length === 0) return 0;
-            
-            const today = new Date();
-            let streak = 0;
-            let currentDate = new Date(today);
-            
-            for (let i = 0; i < 30; i++) {
-                const dateStr = currentDate.toDateString();
-                const hasEntry = journalData.some(entry => {
-                    const entryDate = new Date(entry.date || entry);
-                    return entryDate.toDateString() === dateStr;
-                });
-                
-                if (hasEntry) {
-                    streak++;
-                } else if (i > 0) {
-                    break;
-                }
-                
-                currentDate.setDate(currentDate.getDate() - 1);
-            }
-            
-            return streak;
-        }
-
-        // --- Notification System ---
+        // Creative Notification System
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
+            const colors = {
+                success: 'linear-gradient(135deg, #11998e, #38ef7d)',
+                error: 'linear-gradient(135deg, #f093fb, #f5576c)',
+                info: 'linear-gradient(135deg, #667eea, #764ba2)',
+                xp: 'linear-gradient(135deg, #f093fb, #f5576c)',
+                'level-up': 'linear-gradient(135deg, #ffd700, #ffed4a)'
+            };
+
             notification.style.cssText = `
                 position: fixed;
                 top: 20px;
                 right: 20px;
-                background: ${type === 'success' ? '#4CAF50' : type === 'badge' ? '#FFD700' : type === 'xp' ? '#9C27B0' : '#2196F3'};
+                background: ${colors[type] || colors.info};
                 color: white;
-                padding: 15px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                z-index: 1000;
-                font-weight: 500;
-                animation: slideIn 0.3s ease;
+                padding: 20px 25px;
+                border-radius: 15px;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-weight: 600;
+                font-size: 1rem;
+                animation: slideInRight 0.5s ease, fadeOut 0.5s ease 3s;
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255,255,255,0.2);
             `;
-            
+
             notification.textContent = message;
             document.body.appendChild(notification);
-            
+
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease';
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 4000);
+        }
+
+        // Confetti Effect
+        function createConfetti() {
+            const colors = ['#38ef7d', '#667eea', '#f093fb', '#764ba2', '#11998e'];
+            const confettiCount = 50;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.style.cssText = `
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    top: -10px;
+                    left: ${Math.random() * 100}%;
+                    border-radius: 50%;
+                    pointer-events: none;
+                    z-index: 10000;
+                    animation: confettiFall ${Math.random() * 2 + 2}s linear forwards;
+                `;
+                
+                document.body.appendChild(confetti);
+                
                 setTimeout(() => {
-                    document.body.removeChild(notification);
-                }, 300);
-            }, 3000);
-        }
-
-        // Add CSS for notification animations
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
-
-        // --- Push Notifications Setup ---
-        async function setupNotifications() {
-            try {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    const token = await messaging.getToken({
-                        vapidKey: "BIAkTRN4KwY4b775wFL5SGsjYvlCVEVia6olhpEn2by5LKf7hohw09Q4vJvRPCq1SvLbSrFQHmnVZxgSWXxu1TU"
-                    });
-                    
-                    if (token) {
-                        console.log('FCM Token:', token);
-                        await db.collection('fcmTokens').doc(currentUser.uid).set({
-                            token: token,
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                        
-                        setTimeout(() => {
-                            showNotification('StudySync is ready! Start your productive journey! 🚀', 'success');
-                        }, 2000);
+                    if (confetti.parentNode) {
+                        confetti.parentNode.removeChild(confetti);
                     }
+                }, 4000);
+            }
+        }
+
+        // Level Up Effect
+        function createLevelUpEffect() {
+            const effect = document.createElement('div');
+            effect.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 3rem;
+                font-weight: bold;
+                color: #ffd700;
+                z-index: 10000;
+                animation: levelUpPulse 2s ease forwards;
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+                pointer-events: none;
+            `;
+            effect.textContent = '🌟 LEVEL UP! 🌟';
+            document.body.appendChild(effect);
+
+            setTimeout(() => {
+                if (effect.parentNode) {
+                    effect.parentNode.removeChild(effect);
                 }
-            } catch (error) {
-                console.error('Notification setup error:', error);
-            }
+            }, 2000);
+
+            createConfetti();
         }
 
-        // --- Analytics Functions (from Phase 3) ---
-        async function renderStats() {
-            if (!currentUser) {
-                console.log('No user logged in');
-                return;
-            }
-
-            try {
-                console.log('Loading analytics data...');
-                
-                document.getElementById('streak-counter').innerHTML = 'Loading streak...';
-                document.getElementById('goals-summary').innerHTML = 'Loading...';
-                document.getElementById('total-time').textContent = 'Loading...';
-                document.getElementById('completed-goals').textContent = 'Loading...';
-                document.getElementById('best-day').textContent = 'Loading...';
-                document.getElementById('top-subject').textContent = 'Loading...';
-                
-                await updateStreakCounter();
-                await renderGoalChart();
-                await renderTimeChart();
-                await updateWeeklySummary();
-                
-                console.log('Analytics loaded successfully');
-                
-            } catch (error) {
-                console.error('Error rendering stats:', error);
-                showErrorMessage();
-            }
-        }
-
-        async function updateStreakCounter() {
-            try {
-                const journalDoc = await db.collection('journal').doc(currentUser.uid).get();
-                const entries = journalDoc.exists ? journalDoc.data().entries || [] : [];
-                
-                let streak = calculateCurrentStreak();
-                document.getElementById('streak-counter').innerHTML = `${streak} day${streak !== 1 ? 's' : ''} 🔥`;
-            } catch (error) {
-                console.error('Error updating streak:', error);
-                document.getElementById('streak-counter').innerHTML = '0 days 🔥';
-            }
-        }
-
-        async function renderGoalChart() {
-            try {
-                const goalsDoc = await db.collection('goals').doc(currentUser.uid).get();
-                const goalsData = goalsDoc.exists ? goalsDoc.data().items || [] : [];
-                
-                const completed = goalsData.filter(g => g.completed).length;
-                const pending = goalsData.length - completed;
-                const total = goalsData.length;
-                
-                document.getElementById('goals-summary').innerHTML = `${completed}/${total}`;
-                
-                if (goalChart) {
-                    goalChart.destroy();
-                }
-                
-                const ctx = document.getElementById('goalChart').getContext('2d');
-                goalChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Completed', 'Pending'],
-                        datasets: [{
-                            data: [completed, pending || 1],
-                            backgroundColor: ['#28a745', '#dc3545'],
-                            borderWidth: 2,
-                            borderColor: '#fff'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 20,
-                                    font: { size: 14 }
-                                }
-                            }
-                        }
-                    }
-                });
-                
-            } catch (error) {
-                console.error('Error rendering goal chart:', error);
-            }
-        }
-
-        async function renderTimeChart() {
-            try {
-                const subjects = ['Math', 'Physics', 'Electronics', 'Python', 'Communication'];
-                
-                // Use real session data if available
-                let hours = [0, 0, 0, 0, 0];
-                
-                if (userProgress.sessions && userProgress.sessions.length > 0) {
-                    userProgress.sessions.forEach(session => {
-                        const subjectIndex = subjects.findIndex(s => 
-                            s.toLowerCase() === session.subject.toLowerCase()
-                        );
-                        if (subjectIndex !== -1) {
-                            hours[subjectIndex] += session.duration / 60; // Convert to hours
-                        }
-                    });
-                } else {
-                    hours = [4.5, 3.2, 2.8, 1.5, 2.1]; // Default sample data
-                }
-                
-                if (timeChart) {
-                    timeChart.destroy();
-                }
-                
-                const ctx = document.getElementById('timeChart').getContext('2d');
-                timeChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: subjects,
-                        datasets: [{
-                            label: 'Hours',
-                            data: hours,
-                            backgroundColor: [
-                                '#4a90e2',
-                                '#28a745',
-                                '#ffc107',
-                                '#17a2b8',
-                                '#6f42c1'
-                            ],
-                            borderRadius: 6,
-                            borderSkipped: false
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Hours',
-                                    font: { size: 14, weight: 'bold' }
-                                }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Subjects',
-                                    font: { size: 14, weight: 'bold' }
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: { display: false }
-                        }
-                    }
-                });
-                
-            } catch (error) {
-                console.error('Error rendering time chart:', error);
-            }
-        }
-
-        async function updateWeeklySummary() {
-            try {
-                const goalsDoc = await db.collection('goals').doc(currentUser.uid).get();
-                const goalsData = goalsDoc.exists ? goalsDoc.data().items || [] : [];
-                const completed = goalsData.filter(g => g.completed).length;
-                
-                const totalTime = Math.floor(userProgress.totalStudyTime / 60);
-                const subjects = ['Mathematics', 'Physics', 'Electronics', 'Python', 'Communication'];
-                const topSubject = subjects[0]; // Could be calculated from session data
-                
-                document.getElementById('total-time').textContent = `${totalTime} hours`;
-                document.getElementById('completed-goals').textContent = `${completed}/${goalsData.length}`;
-                document.getElementById('best-day').textContent = 'Today';
-                document.getElementById('top-subject').textContent = topSubject;
-                
-            } catch (error) {
-                console.error('Error updating weekly summary:', error);
-            }
-        }
-
-        function showErrorMessage() {
-            document.getElementById('streak-counter').innerHTML = 'Error loading data';
-            document.getElementById('goals-summary').innerHTML = 'Error';
-            document.getElementById('total-time').textContent = 'Error';
-            document.getElementById('completed-goals').textContent = 'Error';
-            document.getElementById('best-day').textContent = 'Error';
-            document.getElementById('top-subject').textContent = 'Error';
-        }
-
-        // --- Goals Management ---
-        const goalsForm = document.getElementById('goal-form');
-        const goalInput = document.getElementById('goal-input');
-        const goalList = document.getElementById('goal-list');
-        let goalsData = [];
-
-        async function loadGoals() {
-            if (!currentUser) return;
-            
-            try {
-                const doc = await db.collection('goals').doc(currentUser.uid).get();
-                goalsData = doc.exists ? doc.data().items || [] : [];
-                renderGoals();
-            } catch (error) {
-                console.error('Error loading goals:', error);
-                goalsData = JSON.parse(localStorage.getItem('studyGoals') || '[]');
-                renderGoals();
-            }
-        }
-
-        async function saveGoals() {
-            if (!currentUser) return;
-            
-            if (isOnline) {
-                try {
-                    await db.collection('goals').doc(currentUser.uid).set({ 
-                        items: goalsData,
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                } catch (error) {
-                    console.error('Error saving goals:', error);
-                    localStorage.setItem('studyGoals', JSON.stringify(goalsData));
-                }
-            } else {
-                localStorage.setItem('studyGoals', JSON.stringify(goalsData));
-                localStorage.setItem('goalsPendingSync', 'true');
-            }
-        }
-
-        function renderGoals() {
-            goalList.innerHTML = '';
-            goalsData.forEach((goal, idx) => {
-                const li = document.createElement('li');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.checked = goal.completed;
-                
-                checkbox.addEventListener('change', async () => {
-                    const wasCompleted = goalsData[idx].completed;
-                    goalsData[idx].completed = checkbox.checked;
-                    goalsData[idx].updatedAt = new Date().toISOString();
-                    
-                    // Add XP for completing a goal
-                    if (!wasCompleted && checkbox.checked) {
-                        addXP(20, 'Completed a goal');
-                        checkBadges();
-                    }
-                    
-                    await saveGoals();
-                });
-                
-                li.appendChild(checkbox);
-                const span = document.createElement('span');
-                span.textContent = goal.text;
-                if (goal.completed) {
-                    span.style.textDecoration = 'line-through';
-                    span.style.opacity = '0.6';
-                }
-                li.appendChild(span);
-                
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = '×';
-                deleteBtn.style.marginLeft = 'auto';
-                deleteBtn.style.padding = '2px 8px';
-                deleteBtn.style.fontSize = '16px';
-                deleteBtn.style.background = '#ff4444';
-                deleteBtn.onclick = async () => {
-                    goalsData.splice(idx, 1);
-                    await saveGoals();
-                    renderGoals();
-                };
-                li.appendChild(deleteBtn);
-                
-                goalList.appendChild(li);
-            });
-        }
-
-        goalsForm.addEventListener('submit', async e => {
-            e.preventDefault();
-            const newGoal = goalInput.value.trim();
-            if (newGoal) {
-                goalsData.push({
-                    text: newGoal,
-                    completed: false,
-                    createdAt: new Date().toISOString(),
-                    id: Date.now().toString()
-                });
-                
-                // Add XP for creating a goal
-                addXP(5, 'Created a new goal');
-                
-                await saveGoals();
-                goalInput.value = '';
-                renderGoals();
-            }
-        });
-
-        // --- Journal Management ---
-        const journalForm = document.getElementById('journal-form');
-        const journalText = document.getElementById('journal-text');
-        const journalEntries = document.getElementById('journal-entries');
-        let journalData = [];
-
-        async function loadJournal() {
-            if (!currentUser) return;
-            
-            try {
-                const doc = await db.collection('journal').doc(currentUser.uid).get();
-                journalData = doc.exists ? doc.data().entries || [] : [];
-                renderJournal();
-            } catch (error) {
-                console.error('Error loading journal:', error);
-                journalData = JSON.parse(localStorage.getItem('studyJournal') || '[]');
-                renderJournal();
-            }
-        }
-
-        async function saveJournal() {
-            if (!currentUser) return;
-            
-            if (isOnline) {
-                try {
-                    await db.collection('journal').doc(currentUser.uid).set({ 
-                        entries: journalData,
-                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                } catch (error) {
-                    console.error('Error saving journal:', error);
-                    localStorage.setItem('studyJournal', JSON.stringify(journalData));
-                }
-            } else {
-                localStorage.setItem('studyJournal', JSON.stringify(journalData));
-                localStorage.setItem('journalPendingSync', 'true');
-            }
-        }
-
-        function renderJournal() {
-            journalEntries.innerHTML = '';
-            [...journalData].reverse().forEach((entry, idx) => {
-                const li = document.createElement('li');
-                li.style.padding = '8px 0';
-                li.style.borderBottom = '1px solid #eee';
-                li.style.fontSize = '0.95rem';
-                
-                const entryText = typeof entry === 'string' ? entry : 
-                    `${new Date(entry.date).toLocaleDateString()}: ${entry.text}`;
-                li.textContent = entryText;
-                
-                journalEntries.appendChild(li);
-            });
-        }
-
-        journalForm.addEventListener('submit', async e => {
-            e.preventDefault();
-            const entry = journalText.value.trim();
-            if (entry) {
-                const newEntry = {
-                    text: entry,
-                    date: new Date().toISOString(),
-                    id: Date.now().toString()
-                };
-                journalData.push(newEntry);
-                
-                // Add XP for journal entry
-                addXP(10, 'Wrote a journal entry');
-                checkBadges();
-                
-                await saveJournal();
-                journalText.value = '';
-                renderJournal();
-            }
-        });
-
-        // --- Offline Data Sync ---
-        async function syncOfflineData() {
-            if (!currentUser || !isOnline) return;
-            
-            try {
-                if (localStorage.getItem('goalsPendingSync')) {
-                    const localGoals = JSON.parse(localStorage.getItem('studyGoals') || '[]');
-                    if (localGoals.length > 0) {
-                        await db.collection('goals').doc(currentUser.uid).set({ 
-                            items: localGoals,
-                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-                            syncedFromOffline: true
-                        });
-                        localStorage.removeItem('goalsPendingSync');
-                    }
-                }
-                
-                if (localStorage.getItem('journalPendingSync')) {
-                    const localJournal = JSON.parse(localStorage.getItem('studyJournal') || '[]');
-                    if (localJournal.length > 0) {
-                        await db.collection('journal').doc(currentUser.uid).set({ 
-                            entries: localJournal,
-                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
-                            syncedFromOffline: true
-                        });
-                        localStorage.removeItem('journalPendingSync');
-                    }
-                }
-                
-                console.log('Offline data synced successfully');
-            } catch (error) {
-                console.error('Error syncing offline data:', error);
-            }
-        }
-
-        // --- Motivation Quotes ---
+        // Motivational Quotes
         const quotes = [
-            "Success is the sum of small efforts, repeated day in and day out.",
-            "Don't watch the clock; do what it does. Keep going.",
-            "Believe in yourself and all that you are.",
+            "Success is the sum of small efforts, repeated day in and day out. — Robert Collier",
+            "The future belongs to those who believe in the beauty of their dreams. — Eleanor Roosevelt",
+            "Education is the most powerful weapon which you can use to change the world. — Nelson Mandela",
+            "The only way to do great work is to love what you do. — Steve Jobs",
             "Your limitation—it's only your imagination.",
             "Push yourself, because no one else is going to do it for you.",
             "Great things never come from comfort zones.",
             "Dream it. Wish it. Do it.",
-            "Stay positive, work hard, make it happen.",
-            "The secret of getting ahead is getting started.",
-            "It's going to be hard, but hard does not mean impossible.",
-            "The future belongs to those who believe in the beauty of their dreams.",
-            "Education is the most powerful weapon which you can use to change the world.",
-            "The only way to do great work is to love what you do.",
-            "Success is not final, failure is not fatal; it is the courage to continue that counts.",
-            "Your education is a dress rehearsal for a life that is yours to lead."
+            "Success doesn't just find you. You have to go out and get it.",
+            "The harder you work for something, the greater you'll feel when you achieve it."
         ];
 
-        const motivationQuote = document.getElementById('motivation-quote');
-        const newQuoteBtn = document.getElementById('new-quote-btn');
-        const quoteHistory = document.getElementById('quote-history');
-        let usedQuotes = [];
-
         function displayRandomQuote() {
-            if (usedQuotes.length === quotes.length) {
-                usedQuotes = [];
-                quoteHistory.innerHTML = '';
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            const parts = randomQuote.split(' — ');
+            const quote = parts[0];
+            const author = parts[1] || '';
+            
+            document.getElementById('home-quote').textContent = quote;
+            
+            if (author) {
+                const authorElement = document.querySelector('.quote-author');
+                authorElement.textContent = `— ${author}`;
             }
-            
-            let index = Math.floor(Math.random() * quotes.length);
-            while (usedQuotes.includes(index)) {
-                index = Math.floor(Math.random() * quotes.length);
-            }
-            
-            usedQuotes.push(index);
-            motivationQuote.textContent = quotes[index];
-            
-            const li = document.createElement('li');
-            li.textContent = quotes[index];
-            li.style.padding = '5px 0';
-            li.style.borderBottom = '1px solid #eee';
-            li.style.fontSize = '0.9rem';
-            li.style.fontStyle = 'italic';
-            quoteHistory.insertBefore(li, quoteHistory.firstChild);
         }
 
-        newQuoteBtn.addEventListener('click', displayRandomQuote);
-        
-        // Initialize with a quote
-        displayRandomQuote();
+        // Floating Action Button
+        function initFAB() {
+            const motivateBtn = document.getElementById('motivate-btn');
+            motivateBtn.addEventListener('click', () => {
+                displayRandomQuote();
+                showNotification('✨ New inspiration loaded!', 'success');
+                addXP(2, 'Sought motivation');
+            });
+        }
 
-        // Update header quote every 30 seconds
-        setInterval(() => {
-            const headerQuote = document.getElementById('quote');
-            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            headerQuote.textContent = `"${randomQuote}"`;
-        }, 30000);
-
-        // Initialize app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!isOnline) {
-                offlineNotice.style.display = 'block';
+        // CSS Animations
+        const additionalCSS = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
             
-            // Load session count from today's sessions
-            updateSessionLog();
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            
+            @keyframes confettiFall {
+                to {
+                    transform: translateY(100vh) rotateZ(360deg);
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes levelUpPulse {
+                0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+                50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+                100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+            }
+        `;
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = additionalCSS;
+        document.head.appendChild(styleSheet);
+
+        // Initialize Everything
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            initNavigation();
+            initGoalSystem();
+            initFAB();
+            loadUserProgress();
+            displayRandomQuote();
+            
+            // Welcome message
+            setTimeout(() => {
+                showNotification('🚀 Welcome to StudySync! Let\'s achieve greatness together!', 'success');
+            }, 1000);
         });
     </script>
 </body>
