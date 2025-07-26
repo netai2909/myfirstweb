@@ -3,1215 +3,623 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySync Pro | Reliable Study Tracker</title>
+    <title>StudySync Pro | ECE Study Tracker</title>
+    <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #4a90e2;
-            --primary-dark: #357abd;
-            --secondary: #38ef7d;
-            --accent: #ff6b6b;
-            --success: #27ae60;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --dark: #2c3e50;
-            --light: #ecf0f1;
-            --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            --border-radius: 15px;
-            --transition: all 0.3s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--background);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            color: var(--dark);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        /* Loading Screen */
-        .loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--background);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-            color: white;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 1rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .loading-subtext {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        /* Error Screen */
-        .error-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10001;
-            color: white;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .error-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-        }
-
-        .error-title {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        .error-message {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            line-height: 1.6;
-        }
-
-        .retry-button {
-            background: white;
-            color: var(--danger);
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .retry-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        /* Header */
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 1.5rem 2rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--card-shadow);
-        }
-
-        .header-content {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .connection-status {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .connection-status.online {
-            background: rgba(39, 174, 96, 0.1);
-            color: var(--success);
-        }
-
-        .connection-status.offline {
-            background: rgba(231, 76, 60, 0.1);
-            color: var(--danger);
-        }
-
-        /* Navigation */
-        nav {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(15px);
-            border-radius: 50px;
-            margin: 1rem auto;
-            max-width: 1000px;
-            padding: 0.5rem;
-            display: flex;
-            justify-content: center;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-item {
-            padding: 1rem 1.5rem;
-            border-radius: 25px;
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            color: white;
-            background: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1400px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        /* Glass Cards */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--border-radius);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--card-shadow);
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .card-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Section Management */
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-            animation: fadeInUp 0.6s ease;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Button System */
-        .btn {
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.4);
-        }
-
-        /* Form Elements */
-        .form-input {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid rgba(74, 144, 226, 0.2);
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            font-family: inherit;
-            transition: var(--transition);
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-            background: white;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-        }
-
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 100px;
-            right: 20px;
-            padding: 1rem 2rem;
-            border-radius: var(--border-radius);
-            color: white;
-            font-weight: 600;
-            z-index: 10000;
-            animation: slideInRight 0.5s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-width: 400px;
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
-        }
-
-        .notification.success { background: var(--success); }
-        .notification.error { background: var(--danger); }
-        .notification.warning { background: var(--warning); }
-        .notification.info { background: var(--primary); }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            nav {
-                margin: 1rem;
-                border-radius: 20px;
-            }
-
-            .nav-item {
-                flex: 1;
-                justify-content: center;
-                padding: 0.8rem 1rem;
-                font-size: 0.8rem;
-            }
-
-            .container {
-                margin: 1rem auto;
-                padding: 0 0.5rem;
-            }
-
-            .glass-card {
-                padding: 1.5rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Offline Mode */
-        .offline-banner {
-            background: var(--warning);
-            color: white;
-            text-align: center;
-            padding: 0.8rem;
-            font-weight: 600;
-            display: none;
-        }
-
-        .offline-banner.show {
-            display: block;
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <!-- Loading Screen -->
-    <div class="loading-screen" id="loading-screen">
+    <div id="loading-screen" class="loading-screen">
         <div class="loading-spinner"></div>
-        <div class="loading-text">Loading StudySync Pro</div>
-        <div class="loading-subtext">Setting up your study environment...</div>
+        <h2>Loading StudySync Pro...</h2>
+        <p>Setting up your study environment</p>
     </div>
 
-    <!-- Error Screen -->
-    <div class="error-screen" id="error-screen">
-        <div class="error-icon">
-            <i class="fas fa-exclamation-triangle"></i>
-        </div>
-        <div class="error-title">Oops! Something went wrong</div>
-        <div class="error-message" id="error-message">
-            We're having trouble loading StudySync. This might be due to a network issue or browser compatibility problem.
-        </div>
-        <button class="retry-button" onclick="retryLoading()">
-            <i class="fas fa-redo"></i> Try Again
-        </button>
-        <div style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.8;">
-            <p><strong>Quick fixes:</strong></p>
-            <p>• Clear your browser cache and cookies</p>
-            <p>• Try a different browser (Chrome, Firefox, Edge)</p>
-            <p>• Check your internet connection</p>
-            <p>• Disable browser extensions temporarily</p>
-        </div>
-    </div>
+    <!-- Authentication Modal -->
+    <div id="auth-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="auth-title">Welcome to StudySync Pro</h2>
+            <p class="auth-subtitle">Your intelligent ECE study companion</p>
+            
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form">
+                <div class="form-group">
+                    <label for="login-username">Username or Email</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+            </form>
 
-    <!-- Offline Banner -->
-    <div class="offline-banner" id="offline-banner">
-        <i class="fas fa-wifi-slash"></i> You're offline. StudySync will sync when connection is restored.
+            <!-- Register Form -->
+            <form id="register-form" class="auth-form" style="display: none;">
+                <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-confirm">Confirm Password</label>
+                    <input type="password" id="register-confirm" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="auth-toggle">
+                <button id="show-register" class="btn-link">Don't have an account? Sign up</button>
+                <button id="show-login" class="btn-link" style="display: none;">Already have an account? Login</button>
+            </div>
+        </div>
     </div>
 
     <!-- Main Application -->
     <div id="main-app" style="display: none;">
         <!-- Header -->
-        <header>
+        <header class="header">
             <div class="header-content">
-                <a href="#" class="logo">
+                <div class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                    StudySync Pro
-                </a>
-                <div class="connection-status online" id="connection-status">
-                    <i class="fas fa-wifi"></i>
-                    <span id="status-text">Connected</span>
+                    <span>StudySync Pro</span>
+                </div>
+                <div class="user-info">
+                    <span id="user-welcome">Welcome, <span id="username">User</span>!</span>
+                    <button id="logout-btn" class="btn btn-secondary">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
                 </div>
             </div>
         </header>
 
         <!-- Navigation -->
-        <nav>
-            <a href="#" class="nav-item active" data-section="dashboard">
+        <nav class="nav">
+            <button class="nav-item active" data-section="dashboard">
                 <i class="fas fa-chart-line"></i> Dashboard
-            </a>
-            <a href="#" class="nav-item" data-section="goals">
+            </button>
+            <button class="nav-item" data-section="goals">
                 <i class="fas fa-bullseye"></i> Goals
-            </a>
-            <a href="#" class="nav-item" data-section="timer">
+            </button>
+            <button class="nav-item" data-section="timer">
                 <i class="fas fa-clock"></i> Timer
-            </a>
-            <a href="#" class="nav-item" data-section="analytics">
-                <i class="fas fa-chart-pie"></i> Analytics
-            </a>
-            <a href="#" class="nav-item" data-section="journal">
+            </button>
+            <button class="nav-item" data-section="journal">
                 <i class="fas fa-book"></i> Journal
-            </a>
-            <a href="#" class="nav-item" data-section="resources">
+            </button>
+            <button class="nav-item" data-section="analytics">
+                <i class="fas fa-chart-pie"></i> Analytics
+            </button>
+            <button class="nav-item" data-section="resources">
                 <i class="fas fa-library"></i> Resources
-            </a>
+            </button>
         </nav>
 
-        <!-- Main Container -->
-        <div class="container">
+        <!-- Main Content -->
+        <main class="main-content">
             <!-- Dashboard Section -->
-            <section class="section active" id="dashboard">
-                <div class="glass-card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fas fa-chart-bar"></i>
-                            Study Dashboard
-                        </h2>
-                        <button class="btn btn-primary" onclick="refreshData()">
-                            <i class="fas fa-sync-alt"></i> Refresh
-                        </button>
-                    </div>
+            <section id="dashboard" class="section active">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Study Dashboard</h2>
+                    <button id="refresh-dashboard" class="btn btn-primary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
 
-                    <!-- Quick Stats -->
-                    <div class="stats-grid">
-                        <div class="stat-card" style="background: linear-gradient(135deg, var(--success), #219a52);">
-                            <div class="stat-value" id="total-goals">0</div>
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="total-goals">0</div>
                             <div class="stat-label">Total Goals</div>
                         </div>
-                        <div class="stat-card" style="background: linear-gradient(135deg, var(--primary), var(--primary-dark));">
-                            <div class="stat-value" id="completed-goals">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="completed-goals">0</div>
                             <div class="stat-label">Completed</div>
                         </div>
-                        <div class="stat-card" style="background: linear-gradient(135deg, var(--warning), #d68910);">
-                            <div class="stat-value" id="study-streak">0</div>
-                            <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
                         </div>
-                        <div class="stat-card" style="background: linear-gradient(135deg, var(--accent), #e55353);">
-                            <div class="stat-value" id="total-time">0h</div>
-                            <div class="stat-label">Study Time</div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="weekly-hours">0h</div>
+                            <div class="stat-label">This Week</div>
                         </div>
                     </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-number" id="study-streak">0</div>
+                            <div class="stat-label">Day Streak</div>
+                        </div>
+                    </div>
+                </div>
 
-                    <!-- ECE Progress Overview -->
-                    <div class="glass-card">
-                        <h3 style="color: var(--primary); margin-bottom: 1rem;">📚 ECE Subject Progress</h3>
-                        <div style="overflow-x: auto;">
-                            <table style="width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background: var(--primary); color: white;">
-                                        <th style="padding: 1rem; text-align: left;">Subject</th>
-                                        <th style="padding: 1rem; text-align: left;">Current Focus</th>
-                                        <th style="padding: 1rem; text-align: left;">Progress</th>
-                                        <th style="padding: 1rem; text-align: left;">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr style="border-bottom: 1px solid #eee;">
-                                        <td style="padding: 1rem;"><strong>Engineering Mathematics</strong></td>
-                                        <td style="padding: 1rem;">Calculus, Integration, Matrix Operations</td>
-                                        <td style="padding: 1rem;">75%</td>
-                                        <td style="padding: 1rem;"><span style="color: var(--success);">✅ On Track</span></td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #eee;">
-                                        <td style="padding: 1rem;"><strong>Physics</strong></td>
-                                        <td style="padding: 1rem;">Mechanics, Kinematics, Thermodynamics</td>
-                                        <td style="padding: 1rem;">60%</td>
-                                        <td style="padding: 1rem;"><span style="color: var(--warning);">⚠️ Behind</span></td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #eee;">
-                                        <td style="padding: 1rem;"><strong>Electronics & Electrical</strong></td>
-                                        <td style="padding: 1rem;">Ohm's Law, Circuits, Semiconductors</td>
-                                        <td style="padding: 1rem;">85%</td>
-                                        <td style="padding: 1rem;"><span style="color: var(--success);">✅ Excellent</span></td>
-                                    </tr>
-                                    <tr style="border-bottom: 1px solid #eee;">
-                                        <td style="padding: 1rem;"><strong>Python Programming</strong></td>
-                                        <td style="padding: 1rem;">Variables, Loops, Functions, Projects</td>
-                                        <td style="padding: 1rem;">45%</td>
-                                        <td style="padding: 1rem;"><span style="color: var(--danger);">🔴 Needs Focus</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 1rem;"><strong>Professional Communication</strong></td>
-                                        <td style="padding: 1rem;">Email Writing, Technical Reports</td>
-                                        <td style="padding: 1rem;">90%</td>
-                                        <td style="padding: 1rem;"><span style="color: var(--success);">✅ Excellent</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <!-- ECE Subject Progress -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-graduation-cap"></i> ECE Subject Progress</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="progress-grid">
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="subject-name">Engineering Mathematics</span>
+                                    <span class="progress-percentage">75%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%"></div>
+                                </div>
+                                <small>Calculus, Integration, Matrix Operations</small>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="subject-name">Physics</span>
+                                    <span class="progress-percentage">60%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                                <small>Mechanics, Kinematics, Thermodynamics</small>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="subject-name">Electronics & Electrical</span>
+                                    <span class="progress-percentage">85%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 85%"></div>
+                                </div>
+                                <small>Ohm's Law, Circuits, Semiconductors</small>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="subject-name">Python Programming</span>
+                                    <span class="progress-percentage">45%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 45%"></div>
+                                </div>
+                                <small>Variables, Loops, Functions, Projects</small>
+                            </div>
+                            <div class="progress-item">
+                                <div class="progress-header">
+                                    <span class="subject-name">Professional Communication</span>
+                                    <span class="progress-percentage">90%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 90%"></div>
+                                </div>
+                                <small>Email Writing, Technical Reports</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Goals Section -->
-            <section class="section" id="goals">
-                <div class="glass-card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fas fa-bullseye"></i>
-                            Study Goals
-                        </h2>
-                    </div>
+            <section id="goals" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-bullseye"></i> Study Goals</h2>
+                    <button id="add-goal-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Goal
+                    </button>
+                </div>
 
-                    <!-- Add Goal Form -->
-                    <form id="goal-form" style="margin-bottom: 2rem;">
-                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: end;">
-                            <div style="flex: 1; min-width: 300px;">
-                                <input type="text" class="form-input" id="goal-input" 
-                                       placeholder="Enter your study goal (e.g., Complete NPTEL Calculus Lecture 3)" required>
+                <!-- Add Goal Form -->
+                <div id="goal-form-container" class="card" style="display: none;">
+                    <div class="card-header">
+                        <h3>Add New Goal</h3>
+                        <button id="cancel-goal" class="btn btn-secondary">Cancel</button>
+                    </div>
+                    <div class="card-content">
+                        <form id="goal-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="goal-title">Goal Title *</label>
+                                    <input type="text" id="goal-title" required placeholder="e.g., Complete NPTEL Calculus Lecture 3">
+                                </div>
+                                <div class="form-group">
+                                    <label for="goal-subject">Subject</label>
+                                    <select id="goal-subject">
+                                        <option value="mathematics">Engineering Mathematics</option>
+                                        <option value="physics">Physics</option>
+                                        <option value="electronics">Electronics & Electrical</option>
+                                        <option value="python">Python Programming</option>
+                                        <option value="communication">Professional Communication</option>
+                                        <option value="general">General</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="goal-priority">Priority</label>
+                                    <select id="goal-priority">
+                                        <option value="low">Low</option>
+                                        <option value="medium" selected>Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="goal-deadline">Deadline (Optional)</label>
+                                    <input type="date" id="goal-deadline">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="goal-description">Description (Optional)</label>
+                                <textarea id="goal-description" rows="3" placeholder="Additional details about this goal..."></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Add Goal
+                                <i class="fas fa-save"></i> Save Goal
                             </button>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
+                </div>
 
-                    <!-- Goals List -->
-                    <div id="goals-container">
-                        <div style="text-align: center; padding: 3rem; color: var(--primary); opacity: 0.7;">
-                            <i class="fas fa-bullseye" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                            <p style="font-size: 1.2rem;">No goals yet. Add your first study goal above!</p>
+                <!-- Goals List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Your Goals</h3>
+                        <div class="goals-filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="pending">Pending</button>
+                            <button class="filter-btn" data-filter="completed">Completed</button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div id="goals-list" class="goals-list">
+                            <!-- Goals will be loaded here -->
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Timer Section -->
-            <section class="section" id="timer">
-                <div class="glass-card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fas fa-clock"></i>
-                            Study Timer
-                        </h2>
-                    </div>
-                    <div style="text-align: center; padding: 3rem; color: var(--primary);">
-                        <i class="fas fa-clock" style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.3;"></i>
-                        <h3>Pomodoro Timer</h3>
-                        <p>Advanced timer functionality coming soon!</p>
-                    </div>
+            <section id="timer" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-clock"></i> Study Timer</h2>
                 </div>
-            </section>
 
-            <!-- Analytics Section -->
-            <section class="section" id="analytics">
-                <div class="glass-card">
+                <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fas fa-chart-pie"></i>
-                            Study Analytics
-                        </h2>
+                        <h3>Pomodoro Timer</h3>
+                        <div class="timer-mode-selector">
+                            <button class="timer-mode-btn active" data-duration="25">Focus (25min)</button>
+                            <button class="timer-mode-btn" data-duration="5">Short Break (5min)</button>
+                            <button class="timer-mode-btn" data-duration="15">Long Break (15min)</button>
+                        </div>
                     </div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                        <div class="glass-card" style="text-align: center;">
-                            <h4>📊 Goal Completion Rate</h4>
-                            <div style="font-size: 3rem; color: var(--primary); font-weight: bold; margin: 1rem 0;" id="completion-rate">0%</div>
-                            <p>Goals completed this week</p>
+                    <div class="card-content">
+                        <div class="timer-container">
+                            <div class="timer-circle">
+                                <div class="timer-display">25:00</div>
+                                <div class="timer-label">Focus Session</div>
+                            </div>
+                            <div class="timer-controls">
+                                <button id="start-timer" class="btn btn-primary">
+                                    <i class="fas fa-play"></i> Start
+                                </button>
+                                <button id="pause-timer" class="btn btn-secondary" disabled>
+                                    <i class="fas fa-pause"></i> Pause
+                                </button>
+                                <button id="reset-timer" class="btn btn-secondary">
+                                    <i class="fas fa-redo"></i> Reset
+                                </button>
+                            </div>
                         </div>
-                        <div class="glass-card" style="text-align: center;">
-                            <h4>📝 Study Consistency</h4>
-                            <div style="font-size: 3rem; color: var(--success); font-weight: bold; margin: 1rem 0;" id="consistency-score">0%</div>
-                            <p>Weekly consistency score</p>
-                        </div>
-                        <div class="glass-card" style="text-align: center;">
-                            <h4>🎯 Focus Areas</h4>
-                            <div style="font-size: 2rem; color: var(--warning); font-weight: bold; margin: 1rem 0;">Python</div>
-                            <p>Needs more attention</p>
+                        
+                        <div class="timer-settings">
+                            <div class="form-group">
+                                <label for="timer-subject">Current Subject</label>
+                                <select id="timer-subject">
+                                    <option value="mathematics">Engineering Mathematics</option>
+                                    <option value="physics">Physics</option>
+                                    <option value="electronics">Electronics & Electrical</option>
+                                    <option value="python">Python Programming</option>
+                                    <option value="communication">Professional Communication</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Journal Section -->
-            <section class="section" id="journal">
-                <div class="glass-card">
+            <section id="journal" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-book"></i> Study Journal</h2>
+                    <button id="new-entry-btn" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> New Entry
+                    </button>
+                </div>
+
+                <!-- New Entry Form -->
+                <div id="journal-form-container" class="card" style="display: none;">
                     <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fas fa-pen-fancy"></i>
-                            Study Journal
-                        </h2>
+                        <h3>New Journal Entry</h3>
+                        <button id="cancel-entry" class="btn btn-secondary">Cancel</button>
+                    </div>
+                    <div class="card-content">
+                        <form id="journal-form">
+                            <div class="form-group">
+                                <label for="journal-content">How was your study session today?</label>
+                                <textarea id="journal-content" rows="6" required 
+                                          placeholder="Reflect on your progress, challenges, breakthroughs, and what you learned today..."></textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="journal-mood">Mood</label>
+                                    <select id="journal-mood">
+                                        <option value="excellent">😄 Excellent</option>
+                                        <option value="good" selected>😊 Good</option>
+                                        <option value="neutral">😐 Neutral</option>
+                                        <option value="challenging">😓 Challenging</option>
+                                        <option value="difficult">😞 Difficult</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Entry
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Journal Entries -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Your Journal Entries</h3>
+                    </div>
+                    <div class="card-content">
+                        <div id="journal-entries" class="journal-entries">
+                            <!-- Journal entries will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-pie"></i> Study Analytics</h2>
+                    <button id="refresh-analytics" class="btn btn-primary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Goal Completion Rate</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="metric-display">
+                                <div class="metric-value" id="completion-rate">0%</div>
+                                <div class="metric-label">Goals Completed</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Journal Form -->
-                    <form id="journal-form" style="margin-bottom: 2rem;">
-                        <div style="margin-bottom: 1rem;">
-                            <textarea class="form-input" id="journal-input" rows="6" 
-                                      placeholder="How was your study session today? What did you learn? Any challenges you faced?"></textarea>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Weekly Study Time</h3>
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save Entry
-                        </button>
-                    </form>
+                        <div class="card-content">
+                            <div class="metric-display">
+                                <div class="metric-value" id="analytics-weekly-hours">0h</div>
+                                <div class="metric-label">This Week</div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- Journal Entries -->
-                    <div id="journal-entries">
-                        <div style="text-align: center; padding: 3rem; color: var(--primary); opacity: 0.7;">
-                            <i class="fas fa-pen-fancy" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                            <p style="font-size: 1.2rem;">No journal entries yet. Start reflecting on your study journey!</p>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Subject Distribution</h3>
+                        </div>
+                        <div class="card-content">
+                            <canvas id="subjects-chart" width="300" height="300"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Study Insights -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-lightbulb"></i> Study Insights</h3>
+                    </div>
+                    <div class="card-content">
+                        <div id="study-insights">
+                            <div class="insight-item">
+                                <i class="fas fa-chart-line insight-icon"></i>
+                                <div class="insight-content">
+                                    <h4>Performance Trend</h4>
+                                    <p>Your goal completion rate has improved by 15% this week. Keep up the great work!</p>
+                                </div>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-clock insight-icon"></i>
+                                <div class="insight-content">
+                                    <h4>Study Pattern</h4>
+                                    <p>You're most productive during morning hours. Consider scheduling challenging subjects then.</p>
+                                </div>
+                            </div>
+                            <div class="insight-item">
+                                <i class="fas fa-target insight-icon"></i>
+                                <div class="insight-content">
+                                    <h4>Focus Area</h4>
+                                    <p>Python Programming needs more attention. Dedicate extra time this week for better progress.</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             <!-- Resources Section -->
-            <section class="section" id="resources">
-                <div class="glass-card">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fas fa-library"></i>
-                            ECE Study Resources Hub
-                        </h2>
+            <section id="resources" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-library"></i> ECE Study Resources</h2>
+                </div>
+
+                <div class="resources-grid">
+                    <!-- Mathematics Resources -->
+                    <div class="card resource-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-calculator"></i> Engineering Mathematics</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="resource-list">
+                                <a href="https://ncert.nic.in/textbook.php" target="_blank" class="resource-item">
+                                    <i class="fas fa-book"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">NCERT Class 12 Mathematics</div>
+                                        <div class="resource-desc">Official textbooks for calculus and algebra</div>
+                                    </div>
+                                </a>
+                                <a href="https://nptel.ac.in/courses/111/106/111106094/" target="_blank" class="resource-item">
+                                    <i class="fas fa-video"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">NPTEL Engineering Mathematics</div>
+                                        <div class="resource-desc">Comprehensive video lectures</div>
+                                    </div>
+                                </a>
+                                <a href="https://www.youtube.com/user/gatesmashers" target="_blank" class="resource-item">
+                                    <i class="fab fa-youtube"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Gate Smashers YouTube</div>
+                                        <div class="resource-desc">Concept explanations and problem solving</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Resources Grid -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
-                        <!-- Mathematics Resources -->
-                        <div class="glass-card">
-                            <h3 style="color: var(--primary); margin-bottom: 1rem;">
-                                <i class="fas fa-calculator"></i> Engineering Mathematics
-                            </h3>
-                            <ul style="list-style: none; padding: 0;">
-                                <li style="padding: 0.8rem 0; border-bottom: 1px solid rgba(74, 144, 226, 0.1);">
-                                    <a href="https://ncert.nic.in/textbook.php" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📚 NCERT Class 12 Mathematics
-                                    </a>
-                                </li>
-                                <li style="padding: 0.8rem 0; border-bottom: 1px solid rgba(74, 144, 226, 0.1);">
-                                    <a href="https://nptel.ac.in/courses/111/106/111106094/" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        🎥 NPTEL Engineering Mathematics
-                                    </a>
-                                </li>
-                                <li style="padding: 0.8rem 0;">
-                                    <a href="https://www.youtube.com/user/gatesmashers" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📺 Gate Smashers YouTube
-                                    </a>
-                                </li>
-                            </ul>
+                    <!-- Physics Resources -->
+                    <div class="card resource-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-atom"></i> Physics</h3>
                         </div>
-
-                        <!-- Physics Resources -->
-                        <div class="glass-card">
-                            <h3 style="color: var(--success); margin-bottom: 1rem;">
-                                <i class="fas fa-atom"></i> Physics
-                            </h3>
-                            <ul style="list-style: none; padding: 0;">
-                                <li style="padding: 0.8rem 0; border-bottom: 1px solid rgba(39, 174, 96, 0.1);">
-                                    <a href="https://ncert.nic.in/textbook.php" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📚 NCERT Physics (11th & 12th)
-                                    </a>
-                                </li>
-                                <li style="padding: 0.8rem 0; border-bottom: 1px solid rgba(39, 174, 96, 0.1);">
-                                    <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        🎓 MIT OpenCourseWare
-                                    </a>
-                                </li>
-                                <li style="padding: 0.8rem 0;">
-                                    <a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📺 Neso Academy Physics
-                                    </a>
-                                </li>
-                            </ul>
+                        <div class="card-content">
+                            <div class="resource-list">
+                                <a href="https://ncert.nic.in/textbook.php" target="_blank" class="resource-item">
+                                    <i class="fas fa-book"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">NCERT Physics (11th & 12th)</div>
+                                        <div class="resource-desc">Foundation physics concepts</div>
+                                    </div>
+                                </a>
+                                <a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/" target="_blank" class="resource-item">
+                                    <i class="fas fa-university"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">MIT OpenCourseWare</div>
+                                        <div class="resource-desc">Classical mechanics course</div>
+                                    </div>
+                                </a>
+                                <a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank" class="resource-item">
+                                    <i class="fab fa-youtube"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Neso Academy Physics</div>
+                                        <div class="resource-desc">Clear physics explanations</div>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
+                    </div>
 
-                        <!-- Electronics Resources -->
-                        <div class="glass-card">
-                            <h3 style="color: var(--warning); margin-bottom: 1rem;">
-                                <i class="fas fa-microchip"></i> Electronics & Electrical
-                            </h3>
-                            <ul style="list-style: none; padding: 0;">
-                                <li style="padding: 0.8rem 0; border-bottom: 1px solid rgba(243, 156, 18, 0.1);">
-                                    <a href="#" style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📚 Electronic Devices & Circuit Theory - Boylestad
-                                    </a>
-                                </li>
-                                <li style="padding: 0.8rem 0; border-bottom: 1px solid rgba(243, 156, 18, 0.1);">
-                                    <a href="https://www.scribd.com/document/722664013/Syllabus-of-First-Year-Basic-Electrical-and-Electronics" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📋 First Year Electronics Syllabus
-                                    </a>
-                                </li>
-                                <li style="padding: 0.8rem 0;">
-                                    <a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📺 Neso Academy Electronics
-                                    </a>
-                                </li>
-                            </ul>
+                    <!-- Electronics Resources -->
+                    <div class="card resource-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-microchip"></i> Electronics & Electrical</h3>
                         </div>
+                        <div class="card-content">
+                            <div class="resource-list">
+                                <a href="#" class="resource-item">
+                                    <i class="fas fa-book"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Boylestad Circuit Theory</div>
+                                        <div class="resource-desc">Electronic devices and circuit analysis</div>
+                                    </div>
+                                </a>
+                                <a href="https://www.scribd.com/document/722664013/Syllabus-of-First-Year-Basic-Electrical-and-Electronics" target="_blank" class="resource-item">
+                                    <i class="fas fa-file-pdf"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">First Year Electronics Syllabus</div>
+                                        <div class="resource-desc">Complete curriculum guide</div>
+                                    </div>
+                                </a>
+                                <a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank" class="resource-item">
+                                    <i class="fab fa-youtube"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Neso Academy Electronics</div>
+                                        <div class="resource-desc">Electronics fundamentals</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- Python Resources -->
-                        <div class="glass-card">
-                            <h3 style="color: var(--accent); margin-bottom: 1rem;">
-                                <i class="fas fa-code"></i> Python Programming
-                            </h3>
-                            <ul style="list-style: none; padding: 0;">
-                                <li style="padding: 0.8rem 0; border-bottom: 1px solid rgba(255, 107, 107, 0.1);">
-                                    <a href="https://www.coursera.org/learn/python" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        🎓 Python for Everybody (Coursera)
-                                    </a>
-                                </li>
-                                <li style="padding: 0.8rem 0; border-bottom: 1px solid rgba(255, 107, 107, 0.1);">
-                                    <a href="https://www.youtube.com/watch?v=gfDE2a7MKjA" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📺 Python Full Course - YouTube
-                                    </a>
-                                </li>
-                                <li style="padding: 0.8rem 0;">
-                                    <a href="https://automatetheboringstuff.com/" target="_blank" 
-                                       style="text-decoration: none; color: var(--dark); display: flex; align-items: center; gap: 0.5rem;">
-                                        📖 Automate the Boring Stuff with Python
-                                    </a>
-                                </li>
-                            </ul>
+                    <!-- Python Resources -->
+                    <div class="card resource-card">
+                        <div class="card-header">
+                            <h3><i class="fas fa-code"></i> Python Programming</h3>
+                        </div>
+                        <div class="card-content">
+                            <div class="resource-list">
+                                <a href="https://www.coursera.org/learn/python" target="_blank" class="resource-item">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Python for Everybody (Coursera)</div>
+                                        <div class="resource-desc">Comprehensive Python course</div>
+                                    </div>
+                                </a>
+                                <a href="https://www.youtube.com/watch?v=gfDE2a7MKjA" target="_blank" class="resource-item">
+                                    <i class="fab fa-youtube"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Python Full Course</div>
+                                        <div class="resource-desc">Complete beginner to advanced</div>
+                                    </div>
+                                </a>
+                                <a href="https://automatetheboringstuff.com/" target="_blank" class="resource-item">
+                                    <i class="fas fa-book"></i>
+                                    <div class="resource-info">
+                                        <div class="resource-title">Automate the Boring Stuff</div>
+                                        <div class="resource-desc">Practical Python applications</div>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-        </div>
+        </main>
     </div>
 
-    <script>
-        // Application State
-        let appState = {
-            goals: [],
-            journal: [],
-            stats: {
-                totalGoals: 0,
-                completedGoals: 0,
-                studyStreak: 0,
-                totalTime: 0
-            },
-            isOnline: navigator.onLine
-        };
+    <!-- Notification Container -->
+    <div id="notifications" class="notifications"></div>
 
-        // Error Handling
-        function showError(message, details = '') {
-            console.error('StudySync Error:', message, details);
-            document.getElementById('error-message').innerHTML = `
-                ${message}
-                ${details ? `<br><small style="opacity: 0.8;">${details}</small>` : ''}
-            `;
-            document.getElementById('error-screen').style.display = 'flex';
-            document.getElementById('loading-screen').style.display = 'none';
-        }
-
-        function retryLoading() {
-            document.getElementById('error-screen').style.display = 'none';
-            document.getElementById('loading-screen').style.display = 'flex';
-            
-            setTimeout(() => {
-                initializeApp();
-            }, 1000);
-        }
-
-        // Initialize Application
-        function initializeApp() {
-            try {
-                console.log('🚀 Initializing StudySync Pro...');
-                
-                // Simulate loading time
-                updateLoadingText('Loading your data...');
-                
-                setTimeout(() => {
-                    try {
-                        // Load data from localStorage
-                        loadLocalData();
-                        
-                        updateLoadingText('Setting up interface...');
-                        
-                        setTimeout(() => {
-                            // Initialize UI
-                            initializeNavigation();
-                            initializeEventListeners();
-                            updateStats();
-                            renderGoals();
-                            renderJournal();
-                            
-                            updateLoadingText('Almost ready...');
-                            
-                            setTimeout(() => {
-                                // Hide loading screen and show app
-                                document.getElementById('loading-screen').style.display = 'none';
-                                document.getElementById('main-app').style.display = 'block';
-                                
-                                showNotification('Welcome to StudySync Pro! 🎉', 'success');
-                                console.log('✅ StudySync Pro loaded successfully!');
-                            }, 500);
-                        }, 500);
-                    } catch (error) {
-                        showError('Failed to initialize application', error.message);
-                    }
-                }, 1000);
-                
-            } catch (error) {
-                showError('Critical error during initialization', error.message);
-            }
-        }
-
-        function updateLoadingText(text) {
-            const loadingText = document.querySelector('.loading-subtext');
-            if (loadingText) {
-                loadingText.textContent = text;
-            }
-        }
-
-        // Data Management
-        function loadLocalData() {
-            try {
-                const savedGoals = localStorage.getItem('studyGoals');
-                const savedJournal = localStorage.getItem('studyJournal');
-                
-                if (savedGoals) {
-                    appState.goals = JSON.parse(savedGoals);
-                }
-                
-                if (savedJournal) {
-                    appState.journal = JSON.parse(savedJournal);
-                }
-                
-                console.log('✅ Local data loaded successfully');
-            } catch (error) {
-                console.warn('⚠️ Error loading local data:', error);
-                appState.goals = [];
-                appState.journal = [];
-            }
-        }
-
-        function saveLocalData() {
-            try {
-                localStorage.setItem('studyGoals', JSON.stringify(appState.goals));
-                localStorage.setItem('studyJournal', JSON.stringify(appState.journal));
-                console.log('✅ Data saved to localStorage');
-            } catch (error) {
-                console.warn('⚠️ Error saving data:', error);
-                showNotification('Failed to save data locally', 'warning');
-            }
-        }
-
-        // Navigation System
-        function initializeNavigation() {
-            const navItems = document.querySelectorAll('.nav-item');
-            const sections = document.querySelectorAll('.section');
-
-            navItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetSection = item.dataset.section;
-
-                    // Update nav active state
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    sections.forEach(section => section.classList.remove('active'));
-
-                    item.classList.add('active');
-                    document.getElementById(targetSection).classList.add('active');
-                });
-            });
-        }
-
-        // Event Listeners
-        function initializeEventListeners() {
-            // Goal form
-            const goalForm = document.getElementById('goal-form');
-            goalForm.addEventListener('submit', addGoal);
-
-            // Journal form
-            const journalForm = document.getElementById('journal-form');
-            journalForm.addEventListener('submit', addJournalEntry);
-
-            // Network status
-            window.addEventListener('online', handleOnline);
-            window.addEventListener('offline', handleOffline);
-        }
-
-        // Goals Management
-        function addGoal(e) {
-            e.preventDefault();
-            
-            const goalInput = document.getElementById('goal-input');
-            const goalText = goalInput.value.trim();
-            
-            if (!goalText) return;
-            
-            const newGoal = {
-                id: Date.now(),
-                text: goalText,
-                completed: false,
-                createdAt: new Date().toISOString()
-            };
-            
-            appState.goals.unshift(newGoal);
-            saveLocalData();
-            renderGoals();
-            updateStats();
-            
-            goalInput.value = '';
-            showNotification('Goal added successfully! 🎯', 'success');
-        }
-
-        function toggleGoal(goalId) {
-            const goal = appState.goals.find(g => g.id === goalId);
-            if (goal) {
-                goal.completed = !goal.completed;
-                saveLocalData();
-                renderGoals();
-                updateStats();
-                
-                if (goal.completed) {
-                    showNotification('🎉 Goal completed! Great job!', 'success');
-                }
-            }
-        }
-
-        function deleteGoal(goalId) {
-            if (confirm('Are you sure you want to delete this goal?')) {
-                appState.goals = appState.goals.filter(g => g.id !== goalId);
-                saveLocalData();
-                renderGoals();
-                updateStats();
-                showNotification('Goal deleted', 'info');
-            }
-        }
-
-        function renderGoals() {
-            const container = document.getElementById('goals-container');
-            
-            if (appState.goals.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 3rem; color: var(--primary); opacity: 0.7;">
-                        <i class="fas fa-bullseye" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <p style="font-size: 1.2rem;">No goals yet. Add your first study goal above!</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = appState.goals.map(goal => `
-                <div class="glass-card" style="margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; padding: 1rem;">
-                    <input type="checkbox" ${goal.completed ? 'checked' : ''} 
-                           onchange="toggleGoal(${goal.id})"
-                           style="width: 20px; height: 20px; cursor: pointer;">
-                    <div style="flex: 1; ${goal.completed ? 'text-decoration: line-through; opacity: 0.7;' : ''}">
-                        ${goal.text}
-                        <div style="font-size: 0.8rem; color: var(--primary); margin-top: 0.25rem;">
-                            ${new Date(goal.createdAt).toLocaleDateString()}
-                        </div>
-                    </div>
-                    <button onclick="deleteGoal(${goal.id})" 
-                            style="background: var(--danger); color: white; border: none; padding: 0.5rem; border-radius: 8px; cursor: pointer;">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        // Journal Management
-        function addJournalEntry(e) {
-            e.preventDefault();
-            
-            const journalInput = document.getElementById('journal-input');
-            const entryText = journalInput.value.trim();
-            
-            if (!entryText) return;
-            
-            const newEntry = {
-                id: Date.now(),
-                text: entryText,
-                createdAt: new Date().toISOString()
-            };
-            
-            appState.journal.unshift(newEntry);
-            saveLocalData();
-            renderJournal();
-            
-            journalInput.value = '';
-            showNotification('Journal entry saved! 📝', 'success');
-        }
-
-        function renderJournal() {
-            const container = document.getElementById('journal-entries');
-            
-            if (appState.journal.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 3rem; color: var(--primary); opacity: 0.7;">
-                        <i class="fas fa-pen-fancy" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                        <p style="font-size: 1.2rem;">No journal entries yet. Start reflecting on your study journey!</p>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = appState.journal.slice(0, 10).map(entry => `
-                <div class="glass-card" style="margin-bottom: 1.5rem;">
-                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
-                        <small style="color: var(--primary); font-weight: 600;">
-                            ${new Date(entry.createdAt).toLocaleDateString()} at 
-                            ${new Date(entry.createdAt).toLocaleTimeString()}
-                        </small>
-                    </div>
-                    <p style="line-height: 1.7; color: var(--dark);">${entry.text}</p>
-                </div>
-            `).join('');
-        }
-
-        // Statistics
-        function updateStats() {
-            const totalGoals = appState.goals.length;
-            const completedGoals = appState.goals.filter(g => g.completed).length;
-            const completionRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
-            
-            document.getElementById('total-goals').textContent = totalGoals;
-            document.getElementById('completed-goals').textContent = completedGoals;
-            document.getElementById('study-streak').textContent = Math.max(completedGoals, 1);
-            document.getElementById('total-time').textContent = Math.floor(totalGoals * 2) + 'h';
-            document.getElementById('completion-rate').textContent = completionRate + '%';
-            document.getElementById('consistency-score').textContent = Math.min(100, completionRate + 10) + '%';
-        }
-
-        // Network Status
-        function handleOnline() {
-            appState.isOnline = true;
-            document.getElementById('connection-status').className = 'connection-status online';
-            document.getElementById('status-text').textContent = 'Connected';
-            document.getElementById('offline-banner').classList.remove('show');
-            showNotification('Connection restored! 🌐', 'success');
-        }
-
-        function handleOffline() {
-            appState.isOnline = false;
-            document.getElementById('connection-status').className = 'connection-status offline';
-            document.getElementById('status-text').textContent = 'Offline';
-            document.getElementById('offline-banner').classList.add('show');
-            showNotification('You are offline. Data will be saved locally.', 'warning');
-        }
-
-        // Utility Functions
-        function refreshData() {
-            showNotification('Refreshing data...', 'info');
-            updateStats();
-            renderGoals();
-            renderJournal();
-            showNotification('Data refreshed successfully!', 'success');
-        }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            
-            const icons = {
-                success: 'fas fa-check-circle',
-                error: 'fas fa-times-circle',
-                warning: 'fas fa-exclamation-triangle',
-                info: 'fas fa-info-circle'
-            };
-            
-            notification.innerHTML = `
-                <i class="${icons[type]}"></i>
-                <span style="margin-left: 0.5rem;">${message}</span>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 4000);
-        }
-
-        // Make functions globally available
-        window.toggleGoal = toggleGoal;
-        window.deleteGoal = deleteGoal;
-        window.refreshData = refreshData;
-        window.retryLoading = retryLoading;
-
-        // Initialize app when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('📱 StudySync Pro starting...');
-            
-            // Small delay to show loading screen
-            setTimeout(() => {
-                initializeApp();
-            }, 500);
-        });
-
-        // Global error handler
-        window.addEventListener('error', (e) => {
-            console.error('Global error:', e.error);
-            showError('An unexpected error occurred', e.error?.message || 'Please refresh the page and try again.');
-        });
-
-        // Unhandled promise rejection handler
-        window.addEventListener('unhandledrejection', (e) => {
-            console.error('Unhandled promise rejection:', e.reason);
-            e.preventDefault();
-            showNotification('Something went wrong. Please try again.', 'error');
-        });
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
