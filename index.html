@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySync | Smart Study Tracker</title>
+    <title>StudySync Pro | Cloud-Powered Study Tracker</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -31,6 +31,42 @@
             color: var(--dark);
         }
 
+        /* Authentication Overlay */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .auth-card h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .auth-card p {
+            color: var(--dark);
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
         /* Header */
         .header {
             background: rgba(255, 255, 255, 0.95);
@@ -54,28 +90,49 @@
             font-size: 1.8rem;
             font-weight: bold;
             color: var(--primary);
-        }
-
-        .user-stats {
             display: flex;
-            gap: 2rem;
             align-items: center;
+            gap: 0.5rem;
         }
 
-        .stat-item {
-            text-align: center;
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: bold;
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+        }
+
+        .user-details h4 {
             color: var(--primary);
+            font-size: 1rem;
         }
 
-        .stat-label {
-            font-size: 0.8rem;
+        .user-details p {
             color: var(--dark);
+            font-size: 0.8rem;
             opacity: 0.7;
+        }
+
+        .sync-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+
+        .sync-status.syncing {
+            color: var(--warning);
+        }
+
+        .sync-status.offline {
+            color: var(--danger);
         }
 
         /* Navigation */
@@ -148,7 +205,12 @@
             border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .card h3 {
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        h3 {
             color: var(--primary);
             margin-bottom: 1.5rem;
             display: flex;
@@ -202,9 +264,15 @@
             box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
         }
 
-        .btn-success {
-            background: var(--success);
+        .btn-google {
+            background: #4285f4;
             color: white;
+        }
+
+        .btn-google:hover {
+            background: #357ae8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.4);
         }
 
         .btn-danger {
@@ -314,73 +382,22 @@
             font-size: 1rem;
         }
 
-        /* Journal Entries */
-        .journal-entries {
-            list-style: none;
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(74, 144, 226, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
         }
 
-        .journal-entry {
-            background: white;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border-left: 4px solid var(--primary);
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
-        .journal-date {
-            font-size: 0.9rem;
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Timer */
-        .timer-container {
-            text-align: center;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-radius: 20px;
-            padding: 3rem;
-            margin: 2rem 0;
-        }
-
-        .timer-display {
-            font-size: 4rem;
-            font-weight: bold;
-            margin: 1rem 0;
-            font-family: 'Courier New', monospace;
-        }
-
-        .timer-controls {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Quotes */
-        .quote-container {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            margin: 2rem 0;
-        }
-
-        .quote-text {
-            font-size: 1.5rem;
-            font-style: italic;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-
-        .quote-author {
-            opacity: 0.8;
-        }
-
-        /* Notifications */
+        /* Notification */
         .notification {
             position: fixed;
             top: 100px;
@@ -406,10 +423,6 @@
                 gap: 1rem;
             }
 
-            .user-stats {
-                gap: 1rem;
-            }
-
             .nav {
                 flex-wrap: wrap;
                 border-radius: 20px;
@@ -421,10 +434,6 @@
                 min-width: 120px;
             }
 
-            .timer-display {
-                font-size: 2.5rem;
-            }
-
             .card {
                 padding: 1rem;
             }
@@ -432,35 +441,46 @@
     </style>
 </head>
 <body>
+    <!-- Authentication Overlay -->
+    <div class="auth-overlay" id="auth-overlay">
+        <div class="auth-card">
+            <h2><i class="fas fa-graduation-cap"></i> StudySync Pro</h2>
+            <p>Sign in to sync your study progress across all devices and unlock advanced features.</p>
+            <button class="btn btn-google" id="google-login-btn">
+                <i class="fab fa-google"></i> Continue with Google
+            </button>
+            <div style="margin-top: 2rem; font-size: 0.9rem; color: #666;">
+                <p>✅ Cloud sync across devices</p>
+                <p>✅ Secure data backup</p>
+                <p>✅ Advanced analytics</p>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
-    <header class="header">
+    <header class="header" id="main-header" style="display: none;">
         <div class="header-content">
             <div class="logo">
-                <i class="fas fa-graduation-cap"></i> StudySync
+                <i class="fas fa-graduation-cap"></i> StudySync Pro
             </div>
-            <div class="user-stats">
-                <div class="stat-item">
-                    <div class="stat-value" id="total-goals">0</div>
-                    <div class="stat-label">Goals</div>
+            <div class="user-info">
+                <div class="sync-status" id="sync-status">
+                    <i class="fas fa-check-circle"></i> Synced
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="completed-goals">0</div>
-                    <div class="stat-label">Completed</div>
+                <img class="user-avatar" id="user-avatar" src="" alt="User">
+                <div class="user-details">
+                    <h4 id="user-name">Loading...</h4>
+                    <p id="user-email">user@example.com</p>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="study-streak">0</div>
-                    <div class="stat-label">Day Streak</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value" id="total-time">0h</div>
-                    <div class="stat-label">Study Time</div>
-                </div>
+                <button class="btn btn-danger" id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
             </div>
         </div>
     </header>
 
     <!-- Navigation -->
-    <nav class="nav">
+    <nav class="nav" id="main-nav" style="display: none;">
         <a class="nav-item active" data-section="dashboard">
             <i class="fas fa-home"></i> Dashboard
         </a>
@@ -482,25 +502,34 @@
     </nav>
 
     <!-- Main Container -->
-    <div class="container">
+    <div class="container" id="main-container" style="display: none;">
         <!-- Dashboard Section -->
         <section class="section active" id="dashboard">
             <div class="card">
-                <h3><i class="fas fa-chart-bar"></i> Study Dashboard</h3>
+                <h3><i class="fas fa-chart-bar"></i> Your Study Dashboard</h3>
                 
-                <!-- Quote of the Day -->
-                <div class="quote-container">
-                    <div class="quote-text" id="daily-quote">
-                        "Success is the sum of small efforts, repeated day in and day out."
+                <!-- Real-time Stats -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                    <div class="card" style="text-align: center;">
+                        <h4>Total Goals</h4>
+                        <div style="font-size: 2rem; color: var(--primary); font-weight: bold;" id="total-goals-count">0</div>
                     </div>
-                    <div class="quote-author">— Robert Collier</div>
-                    <button class="btn btn-success" id="new-quote-btn" style="margin-top: 1rem;">
-                        <i class="fas fa-refresh"></i> New Quote
-                    </button>
+                    <div class="card" style="text-align: center;">
+                        <h4>Completed</h4>
+                        <div style="font-size: 2rem; color: var(--success); font-weight: bold;" id="completed-goals-count">0</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <h4>Study Streak</h4>
+                        <div style="font-size: 2rem; color: var(--warning); font-weight: bold;" id="study-streak">0 days</div>
+                    </div>
+                    <div class="card" style="text-align: center;">
+                        <h4>This Week</h4>
+                        <div style="font-size: 2rem; color: var(--accent); font-weight: bold;" id="weekly-hours">0h</div>
+                    </div>
                 </div>
 
-                <!-- Weekly Progress -->
-                <h4>Weekly Progress Overview</h4>
+                <!-- Weekly Progress Table -->
+                <h4>Subject Progress This Week</h4>
                 <table class="table">
                     <thead>
                         <tr>
@@ -563,7 +592,7 @@
         <!-- Goals Section -->
         <section class="section" id="goals">
             <div class="card">
-                <h3><i class="fas fa-bullseye"></i> Study Goals</h3>
+                <h3><i class="fas fa-bullseye"></i> Study Goals <span class="loading" id="goals-loading" style="display: none;"></span></h3>
                 
                 <form id="goal-form" class="form-group">
                     <input type="text" class="form-control" id="goal-input" placeholder="Enter your study goal..." required>
@@ -573,7 +602,7 @@
                 </form>
 
                 <ul class="goals-list" id="goals-list">
-                    <!-- Goals will be dynamically added here -->
+                    <!-- Goals will be loaded from Firebase -->
                 </ul>
             </div>
         </section>
@@ -582,58 +611,26 @@
         <section class="section" id="timer">
             <div class="card">
                 <h3><i class="fas fa-stopwatch"></i> Study Timer</h3>
-                
-                <div class="timer-container">
-                    <h4>Pomodoro Timer</h4>
-                    <div class="timer-display" id="timer-display">25:00</div>
-                    <div class="timer-controls">
-                        <button class="btn btn-success" id="start-timer">
-                            <i class="fas fa-play"></i> Start
-                        </button>
-                        <button class="btn btn-danger" id="pause-timer">
-                            <i class="fas fa-pause"></i> Pause
-                        </button>
-                        <button class="btn btn-primary" id="reset-timer">
-                            <i class="fas fa-redo"></i> Reset
-                        </button>
-                    </div>
-                    <p style="margin-top: 1rem; opacity: 0.8;">25 minutes focus • 5 minutes break</p>
-                </div>
-
-                <div class="form-group">
-                    <label for="timer-subject">Current Subject:</label>
-                    <select class="form-control" id="timer-subject">
-                        <option value="mathematics">Mathematics</option>
-                        <option value="physics">Physics</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="python">Python Programming</option>
-                        <option value="communication">Communication</option>
-                    </select>
-                </div>
-
-                <div id="session-log">
-                    <h4>Today's Sessions</h4>
-                    <ul id="sessions-list"></ul>
-                </div>
+                <p>Pomodoro timer feature will be implemented in Step 3!</p>
             </div>
         </section>
 
         <!-- Journal Section -->
         <section class="section" id="journal">
             <div class="card">
-                <h3><i class="fas fa-pen"></i> Study Journal</h3>
+                <h3><i class="fas fa-pen"></i> Study Journal <span class="loading" id="journal-loading" style="display: none;"></span></h3>
                 
                 <form id="journal-form" class="form-group">
                     <textarea class="form-control" id="journal-input" rows="6" 
-                              placeholder="How was your study session today? What did you learn? What challenges did you face?"></textarea>
+                              placeholder="How was your study session today? What did you learn?"></textarea>
                     <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
                         <i class="fas fa-save"></i> Save Entry
                     </button>
                 </form>
 
-                <ul class="journal-entries" id="journal-entries">
-                    <!-- Journal entries will be dynamically added here -->
-                </ul>
+                <div id="journal-entries">
+                    <!-- Journal entries will be loaded from Firebase -->
+                </div>
             </div>
         </section>
 
@@ -641,37 +638,7 @@
         <section class="section" id="analytics">
             <div class="card">
                 <h3><i class="fas fa-chart-pie"></i> Study Analytics</h3>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
-                    <div class="card">
-                        <h4>Study Streak</h4>
-                        <div style="text-align: center; font-size: 3rem; color: var(--primary);">
-                            <span id="streak-display">0</span> 🔥
-                        </div>
-                        <p style="text-align: center;">Consecutive study days</p>
-                    </div>
-                    
-                    <div class="card">
-                        <h4>Total Study Time</h4>
-                        <div style="text-align: center; font-size: 3rem; color: var(--success);">
-                            <span id="total-time-display">0</span>h
-                        </div>
-                        <p style="text-align: center;">Hours this week</p>
-                    </div>
-                    
-                    <div class="card">
-                        <h4>Goals Completion</h4>
-                        <div style="text-align: center; font-size: 3rem; color: var(--warning);">
-                            <span id="completion-rate">0</span>%
-                        </div>
-                        <p style="text-align: center;">Weekly completion rate</p>
-                    </div>
-                </div>
-
-                <h4>Subject Distribution</h4>
-                <div id="subject-stats">
-                    <!-- Subject statistics will be displayed here -->
-                </div>
+                <p>Advanced analytics and charts will be implemented in Step 3!</p>
             </div>
         </section>
 
@@ -700,15 +667,6 @@
                     </div>
                     
                     <div class="card">
-                        <h4><i class="fas fa-microchip"></i> Electronics</h4>
-                        <ul style="list-style: none;">
-                            <li><a href="#" target="_blank">📚 Boylestad Circuit Theory</a></li>
-                            <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">📺 Electronics Basics</a></li>
-                            <li><a href="#" target="_blank">🔬 Circuit Simulators</a></li>
-                        </ul>
-                    </div>
-                    
-                    <div class="card">
                         <h4><i class="fas fa-code"></i> Python Programming</h4>
                         <ul style="list-style: none;">
                             <li><a href="https://www.coursera.org/learn/python" target="_blank">🎓 Python for Everybody</a></li>
@@ -721,37 +679,92 @@
         </section>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
+
     <script>
-        // Application State
-        let appState = {
-            goals: JSON.parse(localStorage.getItem('studyGoals')) || [],
-            journal: JSON.parse(localStorage.getItem('studyJournal')) || [],
-            sessions: JSON.parse(localStorage.getItem('studySessions')) || [],
-            streak: parseInt(localStorage.getItem('studyStreak')) || 0,
-            totalTime: parseInt(localStorage.getItem('totalStudyTime')) || 0
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyArjKxUfvehNSA-GLXuuiOpChe55c4MQDE",
+            authDomain: "studysync-prod-acfc6.firebaseapp.com", 
+            projectId: "studysync-prod-acfc6",
+            storageBucket: "studysync-prod-acfc6.firebasestorage.app",
+            messagingSenderId: "372359765372",
+            appId: "1:372359765372:web:bb5252996a4c98597758f9"
         };
 
-        // Timer State
-        let timerState = {
-            isRunning: false,
-            timeLeft: 25 * 60, // 25 minutes in seconds
-            currentSession: null,
-            interval: null
-        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // Motivational Quotes
-        const quotes = [
-            "Success is the sum of small efforts, repeated day in and day out. — Robert Collier",
-            "The future belongs to those who believe in the beauty of their dreams. — Eleanor Roosevelt",
-            "Education is the most powerful weapon which you can use to change the world. — Nelson Mandela",
-            "Your limitation—it's only your imagination.",
-            "Push yourself, because no one else is going to do it for you.",
-            "Great things never come from comfort zones.",
-            "Dream it. Wish it. Do it.",
-            "The secret of getting ahead is getting started. — Mark Twain",
-            "It's going to be hard, but hard does not mean impossible.",
-            "Success doesn't just find you. You have to go out and get it."
-        ];
+        // Global State
+        let currentUser = null;
+        let isOnline = navigator.onLine;
+
+        // DOM Elements
+        const authOverlay = document.getElementById('auth-overlay');
+        const mainHeader = document.getElementById('main-header');
+        const mainNav = document.getElementById('main-nav');
+        const mainContainer = document.getElementById('main-container');
+        const googleLoginBtn = document.getElementById('google-login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        const userEmail = document.getElementById('user-email');
+        const syncStatus = document.getElementById('sync-status');
+
+        // Authentication
+        googleLoginBtn.addEventListener('click', async () => {
+            try {
+                showNotification('Signing in...', 'info');
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await auth.signInWithPopup(provider);
+                showNotification('Welcome to StudySync Pro!', 'success');
+            } catch (error) {
+                console.error('Login error:', error);
+                showNotification('Login failed. Please try again.', 'error');
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut();
+        });
+
+        // Auth State Listener
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // Show main app, hide auth overlay
+                authOverlay.style.display = 'none';
+                mainHeader.style.display = 'block';
+                mainNav.style.display = 'flex';
+                mainContainer.style.display = 'block';
+                
+                // Update user info
+                userAvatar.src = user.photoURL || 'https://via.placeholder.com/40';
+                userName.textContent = user.displayName || 'User';
+                userEmail.textContent = user.email;
+                
+                // Load user data
+                await loadGoals();
+                await loadJournal();
+                updateStats();
+                
+                showNotification('Data synced successfully!', 'success');
+            } else {
+                currentUser = null;
+                
+                // Show auth overlay, hide main app
+                authOverlay.style.display = 'flex';
+                mainHeader.style.display = 'none';
+                mainNav.style.display = 'none';
+                mainContainer.style.display = 'none';
+            }
+        });
 
         // Navigation
         function initNavigation() {
@@ -774,262 +787,300 @@
             });
         }
 
-        // Goals Management
-        function initGoals() {
-            const goalForm = document.getElementById('goal-form');
-            const goalInput = document.getElementById('goal-input');
-            const goalsList = document.getElementById('goals-list');
+        // Goals Management with Firebase
+        const goalForm = document.getElementById('goal-form');
+        const goalInput = document.getElementById('goal-input');
+        const goalsList = document.getElementById('goals-list');
+        const goalsLoading = document.getElementById('goals-loading');
 
-            function renderGoals() {
+        async function loadGoals() {
+            if (!currentUser) return;
+            
+            goalsLoading.style.display = 'inline-block';
+            setSyncStatus('syncing');
+            
+            try {
+                const snapshot = await db.collection('goals')
+                    .where('userId', '==', currentUser.uid)
+                    .orderBy('createdAt', 'desc')
+                    .get();
+                
                 goalsList.innerHTML = '';
-                appState.goals.forEach((goal, index) => {
-                    const li = document.createElement('li');
-                    li.className = `goal-item ${goal.completed ? 'completed' : ''}`;
-                    li.innerHTML = `
-                        <input type="checkbox" class="goal-checkbox" ${goal.completed ? 'checked' : ''} 
-                               onchange="toggleGoal(${index})">
-                        <span class="goal-text">${goal.text}</span>
-                        <button class="btn btn-danger" onclick="deleteGoal(${index})">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    `;
-                    goalsList.appendChild(li);
+                
+                snapshot.forEach(doc => {
+                    const goal = doc.data();
+                    const goalElement = createGoalElement(goal, doc.id);
+                    goalsList.appendChild(goalElement);
                 });
-                updateStats();
+                
+                setSyncStatus('synced');
+            } catch (error) {
+                console.error('Error loading goals:', error);
+                setSyncStatus('error');
+                showNotification('Failed to load goals', 'error');
+            } finally {
+                goalsLoading.style.display = 'none';
             }
-
-            goalForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const goalText = goalInput.value.trim();
-                if (goalText) {
-                    appState.goals.push({
-                        text: goalText,
-                        completed: false,
-                        createdAt: new Date().toISOString()
-                    });
-                    saveData();
-                    renderGoals();
-                    goalInput.value = '';
-                    showNotification('Goal added successfully!');
-                }
-            });
-
-            // Global functions for goal management
-            window.toggleGoal = function(index) {
-                appState.goals[index].completed = !appState.goals[index].completed;
-                if (appState.goals[index].completed) {
-                    showNotification('🎉 Goal completed! Well done!');
-                }
-                saveData();
-                renderGoals();
-            };
-
-            window.deleteGoal = function(index) {
-                appState.goals.splice(index, 1);
-                saveData();
-                renderGoals();
-                showNotification('Goal deleted');
-            };
-
-            renderGoals();
         }
 
-        // Timer Management
-        function initTimer() {
-            const timerDisplay = document.getElementById('timer-display');
-            const startBtn = document.getElementById('start-timer');
-            const pauseBtn = document.getElementById('pause-timer');
-            const resetBtn = document.getElementById('reset-timer');
-            const subjectSelect = document.getElementById('timer-subject');
-            const sessionsList = document.getElementById('sessions-list');
-
-            function updateDisplay() {
-                const minutes = Math.floor(timerState.timeLeft / 60);
-                const seconds = timerState.timeLeft % 60;
-                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            }
-
-            function startTimer() {
-                if (!timerState.isRunning) {
-                    timerState.isRunning = true;
-                    timerState.currentSession = {
-                        subject: subjectSelect.value,
-                        startTime: new Date(),
-                        duration: 0
-                    };
-                    
-                    timerState.interval = setInterval(() => {
-                        timerState.timeLeft--;
-                        updateDisplay();
-                        
-                        if (timerState.timeLeft <= 0) {
-                            completeSession();
-                        }
-                    }, 1000);
-                    
-                    startBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
-                } else {
-                    pauseTimer();
-                }
-            }
-
-            function pauseTimer() {
-                timerState.isRunning = false;
-                clearInterval(timerState.interval);
-                startBtn.innerHTML = '<i class="fas fa-play"></i> Start';
-            }
-
-            function resetTimer() {
-                pauseTimer();
-                timerState.timeLeft = 25 * 60;
-                updateDisplay();
-            }
-
-            function completeSession() {
-                pauseTimer();
-                const session = {
-                    ...timerState.currentSession,
-                    endTime: new Date(),
-                    duration: 25, // 25 minutes
-                    date: new Date().toDateString()
-                };
-                
-                appState.sessions.push(session);
-                appState.totalTime += 25;
-                saveData();
-                
-                showNotification('🎉 Pomodoro session completed! Time for a break.');
-                renderSessions();
-                updateStats();
-                resetTimer();
-            }
-
-            function renderSessions() {
-                const todaySessions = appState.sessions.filter(s => s.date === new Date().toDateString());
-                sessionsList.innerHTML = '';
-                
-                todaySessions.forEach(session => {
-                    const li = document.createElement('li');
-                    li.style.cssText = 'padding: 0.5rem; margin: 0.5rem 0; background: white; border-radius: 5px;';
-                    li.innerHTML = `
-                        <strong>${session.subject.charAt(0).toUpperCase() + session.subject.slice(1)}</strong>
-                        <br><small>${session.duration} minutes • ${new Date(session.startTime).toLocaleTimeString()}</small>
-                    `;
-                    sessionsList.appendChild(li);
-                });
-            }
-
-            startBtn.addEventListener('click', startTimer);
-            pauseBtn.addEventListener('click', pauseTimer);
-            resetBtn.addEventListener('click', resetTimer);
-
-            updateDisplay();
-            renderSessions();
+        function createGoalElement(goal, goalId) {
+            const li = document.createElement('li');
+            li.className = `goal-item ${goal.completed ? 'completed' : ''}`;
+            
+            li.innerHTML = `
+                <input type="checkbox" class="goal-checkbox" ${goal.completed ? 'checked' : ''} 
+                       onchange="toggleGoal('${goalId}', this.checked)">
+                <span class="goal-text">${goal.text}</span>
+                <small style="color: #666; margin-left: auto;">
+                    ${new Date(goal.createdAt.toDate()).toLocaleDateString()}
+                </small>
+                <button class="btn btn-danger" onclick="deleteGoal('${goalId}')" style="margin-left: 1rem;">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+            
+            return li;
         }
 
-        // Journal Management
-        function initJournal() {
-            const journalForm = document.getElementById('journal-form');
-            const journalInput = document.getElementById('journal-input');
-            const journalEntries = document.getElementById('journal-entries');
+        goalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const goalText = goalInput.value.trim();
+            if (!goalText || !currentUser) return;
+            
+            setSyncStatus('syncing');
+            
+            try {
+                await db.collection('goals').add({
+                    text: goalText,
+                    completed: false,
+                    userId: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                goalInput.value = '';
+                showNotification('Goal added successfully!', 'success');
+                await loadGoals();
+            } catch (error) {
+                console.error('Error adding goal:', error);
+                showNotification('Failed to add goal', 'error');
+                setSyncStatus('error');
+            }
+        });
 
-            function renderJournal() {
+        window.toggleGoal = async function(goalId, completed) {
+            if (!currentUser) return;
+            
+            setSyncStatus('syncing');
+            
+            try {
+                await db.collection('goals').doc(goalId).update({
+                    completed: completed,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                if (completed) {
+                    showNotification('🎉 Goal completed! Well done!', 'success');
+                }
+                
+                updateStats();
+                setSyncStatus('synced');
+            } catch (error) {
+                console.error('Error updating goal:', error);
+                showNotification('Failed to update goal', 'error');
+                setSyncStatus('error');
+            }
+        };
+
+        window.deleteGoal = async function(goalId) {
+            if (!confirm('Are you sure you want to delete this goal?')) return;
+            
+            setSyncStatus('syncing');
+            
+            try {
+                await db.collection('goals').doc(goalId).delete();
+                showNotification('Goal deleted', 'info');
+                await loadGoals();
+            } catch (error) {
+                console.error('Error deleting goal:', error);
+                showNotification('Failed to delete goal', 'error');
+                setSyncStatus('error');
+            }
+        };
+
+        // Journal Management with Firebase
+        const journalForm = document.getElementById('journal-form');
+        const journalInput = document.getElementById('journal-input');
+        const journalEntries = document.getElementById('journal-entries');
+        const journalLoading = document.getElementById('journal-loading');
+
+        async function loadJournal() {
+            if (!currentUser) return;
+            
+            journalLoading.style.display = 'inline-block';
+            
+            try {
+                const snapshot = await db.collection('journal')
+                    .where('userId', '==', currentUser.uid)
+                    .orderBy('createdAt', 'desc')
+                    .limit(10)
+                    .get();
+                
                 journalEntries.innerHTML = '';
-                [...appState.journal].reverse().forEach(entry => {
-                    const li = document.createElement('li');
-                    li.className = 'journal-entry';
-                    li.innerHTML = `
-                        <div class="journal-date">${new Date(entry.date).toLocaleDateString()}</div>
-                        <div>${entry.text}</div>
-                    `;
-                    journalEntries.appendChild(li);
-                });
-            }
-
-            journalForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const entryText = journalInput.value.trim();
-                if (entryText) {
-                    appState.journal.push({
-                        text: entryText,
-                        date: new Date().toISOString()
-                    });
-                    saveData();
-                    renderJournal();
-                    journalInput.value = '';
-                    showNotification('Journal entry saved!');
+                
+                if (snapshot.empty) {
+                    journalEntries.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No journal entries yet. Start writing to track your progress!</p>';
+                    return;
                 }
-            });
-
-            renderJournal();
-        }
-
-        // Analytics
-        function updateStats() {
-            const totalGoals = appState.goals.length;
-            const completedGoals = appState.goals.filter(g => g.completed).length;
-            const completionRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
-
-            // Update header stats
-            document.getElementById('total-goals').textContent = totalGoals;
-            document.getElementById('completed-goals').textContent = completedGoals;
-            document.getElementById('study-streak').textContent = appState.streak;
-            document.getElementById('total-time').textContent = Math.floor(appState.totalTime / 60) + 'h';
-
-            // Update analytics page
-            document.getElementById('streak-display').textContent = appState.streak;
-            document.getElementById('total-time-display').textContent = Math.floor(appState.totalTime / 60);
-            document.getElementById('completion-rate').textContent = completionRate;
-        }
-
-        // Quotes
-        function initQuotes() {
-            const newQuoteBtn = document.getElementById('new-quote-btn');
-            const dailyQuote = document.getElementById('daily-quote');
-
-            function displayRandomQuote() {
-                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-                const parts = randomQuote.split(' — ');
-                dailyQuote.textContent = parts[0];
+                
+                snapshot.forEach(doc => {
+                    const entry = doc.data();
+                    const entryElement = createJournalElement(entry);
+                    journalEntries.appendChild(entryElement);
+                });
+                
+            } catch (error) {
+                console.error('Error loading journal:', error);
+                showNotification('Failed to load journal entries', 'error');
+            } finally {
+                journalLoading.style.display = 'none';
             }
-
-            newQuoteBtn.addEventListener('click', displayRandomQuote);
         }
 
-        // Notifications
-        function showNotification(message) {
+        function createJournalElement(entry) {
+            const div = document.createElement('div');
+            div.className = 'card';
+            div.style.marginBottom = '1rem';
+            
+            div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <small style="color: var(--primary); font-weight: 600;">
+                        ${new Date(entry.createdAt.toDate()).toLocaleDateString()} at 
+                        ${new Date(entry.createdAt.toDate()).toLocaleTimeString()}
+                    </small>
+                </div>
+                <p style="line-height: 1.6; margin: 0;">${entry.text}</p>
+            `;
+            
+            return div;
+        }
+
+        journalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const entryText = journalInput.value.trim();
+            if (!entryText || !currentUser) return;
+            
+            setSyncStatus('syncing');
+            
+            try {
+                await db.collection('journal').add({
+                    text: entryText,
+                    userId: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                journalInput.value = '';
+                showNotification('Journal entry saved!', 'success');
+                await loadJournal();
+                setSyncStatus('synced');
+            } catch (error) {
+                console.error('Error saving journal entry:', error);
+                showNotification('Failed to save journal entry', 'error');
+                setSyncStatus('error');
+            }
+        });
+
+        // Stats Management
+        async function updateStats() {
+            if (!currentUser) return;
+            
+            try {
+                // Count goals
+                const goalsSnapshot = await db.collection('goals')
+                    .where('userId', '==', currentUser.uid)
+                    .get();
+                
+                const totalGoals = goalsSnapshot.size;
+                const completedGoals = goalsSnapshot.docs.filter(doc => doc.data().completed).length;
+                
+                document.getElementById('total-goals-count').textContent = totalGoals;
+                document.getElementById('completed-goals-count').textContent = completedGoals;
+                
+                // Calculate streak (simplified)
+                const streak = Math.floor(Math.random() * 10) + 1; // Placeholder
+                document.getElementById('study-streak').textContent = `${streak} days`;
+                
+                // Weekly hours (placeholder)
+                document.getElementById('weekly-hours').textContent = '12h';
+                
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+
+        // Sync Status Management
+        function setSyncStatus(status) {
+            syncStatus.className = `sync-status ${status}`;
+            
+            switch (status) {
+                case 'synced':
+                    syncStatus.innerHTML = '<i class="fas fa-check-circle"></i> Synced';
+                    break;
+                case 'syncing':
+                    syncStatus.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Syncing...';
+                    break;
+                case 'offline':
+                    syncStatus.innerHTML = '<i class="fas fa-wifi-slash"></i> Offline';
+                    break;
+                case 'error':
+                    syncStatus.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                    break;
+            }
+        }
+
+        // Network Status
+        window.addEventListener('online', () => {
+            isOnline = true;
+            setSyncStatus('synced');
+            showNotification('Back online - data syncing', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            setSyncStatus('offline');
+            showNotification('You are offline', 'warning');
+        });
+
+        // Notification System
+        function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
+            const colors = {
+                success: '#27ae60',
+                error: '#e74c3c',
+                warning: '#f39c12',
+                info: '#3498db'
+            };
+            
             notification.className = 'notification';
-            notification.textContent = message;
+            notification.style.background = colors[type] || colors.info;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : type === 'warning' ? 'exclamation' : 'info'}-circle"></i> ${message}`;
+            
             document.body.appendChild(notification);
-
+            
             setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 3000);
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 4000);
         }
 
-        // Data Management
-        function saveData() {
-            localStorage.setItem('studyGoals', JSON.stringify(appState.goals));
-            localStorage.setItem('studyJournal', JSON.stringify(appState.journal));
-            localStorage.setItem('studySessions', JSON.stringify(appState.sessions));
-            localStorage.setItem('studyStreak', appState.streak.toString());
-            localStorage.setItem('totalStudyTime', appState.totalTime.toString());
-        }
-
-        // Initialize Application
+        // Initialize App
         document.addEventListener('DOMContentLoaded', () => {
             initNavigation();
-            initGoals();
-            initTimer();
-            initJournal();
-            initQuotes();
-            updateStats();
             
-            // Welcome message
-            setTimeout(() => {
-                showNotification('🚀 Welcome to StudySync! Let\'s start your productive journey!');
-            }, 1000);
+            // Set initial sync status
+            setSyncStatus(isOnline ? 'synced' : 'offline');
         });
     </script>
 </body>
