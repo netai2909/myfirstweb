@@ -3,264 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudySync | Next-Gen Study Tracker</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>StudySync | Smart Study Tracker</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --dark-gradient: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
-            --glass-bg: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-primary: #2d3748;
-            --text-secondary: #718096;
-            --card-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            --hover-transform: translateY(-5px);
-        }
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #4a90e2;
+            --secondary: #38ef7d;
+            --accent: #ff6b6b;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-            color: var(--text-primary);
-            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--gradient);
+            min-height: 100vh;
+            color: var(--dark);
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Floating particles background */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        /* Glassmorphism Header */
-        header {
-            background: var(--glass-bg);
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 30px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: rotate 10s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .header-content {
-            position: relative;
-            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(45deg, #fff, #f0f8ff, #e6f3ff);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-            text-shadow: 0 0 30px rgba(255,255,255,0.5);
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
         }
 
-        .tagline {
-            font-size: 1.3rem;
-            color: rgba(255,255,255,0.9);
-            margin-bottom: 20px;
-            font-weight: 300;
-        }
-
-        /* Dynamic Stats Bar */
         .user-stats {
             display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
         }
 
-        .stat-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
+        .stat-item {
             text-align: center;
-            min-width: 120px;
-            transform: translateY(0);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .stat-card:hover {
-            transform: var(--hover-transform);
-            box-shadow: 0 15px 30px rgba(255,255,255,0.2);
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
-            color: white;
-            margin-bottom: 5px;
+            color: var(--primary);
         }
 
         .stat-label {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.8);
+            font-size: 0.8rem;
+            color: var(--dark);
+            opacity: 0.7;
         }
 
-        /* Creative Navigation */
-        nav {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
+        /* Navigation */
+        .nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 50px;
+            margin: 1rem auto;
+            max-width: 800px;
+            padding: 0.5rem;
             display: flex;
             justify-content: center;
-            padding: 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
         }
 
         .nav-item {
-            padding: 20px 25px;
-            color: rgba(255,255,255,0.8);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
             text-decoration: none;
-            font-weight: 600;
-            position: relative;
+            color: var(--dark);
+            font-weight: 500;
             transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .nav-item:hover, .nav-item.active {
+        .nav-item:hover {
+            background: var(--primary);
             color: white;
-            background: rgba(255,255,255,0.1);
-            border-bottom-color: #38ef7d;
+            transform: translateY(-2px);
         }
 
-        .nav-item i {
-            margin-right: 8px;
-            font-size: 1.1rem;
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
         }
 
         /* Main Container */
-        main {
+        .container {
             max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
-        /* Glass Cards */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 25px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: var(--card-shadow);
-            transition: all 0.3s ease;
-        }
-
-        .glass-card:hover {
-            transform: var(--hover-transform);
-            box-shadow: 0 25px 50px rgba(255,255,255,0.2);
-        }
-
-        section {
+        .section {
             display: none;
+            animation: fadeIn 0.5s ease;
         }
 
-        section.active {
+        .section.active {
             display: block;
-            animation: fadeInUp 0.6s ease;
         }
 
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        h3 {
-            color: white;
-            font-size: 2rem;
-            margin-bottom: 20px;
+        /* Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 0.5rem;
         }
 
-        h3 i {
-            font-size: 1.5rem;
-            color: #38ef7d;
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
-        /* Creative Progress Bars */
-        .progress-container {
-            background: rgba(255,255,255,0.1);
-            border-radius: 25px;
-            padding: 5px;
-            margin: 10px 0;
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(74, 144, 226, 0.2);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+            background: white;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #357abd;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        /* Progress Bars */
+        .progress {
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+            height: 20px;
             overflow: hidden;
+            margin: 0.5rem 0;
         }
 
         .progress-bar {
-            height: 12px;
-            border-radius: 20px;
-            background: linear-gradient(90deg, #11998e, #38ef7d);
-            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            transition: width 1s ease;
             position: relative;
-            overflow: hidden;
         }
 
         .progress-bar::after {
@@ -271,7 +239,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
+            animation: shimmer 1.5s infinite;
         }
 
         @keyframes shimmer {
@@ -279,438 +247,313 @@
             100% { left: 100%; }
         }
 
-        /* Creative Tables */
-        .creative-table {
+        /* Table */
+        .table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 10px;
-            margin: 20px 0;
+            border-collapse: collapse;
+            margin: 1rem 0;
         }
 
-        .creative-table th {
-            background: var(--primary-gradient);
-            color: white;
-            padding: 20px;
+        .table th,
+        .table td {
+            padding: 1rem;
             text-align: left;
-            font-weight: 700;
-            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
         }
 
-        .creative-table th:first-child {
-            border-radius: 15px 0 0 15px;
+        .table th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
         }
 
-        .creative-table th:last-child {
-            border-radius: 0 15px 15px 0;
+        .table tr:hover {
+            background: rgba(74, 144, 226, 0.05);
         }
 
-        .creative-table td {
-            background: rgba(255,255,255,0.9);
-            padding: 20px;
-            color: var(--text-primary);
-            font-weight: 500;
+        /* Goals List */
+        .goals-list {
+            list-style: none;
+        }
+
+        .goal-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
         }
 
-        .creative-table tr:hover td {
-            background: rgba(255,255,255,1);
-            transform: scale(1.02);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        .goal-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
 
-        .creative-table td:first-child {
-            border-radius: 15px 0 0 15px;
-            font-weight: 700;
-            color: #667eea;
+        .goal-item.completed {
+            opacity: 0.7;
         }
 
-        .creative-table td:last-child {
-            border-radius: 0 15px 15px 0;
+        .goal-item.completed .goal-text {
+            text-decoration: line-through;
         }
 
-        /* Creative Forms */
-        .creative-form {
+        .goal-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+        }
+
+        .goal-text {
+            flex: 1;
+            font-size: 1rem;
+        }
+
+        /* Journal Entries */
+        .journal-entries {
+            list-style: none;
+        }
+
+        .journal-entry {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
+
+        .journal-date {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Timer */
+        .timer-container {
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+        }
+
+        .timer-display {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .timer-controls {
             display: flex;
-            gap: 15px;
-            margin: 20px 0;
+            gap: 1rem;
+            justify-content: center;
             flex-wrap: wrap;
         }
 
-        .form-group {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 18px 25px;
-            border: 2px solid rgba(255,255,255,0.2);
-            border-radius: 15px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #38ef7d;
-            background: rgba(255,255,255,0.2);
-            box-shadow: 0 0 20px rgba(56, 239, 125, 0.3);
-        }
-
-        .form-input::placeholder {
-            color: rgba(255,255,255,0.6);
-        }
-
-        .creative-btn {
-            background: var(--success-gradient);
-            color: white;
-            border: none;
-            padding: 18px 30px;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 25px rgba(56, 239, 125, 0.3);
-        }
-
-        .creative-btn:hover {
-            transform: var(--hover-transform);
-            box-shadow: 0 15px 35px rgba(56, 239, 125, 0.4);
-        }
-
-        .creative-btn:active {
-            transform: translateY(-2px);
-        }
-
-        /* Creative Lists */
-        .creative-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .list-item {
-            background: rgba(255,255,255,0.9);
-            margin: 10px 0;
-            padding: 20px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: all 0.3s ease;
-            border-left: 5px solid #38ef7d;
-        }
-
-        .list-item:hover {
-            transform: translateX(10px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-
-        .list-item.completed {
-            opacity: 0.7;
-            text-decoration: line-through;
-            border-left-color: #cbd5e0;
-        }
-
-        .creative-checkbox {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            border: 3px solid #38ef7d;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .creative-checkbox:checked {
-            background: #38ef7d;
-        }
-
-        /* Floating Action Button */
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--success-gradient);
-            color: white;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(56, 239, 125, 0.4);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .fab:hover {
-            transform: scale(1.1) rotate(180deg);
-            box-shadow: 0 15px 35px rgba(56, 239, 125, 0.6);
-        }
-
-        /* Creative Animations */
-        .bounce-in {
-            animation: bounceIn 0.8s ease;
-        }
-
-        @keyframes bounceIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.3);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.05);
-            }
-            70% {
-                transform: scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(56, 239, 125, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(56, 239, 125, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(56, 239, 125, 0);
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .logo {
-                font-size: 2.5rem;
-            }
-            
-            .user-stats {
-                gap: 15px;
-            }
-            
-            .stat-card {
-                min-width: 100px;
-                padding: 15px;
-            }
-            
-            nav {
-                flex-wrap: wrap;
-            }
-            
-            .nav-item {
-                flex: 1;
-                text-align: center;
-                padding: 15px 10px;
-                font-size: 0.9rem;
-            }
-            
-            main {
-                margin: 20px auto;
-                padding: 0 15px;
-            }
-            
-            .glass-card {
-                padding: 20px;
-            }
-            
-            .creative-form {
-                flex-direction: column;
-            }
-        }
-
-        /* Success Animations */
-        .success-animation {
-            animation: successPop 0.6s ease;
-        }
-
-        @keyframes successPop {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* Quote Styling */
+        /* Quotes */
         .quote-container {
-            text-align: center;
-            padding: 30px;
-            background: var(--glass-bg);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
             border-radius: 20px;
-            margin: 20px 0;
-            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
         }
 
         .quote-text {
-            font-size: 1.3rem;
-            color: white;
+            font-size: 1.5rem;
             font-style: italic;
-            margin-bottom: 15px;
+            margin-bottom: 1rem;
             line-height: 1.6;
         }
 
         .quote-author {
-            color: rgba(255,255,255,0.8);
-            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .user-stats {
+                gap: 1rem;
+            }
+
+            .nav {
+                flex-wrap: wrap;
+                border-radius: 20px;
+            }
+
+            .nav-item {
+                flex: 1;
+                justify-content: center;
+                min-width: 120px;
+            }
+
+            .timer-display {
+                font-size: 2.5rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Floating Particles -->
-    <div class="particles" id="particles"></div>
-
-    <header>
+    <!-- Header -->
+    <header class="header">
         <div class="header-content">
-            <div class="logo">✨ StudySync</div>
-            <div class="tagline">Next-Generation Study Tracking Experience</div>
-            
-            <!-- Dynamic User Stats -->
-            <div class="user-stats" id="user-stats" style="display:none;">
-                <div class="stat-card" data-tooltip="Your current level">
-                    <div class="stat-value" id="user-level">1</div>
-                    <div class="stat-label">Level</div>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i> StudySync
+            </div>
+            <div class="user-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-goals">0</div>
+                    <div class="stat-label">Goals</div>
                 </div>
-                <div class="stat-card" data-tooltip="Experience points earned">
-                    <div class="stat-value" id="user-xp">0</div>
-                    <div class="stat-label">XP</div>
+                <div class="stat-item">
+                    <div class="stat-value" id="completed-goals">0</div>
+                    <div class="stat-label">Completed</div>
                 </div>
-                <div class="stat-card" data-tooltip="Total study time">
-                    <div class="stat-value" id="total-study-time">0h</div>
-                    <div class="stat-label">Study Time</div>
-                </div>
-                <div class="stat-card" data-tooltip="Badges collected">
-                    <div class="stat-value" id="badges-earned">0</div>
-                    <div class="stat-label">Badges</div>
-                </div>
-                <div class="stat-card" data-tooltip="Current study streak">
+                <div class="stat-item">
                     <div class="stat-value" id="study-streak">0</div>
                     <div class="stat-label">Day Streak</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="total-time">0h</div>
+                    <div class="stat-label">Study Time</div>
                 </div>
             </div>
         </div>
     </header>
 
-    <nav>
-        <a href="#" class="nav-item active" data-section="home">
-            <i class="fas fa-home"></i> Home
+    <!-- Navigation -->
+    <nav class="nav">
+        <a class="nav-item active" data-section="dashboard">
+            <i class="fas fa-home"></i> Dashboard
         </a>
-        <a href="#" class="nav-item" data-section="dashboard">
-            <i class="fas fa-chart-line"></i> Dashboard
-        </a>
-        <a href="#" class="nav-item" data-section="goals">
+        <a class="nav-item" data-section="goals">
             <i class="fas fa-target"></i> Goals
         </a>
-        <a href="#" class="nav-item" data-section="timer">
+        <a class="nav-item" data-section="timer">
             <i class="fas fa-clock"></i> Timer
         </a>
-        <a href="#" class="nav-item" data-section="journal">
+        <a class="nav-item" data-section="journal">
             <i class="fas fa-book"></i> Journal
         </a>
-        <a href="#" class="nav-item" data-section="stats">
-            <i class="fas fa-analytics"></i> Analytics
+        <a class="nav-item" data-section="analytics">
+            <i class="fas fa-chart-line"></i> Analytics
         </a>
-        <a href="#" class="nav-item" data-section="achievements">
-            <i class="fas fa-trophy"></i> Badges
-        </a>
-        <a href="#" class="nav-item" data-section="resources">
-            <i class="fas fa-library"></i> Resources
+        <a class="nav-item" data-section="resources">
+            <i class="fas fa-book-open"></i> Resources
         </a>
     </nav>
 
-    <main>
-        <!-- Home Section -->
-        <section id="home" class="active">
-            <div class="glass-card bounce-in">
-                <h3><i class="fas fa-rocket"></i> Welcome to Your Study Universe</h3>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Dashboard Section -->
+        <section class="section active" id="dashboard">
+            <div class="card">
+                <h3><i class="fas fa-chart-bar"></i> Study Dashboard</h3>
                 
-                <!-- Motivational Quote -->
+                <!-- Quote of the Day -->
                 <div class="quote-container">
-                    <div class="quote-text" id="home-quote">
+                    <div class="quote-text" id="daily-quote">
                         "Success is the sum of small efforts, repeated day in and day out."
                     </div>
                     <div class="quote-author">— Robert Collier</div>
+                    <button class="btn btn-success" id="new-quote-btn" style="margin-top: 1rem;">
+                        <i class="fas fa-refresh"></i> New Quote
+                    </button>
                 </div>
 
-                <!-- Weekly Progress Overview -->
-                <h4 style="color: white; margin: 30px 0 20px 0; font-size: 1.5rem;">
-                    <i class="fas fa-chart-bar" style="color: #38ef7d; margin-right: 10px;"></i>
-                    Weekly Progress Overview
-                </h4>
-                
-                <table class="creative-table">
+                <!-- Weekly Progress -->
+                <h4>Weekly Progress Overview</h4>
+                <table class="table">
                     <thead>
                         <tr>
-                            <th><i class="fas fa-book-open"></i> Subject</th>
-                            <th><i class="fas fa-target"></i> This Week's Target</th>
-                            <th><i class="fas fa-check-circle"></i> Completed</th>
-                            <th><i class="fas fa-chart-line"></i> Progress</th>
+                            <th>Subject</th>
+                            <th>Target</th>
+                            <th>Progress</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td><strong>Mathematics</strong></td>
-                            <td>Calculus, Integration, Matrix Operations</td>
-                            <td><span style="color: #38ef7d; font-weight: bold;">2/3 topics</span></td>
+                            <td>Calculus & Integration</td>
                             <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar" style="width: 67%"></div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 75%"></div>
                                 </div>
-                                <small style="color: #38ef7d; font-weight: bold;">67%</small>
+                                75%
                             </td>
+                            <td><span style="color: var(--success);">On Track</span></td>
                         </tr>
                         <tr>
                             <td><strong>Physics</strong></td>
-                            <td>Kinematics, Newton's Laws, Energy</td>
-                            <td><span style="color: #f093fb; font-weight: bold;">1/2 topics</span></td>
+                            <td>Mechanics & Waves</td>
                             <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar" style="width: 50%"></div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 60%"></div>
                                 </div>
-                                <small style="color: #f093fb; font-weight: bold;">50%</small>
+                                60%
                             </td>
+                            <td><span style="color: var(--warning);">Behind</span></td>
                         </tr>
                         <tr>
                             <td><strong>Electronics</strong></td>
-                            <td>Circuits, Semiconductors, Diodes</td>
-                            <td><span style="color: #f093fb; font-weight: bold;">1/2 topics</span></td>
+                            <td>Circuits & Diodes</td>
                             <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar" style="width: 50%"></div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 85%"></div>
                                 </div>
-                                <small style="color: #f093fb; font-weight: bold;">50%</small>
+                                85%
                             </td>
+                            <td><span style="color: var(--success);">Excellent</span></td>
                         </tr>
                         <tr>
                             <td><strong>Python</strong></td>
-                            <td>Functions, Loops, Mini-projects</td>
-                            <td><span style="color: #667eea; font-weight: bold;">1/3 goals</span></td>
+                            <td>Functions & Projects</td>
                             <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar" style="width: 33%"></div>
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 45%"></div>
                                 </div>
-                                <small style="color: #667eea; font-weight: bold;">33%</small>
+                                45%
                             </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Communication</strong></td>
-                            <td>Email Writing, Presentations</td>
-                            <td><span style="color: #38ef7d; font-weight: bold;">2/2 tasks</span></td>
-                            <td>
-                                <div class="progress-container">
-                                    <div class="progress-bar" style="width: 100%"></div>
-                                </div>
-                                <small style="color: #38ef7d; font-weight: bold;">100%</small>
-                            </td>
+                            <td><span style="color: var(--danger);">Needs Focus</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -718,418 +561,474 @@
         </section>
 
         <!-- Goals Section -->
-        <section id="goals">
-            <div class="glass-card">
-                <h3><i class="fas fa-bullseye"></i> Smart Goal Management</h3>
+        <section class="section" id="goals">
+            <div class="card">
+                <h3><i class="fas fa-bullseye"></i> Study Goals</h3>
                 
-                <form class="creative-form" id="goal-form">
-                    <div class="form-group">
-                        <input type="text" class="form-input" id="goal-input" placeholder="What's your next achievement?" required>
-                    </div>
-                    <button type="submit" class="creative-btn pulse">
+                <form id="goal-form" class="form-group">
+                    <input type="text" class="form-control" id="goal-input" placeholder="Enter your study goal..." required>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
                         <i class="fas fa-plus"></i> Add Goal
                     </button>
                 </form>
 
-                <div id="goals-container">
-                    <ul class="creative-list" id="goal-list"></ul>
+                <ul class="goals-list" id="goals-list">
+                    <!-- Goals will be dynamically added here -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- Timer Section -->
+        <section class="section" id="timer">
+            <div class="card">
+                <h3><i class="fas fa-stopwatch"></i> Study Timer</h3>
+                
+                <div class="timer-container">
+                    <h4>Pomodoro Timer</h4>
+                    <div class="timer-display" id="timer-display">25:00</div>
+                    <div class="timer-controls">
+                        <button class="btn btn-success" id="start-timer">
+                            <i class="fas fa-play"></i> Start
+                        </button>
+                        <button class="btn btn-danger" id="pause-timer">
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button class="btn btn-primary" id="reset-timer">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                    <p style="margin-top: 1rem; opacity: 0.8;">25 minutes focus • 5 minutes break</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="timer-subject">Current Subject:</label>
+                    <select class="form-control" id="timer-subject">
+                        <option value="mathematics">Mathematics</option>
+                        <option value="physics">Physics</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="python">Python Programming</option>
+                        <option value="communication">Communication</option>
+                    </select>
+                </div>
+
+                <div id="session-log">
+                    <h4>Today's Sessions</h4>
+                    <ul id="sessions-list"></ul>
                 </div>
             </div>
         </section>
 
-        <!-- More sections would continue here... -->
-    </main>
+        <!-- Journal Section -->
+        <section class="section" id="journal">
+            <div class="card">
+                <h3><i class="fas fa-pen"></i> Study Journal</h3>
+                
+                <form id="journal-form" class="form-group">
+                    <textarea class="form-control" id="journal-input" rows="6" 
+                              placeholder="How was your study session today? What did you learn? What challenges did you face?"></textarea>
+                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-save"></i> Save Entry
+                    </button>
+                </form>
 
-    <!-- Floating Action Button -->
-    <button class="fab" id="motivate-btn" title="Get Motivated!">
-        <i class="fas fa-heart"></i>
-    </button>
+                <ul class="journal-entries" id="journal-entries">
+                    <!-- Journal entries will be dynamically added here -->
+                </ul>
+            </div>
+        </section>
 
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
-    
-    <!-- Chart.js for Analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+        <!-- Analytics Section -->
+        <section class="section" id="analytics">
+            <div class="card">
+                <h3><i class="fas fa-chart-pie"></i> Study Analytics</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
+                    <div class="card">
+                        <h4>Study Streak</h4>
+                        <div style="text-align: center; font-size: 3rem; color: var(--primary);">
+                            <span id="streak-display">0</span> 🔥
+                        </div>
+                        <p style="text-align: center;">Consecutive study days</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>Total Study Time</h4>
+                        <div style="text-align: center; font-size: 3rem; color: var(--success);">
+                            <span id="total-time-display">0</span>h
+                        </div>
+                        <p style="text-align: center;">Hours this week</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>Goals Completion</h4>
+                        <div style="text-align: center; font-size: 3rem; color: var(--warning);">
+                            <span id="completion-rate">0</span>%
+                        </div>
+                        <p style="text-align: center;">Weekly completion rate</p>
+                    </div>
+                </div>
+
+                <h4>Subject Distribution</h4>
+                <div id="subject-stats">
+                    <!-- Subject statistics will be displayed here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources Section -->
+        <section class="section" id="resources">
+            <div class="card">
+                <h3><i class="fas fa-library"></i> Study Resources</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div class="card">
+                        <h4><i class="fas fa-calculator"></i> Mathematics</h4>
+                        <ul style="list-style: none;">
+                            <li><a href="https://ncert.nic.in/textbook.php" target="_blank">📚 NCERT Mathematics</a></li>
+                            <li><a href="https://nptel.ac.in/courses/111/106/111106094/" target="_blank">🎥 NPTEL Engineering Math</a></li>
+                            <li><a href="https://www.youtube.com/user/gatesmashers" target="_blank">📺 Gate Smashers</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4><i class="fas fa-atom"></i> Physics</h4>
+                        <ul style="list-style: none;">
+                            <li><a href="https://ncert.nic.in/textbook.php" target="_blank">📚 NCERT Physics</a></li>
+                            <li><a href="https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/" target="_blank">🎓 MIT OpenCourseWare</a></li>
+                            <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">📺 Neso Academy</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4><i class="fas fa-microchip"></i> Electronics</h4>
+                        <ul style="list-style: none;">
+                            <li><a href="#" target="_blank">📚 Boylestad Circuit Theory</a></li>
+                            <li><a href="https://www.youtube.com/channel/UCB3QHZf8Brffn76_Jk88nTQ" target="_blank">📺 Electronics Basics</a></li>
+                            <li><a href="#" target="_blank">🔬 Circuit Simulators</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <h4><i class="fas fa-code"></i> Python Programming</h4>
+                        <ul style="list-style: none;">
+                            <li><a href="https://www.coursera.org/learn/python" target="_blank">🎓 Python for Everybody</a></li>
+                            <li><a href="https://www.youtube.com/watch?v=gfDE2a7MKjA" target="_blank">📺 Python Full Course</a></li>
+                            <li><a href="https://automatetheboringstuff.com/" target="_blank">📖 Automate Boring Stuff</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyArjKxUfvehNSA-GLXuuiOpChe55c4MQDE",
-            authDomain: "studysync-prod-acfc6.firebaseapp.com",
-            projectId: "studysync-prod-acfc6",
-            storageBucket: "studysync-prod-acfc6.firebasestorage.app",
-            messagingSenderId: "372359765372",
-            appId: "1:372359765372:web:bb5252996a4c98597758f9"
+        // Application State
+        let appState = {
+            goals: JSON.parse(localStorage.getItem('studyGoals')) || [],
+            journal: JSON.parse(localStorage.getItem('studyJournal')) || [],
+            sessions: JSON.parse(localStorage.getItem('studySessions')) || [],
+            streak: parseInt(localStorage.getItem('studyStreak')) || 0,
+            totalTime: parseInt(localStorage.getItem('totalStudyTime')) || 0
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Global State
-        let currentUser = null;
-        let userProgress = {
-            level: 1,
-            xp: 0,
-            totalStudyTime: 0,
-            badges: [],
-            streak: 0,
-            goals: [],
-            sessions: []
+        // Timer State
+        let timerState = {
+            isRunning: false,
+            timeLeft: 25 * 60, // 25 minutes in seconds
+            currentSession: null,
+            interval: null
         };
-
-        // Create Floating Particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = 50;
-
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.width = Math.random() * 4 + 2 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Navigation System
-        function initNavigation() {
-            const navItems = document.querySelectorAll('.nav-item');
-            const sections = document.querySelectorAll('main section');
-
-            navItems.forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetSection = item.getAttribute('data-section');
-
-                    // Update active states
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    sections.forEach(section => section.classList.remove('active'));
-
-                    item.classList.add('active');
-                    document.getElementById(targetSection).classList.add('active');
-
-                    // Add entrance animation
-                    const activeSection = document.getElementById(targetSection);
-                    activeSection.style.animation = 'none';
-                    setTimeout(() => {
-                        activeSection.style.animation = 'fadeInUp 0.6s ease';
-                    }, 10);
-                });
-            });
-        }
-
-        // Goal Management System
-        function initGoalSystem() {
-            const goalForm = document.getElementById('goal-form');
-            const goalInput = document.getElementById('goal-input');
-            const goalList = document.getElementById('goal-list');
-
-            // Load existing goals
-            function loadGoals() {
-                const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
-                goalList.innerHTML = '';
-
-                goals.forEach((goal, index) => {
-                    const li = document.createElement('li');
-                    li.className = 'list-item';
-                    if (goal.completed) li.classList.add('completed');
-
-                    li.innerHTML = `
-                        <input type="checkbox" class="creative-checkbox" ${goal.completed ? 'checked' : ''} 
-                               onchange="toggleGoal(${index})">
-                        <span style="flex: 1; color: #2d3748; font-weight: 500;">${goal.text}</span>
-                        <button onclick="deleteGoal(${index})" style="background: #f56565; color: white; border: none; 
-                                padding: 8px 12px; border-radius: 8px; cursor: pointer;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    `;
-
-                    goalList.appendChild(li);
-                });
-
-                updateStats();
-            }
-
-            // Add new goal
-            goalForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const goalText = goalInput.value.trim();
-                
-                if (goalText) {
-                    const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
-                    goals.push({
-                        text: goalText,
-                        completed: false,
-                        createdAt: new Date().toISOString(),
-                        id: Date.now()
-                    });
-                    
-                    localStorage.setItem('studyGoals', JSON.stringify(goals));
-                    goalInput.value = '';
-                    loadGoals();
-                    
-                    // Add XP for creating goals
-                    addXP(5, 'Created a new goal');
-                    showNotification('🎯 New goal added!', 'success');
-                }
-            });
-
-            // Global functions for goal management
-            window.toggleGoal = function(index) {
-                const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
-                const wasCompleted = goals[index].completed;
-                goals[index].completed = !goals[index].completed;
-                
-                localStorage.setItem('studyGoals', JSON.stringify(goals));
-                loadGoals();
-                
-                if (!wasCompleted && goals[index].completed) {
-                    addXP(20, 'Completed a goal');
-                    showNotification('🎉 Goal completed! Well done!', 'success');
-                    createConfetti();
-                }
-            };
-
-            window.deleteGoal = function(index) {
-                const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
-                goals.splice(index, 1);
-                localStorage.setItem('studyGoals', JSON.stringify(goals));
-                loadGoals();
-                showNotification('🗑️ Goal deleted', 'info');
-            };
-
-            loadGoals();
-        }
-
-        // XP and Level System
-        function addXP(amount, reason) {
-            userProgress.xp += amount;
-            const newLevel = Math.floor(userProgress.xp / 100) + 1;
-            
-            if (newLevel > userProgress.level) {
-                userProgress.level = newLevel;
-                showNotification(`🌟 Level Up! You're now Level ${newLevel}!`, 'level-up');
-                createLevelUpEffect();
-            }
-            
-            updateStats();
-            saveUserProgress();
-            
-            // Show XP notification
-            showNotification(`+${amount} XP - ${reason}`, 'xp');
-        }
-
-        function updateStats() {
-            const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
-            const completedGoals = goals.filter(g => g.completed).length;
-            
-            document.getElementById('user-level').textContent = userProgress.level;
-            document.getElementById('user-xp').textContent = userProgress.xp;
-            document.getElementById('total-study-time').textContent = Math.floor(userProgress.totalStudyTime / 60) + 'h';
-            document.getElementById('badges-earned').textContent = userProgress.badges.length;
-            document.getElementById('study-streak').textContent = userProgress.streak;
-            
-            // Show stats if user has data
-            if (userProgress.xp > 0 || goals.length > 0) {
-                document.getElementById('user-stats').style.display = 'flex';
-            }
-        }
-
-        function saveUserProgress() {
-            localStorage.setItem('userProgress', JSON.stringify(userProgress));
-        }
-
-        function loadUserProgress() {
-            const saved = localStorage.getItem('userProgress');
-            if (saved) {
-                userProgress = { ...userProgress, ...JSON.parse(saved) };
-            }
-            updateStats();
-        }
-
-        // Creative Notification System
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            const colors = {
-                success: 'linear-gradient(135deg, #11998e, #38ef7d)',
-                error: 'linear-gradient(135deg, #f093fb, #f5576c)',
-                info: 'linear-gradient(135deg, #667eea, #764ba2)',
-                xp: 'linear-gradient(135deg, #f093fb, #f5576c)',
-                'level-up': 'linear-gradient(135deg, #ffd700, #ffed4a)'
-            };
-
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: ${colors[type] || colors.info};
-                color: white;
-                padding: 20px 25px;
-                border-radius: 15px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-                z-index: 10000;
-                font-weight: 600;
-                font-size: 1rem;
-                animation: slideInRight 0.5s ease, fadeOut 0.5s ease 3s;
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255,255,255,0.2);
-            `;
-
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.parentNode.removeChild(notification);
-                }
-            }, 4000);
-        }
-
-        // Confetti Effect
-        function createConfetti() {
-            const colors = ['#38ef7d', '#667eea', '#f093fb', '#764ba2', '#11998e'];
-            const confettiCount = 50;
-            
-            for (let i = 0; i < confettiCount; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.cssText = `
-                    position: fixed;
-                    width: 10px;
-                    height: 10px;
-                    background: ${colors[Math.floor(Math.random() * colors.length)]};
-                    top: -10px;
-                    left: ${Math.random() * 100}%;
-                    border-radius: 50%;
-                    pointer-events: none;
-                    z-index: 10000;
-                    animation: confettiFall ${Math.random() * 2 + 2}s linear forwards;
-                `;
-                
-                document.body.appendChild(confetti);
-                
-                setTimeout(() => {
-                    if (confetti.parentNode) {
-                        confetti.parentNode.removeChild(confetti);
-                    }
-                }, 4000);
-            }
-        }
-
-        // Level Up Effect
-        function createLevelUpEffect() {
-            const effect = document.createElement('div');
-            effect.style.cssText = `
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                font-size: 3rem;
-                font-weight: bold;
-                color: #ffd700;
-                z-index: 10000;
-                animation: levelUpPulse 2s ease forwards;
-                text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-                pointer-events: none;
-            `;
-            effect.textContent = '🌟 LEVEL UP! 🌟';
-            document.body.appendChild(effect);
-
-            setTimeout(() => {
-                if (effect.parentNode) {
-                    effect.parentNode.removeChild(effect);
-                }
-            }, 2000);
-
-            createConfetti();
-        }
 
         // Motivational Quotes
         const quotes = [
             "Success is the sum of small efforts, repeated day in and day out. — Robert Collier",
             "The future belongs to those who believe in the beauty of their dreams. — Eleanor Roosevelt",
             "Education is the most powerful weapon which you can use to change the world. — Nelson Mandela",
-            "The only way to do great work is to love what you do. — Steve Jobs",
             "Your limitation—it's only your imagination.",
             "Push yourself, because no one else is going to do it for you.",
             "Great things never come from comfort zones.",
             "Dream it. Wish it. Do it.",
-            "Success doesn't just find you. You have to go out and get it.",
-            "The harder you work for something, the greater you'll feel when you achieve it."
+            "The secret of getting ahead is getting started. — Mark Twain",
+            "It's going to be hard, but hard does not mean impossible.",
+            "Success doesn't just find you. You have to go out and get it."
         ];
 
-        function displayRandomQuote() {
-            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-            const parts = randomQuote.split(' — ');
-            const quote = parts[0];
-            const author = parts[1] || '';
-            
-            document.getElementById('home-quote').textContent = quote;
-            
-            if (author) {
-                const authorElement = document.querySelector('.quote-author');
-                authorElement.textContent = `— ${author}`;
-            }
-        }
+        // Navigation
+        function initNavigation() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.section');
 
-        // Floating Action Button
-        function initFAB() {
-            const motivateBtn = document.getElementById('motivate-btn');
-            motivateBtn.addEventListener('click', () => {
-                displayRandomQuote();
-                showNotification('✨ New inspiration loaded!', 'success');
-                addXP(2, 'Sought motivation');
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetSection = item.dataset.section;
+
+                    // Update nav active state
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Update section active state
+                    sections.forEach(section => section.classList.remove('active'));
+                    document.getElementById(targetSection).classList.add('active');
+                });
             });
         }
 
-        // CSS Animations
-        const additionalCSS = `
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
+        // Goals Management
+        function initGoals() {
+            const goalForm = document.getElementById('goal-form');
+            const goalInput = document.getElementById('goal-input');
+            const goalsList = document.getElementById('goals-list');
+
+            function renderGoals() {
+                goalsList.innerHTML = '';
+                appState.goals.forEach((goal, index) => {
+                    const li = document.createElement('li');
+                    li.className = `goal-item ${goal.completed ? 'completed' : ''}`;
+                    li.innerHTML = `
+                        <input type="checkbox" class="goal-checkbox" ${goal.completed ? 'checked' : ''} 
+                               onchange="toggleGoal(${index})">
+                        <span class="goal-text">${goal.text}</span>
+                        <button class="btn btn-danger" onclick="deleteGoal(${index})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    goalsList.appendChild(li);
+                });
+                updateStats();
             }
-            
-            @keyframes fadeOut {
-                from { opacity: 1; }
-                to { opacity: 0; }
+
+            goalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const goalText = goalInput.value.trim();
+                if (goalText) {
+                    appState.goals.push({
+                        text: goalText,
+                        completed: false,
+                        createdAt: new Date().toISOString()
+                    });
+                    saveData();
+                    renderGoals();
+                    goalInput.value = '';
+                    showNotification('Goal added successfully!');
+                }
+            });
+
+            // Global functions for goal management
+            window.toggleGoal = function(index) {
+                appState.goals[index].completed = !appState.goals[index].completed;
+                if (appState.goals[index].completed) {
+                    showNotification('🎉 Goal completed! Well done!');
+                }
+                saveData();
+                renderGoals();
+            };
+
+            window.deleteGoal = function(index) {
+                appState.goals.splice(index, 1);
+                saveData();
+                renderGoals();
+                showNotification('Goal deleted');
+            };
+
+            renderGoals();
+        }
+
+        // Timer Management
+        function initTimer() {
+            const timerDisplay = document.getElementById('timer-display');
+            const startBtn = document.getElementById('start-timer');
+            const pauseBtn = document.getElementById('pause-timer');
+            const resetBtn = document.getElementById('reset-timer');
+            const subjectSelect = document.getElementById('timer-subject');
+            const sessionsList = document.getElementById('sessions-list');
+
+            function updateDisplay() {
+                const minutes = Math.floor(timerState.timeLeft / 60);
+                const seconds = timerState.timeLeft % 60;
+                timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
-            
-            @keyframes confettiFall {
-                to {
-                    transform: translateY(100vh) rotateZ(360deg);
-                    opacity: 0;
+
+            function startTimer() {
+                if (!timerState.isRunning) {
+                    timerState.isRunning = true;
+                    timerState.currentSession = {
+                        subject: subjectSelect.value,
+                        startTime: new Date(),
+                        duration: 0
+                    };
+                    
+                    timerState.interval = setInterval(() => {
+                        timerState.timeLeft--;
+                        updateDisplay();
+                        
+                        if (timerState.timeLeft <= 0) {
+                            completeSession();
+                        }
+                    }, 1000);
+                    
+                    startBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                } else {
+                    pauseTimer();
                 }
             }
-            
-            @keyframes levelUpPulse {
-                0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-                50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-                100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-            }
-        `;
-        
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = additionalCSS;
-        document.head.appendChild(styleSheet);
 
-        // Initialize Everything
+            function pauseTimer() {
+                timerState.isRunning = false;
+                clearInterval(timerState.interval);
+                startBtn.innerHTML = '<i class="fas fa-play"></i> Start';
+            }
+
+            function resetTimer() {
+                pauseTimer();
+                timerState.timeLeft = 25 * 60;
+                updateDisplay();
+            }
+
+            function completeSession() {
+                pauseTimer();
+                const session = {
+                    ...timerState.currentSession,
+                    endTime: new Date(),
+                    duration: 25, // 25 minutes
+                    date: new Date().toDateString()
+                };
+                
+                appState.sessions.push(session);
+                appState.totalTime += 25;
+                saveData();
+                
+                showNotification('🎉 Pomodoro session completed! Time for a break.');
+                renderSessions();
+                updateStats();
+                resetTimer();
+            }
+
+            function renderSessions() {
+                const todaySessions = appState.sessions.filter(s => s.date === new Date().toDateString());
+                sessionsList.innerHTML = '';
+                
+                todaySessions.forEach(session => {
+                    const li = document.createElement('li');
+                    li.style.cssText = 'padding: 0.5rem; margin: 0.5rem 0; background: white; border-radius: 5px;';
+                    li.innerHTML = `
+                        <strong>${session.subject.charAt(0).toUpperCase() + session.subject.slice(1)}</strong>
+                        <br><small>${session.duration} minutes • ${new Date(session.startTime).toLocaleTimeString()}</small>
+                    `;
+                    sessionsList.appendChild(li);
+                });
+            }
+
+            startBtn.addEventListener('click', startTimer);
+            pauseBtn.addEventListener('click', pauseTimer);
+            resetBtn.addEventListener('click', resetTimer);
+
+            updateDisplay();
+            renderSessions();
+        }
+
+        // Journal Management
+        function initJournal() {
+            const journalForm = document.getElementById('journal-form');
+            const journalInput = document.getElementById('journal-input');
+            const journalEntries = document.getElementById('journal-entries');
+
+            function renderJournal() {
+                journalEntries.innerHTML = '';
+                [...appState.journal].reverse().forEach(entry => {
+                    const li = document.createElement('li');
+                    li.className = 'journal-entry';
+                    li.innerHTML = `
+                        <div class="journal-date">${new Date(entry.date).toLocaleDateString()}</div>
+                        <div>${entry.text}</div>
+                    `;
+                    journalEntries.appendChild(li);
+                });
+            }
+
+            journalForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const entryText = journalInput.value.trim();
+                if (entryText) {
+                    appState.journal.push({
+                        text: entryText,
+                        date: new Date().toISOString()
+                    });
+                    saveData();
+                    renderJournal();
+                    journalInput.value = '';
+                    showNotification('Journal entry saved!');
+                }
+            });
+
+            renderJournal();
+        }
+
+        // Analytics
+        function updateStats() {
+            const totalGoals = appState.goals.length;
+            const completedGoals = appState.goals.filter(g => g.completed).length;
+            const completionRate = totalGoals > 0 ? Math.round((completedGoals / totalGoals) * 100) : 0;
+
+            // Update header stats
+            document.getElementById('total-goals').textContent = totalGoals;
+            document.getElementById('completed-goals').textContent = completedGoals;
+            document.getElementById('study-streak').textContent = appState.streak;
+            document.getElementById('total-time').textContent = Math.floor(appState.totalTime / 60) + 'h';
+
+            // Update analytics page
+            document.getElementById('streak-display').textContent = appState.streak;
+            document.getElementById('total-time-display').textContent = Math.floor(appState.totalTime / 60);
+            document.getElementById('completion-rate').textContent = completionRate;
+        }
+
+        // Quotes
+        function initQuotes() {
+            const newQuoteBtn = document.getElementById('new-quote-btn');
+            const dailyQuote = document.getElementById('daily-quote');
+
+            function displayRandomQuote() {
+                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                const parts = randomQuote.split(' — ');
+                dailyQuote.textContent = parts[0];
+            }
+
+            newQuoteBtn.addEventListener('click', displayRandomQuote);
+        }
+
+        // Notifications
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+
+        // Data Management
+        function saveData() {
+            localStorage.setItem('studyGoals', JSON.stringify(appState.goals));
+            localStorage.setItem('studyJournal', JSON.stringify(appState.journal));
+            localStorage.setItem('studySessions', JSON.stringify(appState.sessions));
+            localStorage.setItem('studyStreak', appState.streak.toString());
+            localStorage.setItem('totalStudyTime', appState.totalTime.toString());
+        }
+
+        // Initialize Application
         document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
             initNavigation();
-            initGoalSystem();
-            initFAB();
-            loadUserProgress();
-            displayRandomQuote();
+            initGoals();
+            initTimer();
+            initJournal();
+            initQuotes();
+            updateStats();
             
             // Welcome message
             setTimeout(() => {
-                showNotification('🚀 Welcome to StudySync! Let\'s achieve greatness together!', 'success');
+                showNotification('🚀 Welcome to StudySync! Let\'s start your productive journey!');
             }, 1000);
         });
     </script>
