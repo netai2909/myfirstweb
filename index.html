@@ -60,7 +60,7 @@
             z-index: 10;
         }
         nav a {
-            padding: 15px 25px;
+            padding: 15px 20px;
             display: block;
             color: #4a90e2;
             font-weight: 600;
@@ -175,6 +175,23 @@
             text-align: center;
         }
         
+        /* Stats and Charts */
+        #streak-counter {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4a90e2;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #f0f8ff, #e6f3ff);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        canvas {
+            max-width: 100%;
+            margin: 20px 0;
+        }
+        
         /* Loading and offline states */
         .loading {
             opacity: 0.6;
@@ -194,9 +211,10 @@
                 flex-wrap: wrap;
             }
             nav a {
-                flex: 1 0 50%;
+                flex: 1 0 33.33%;
                 text-align: center;
-                padding: 12px 15px;
+                padding: 12px 8px;
+                font-size: 0.9rem;
             }
             main {
                 margin: 10px;
@@ -230,6 +248,7 @@
         <a href="#" data-section="dashboard">Dashboard</a>
         <a href="#" data-section="goals">Goals</a>
         <a href="#" data-section="journal">Journal</a>
+        <a href="#" data-section="stats">Stats</a>
         <a href="#" data-section="motivation">Motivation</a>
         <a href="#" data-section="resources">Resources</a>
     </nav>
@@ -312,6 +331,27 @@
             <ul id="journal-entries"></ul>
         </section>
 
+        <section id="stats">
+            <h3>Analytics & Insights</h3>
+            
+            <h4>Study Streak</h4>
+            <div id="streak-counter">0-day streak 🔥</div>
+            
+            <h4>Goal Completion Rate</h4>
+            <canvas id="goalChart" width="400" height="200"></canvas>
+            
+            <h4>Hours per Subject (Last 7 Days)</h4>
+            <canvas id="timeChart" width="400" height="250"></canvas>
+            
+            <h4>Weekly Study Summary</h4>
+            <div id="weekly-summary" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                <p><strong>Total Study Time:</strong> <span id="total-time">12.5 hours</span></p>
+                <p><strong>Goals Completed:</strong> <span id="completed-goals">8/12</span></p>
+                <p><strong>Most Productive Day:</strong> <span id="best-day">Wednesday</span></p>
+                <p><strong>Favorite Subject:</strong> <span id="top-subject">Mathematics</span></p>
+            </div>
+        </section>
+
         <section id="motivation">
             <h3>Motivation Zone</h3>
             <p id="motivation-quote" style="font-style: italic; font-size: 1.2rem; color: #4a90e2; text-align: center;"></p>
@@ -367,6 +407,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-messaging-compat.js"></script>
+    
+    <!-- Chart.js for Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
     <script>
         // --- Firebase Configuration & Initialization ---
@@ -383,6 +427,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
+        const messaging = firebase.messaging();
 
         // Global variables
         let currentUser = null;
@@ -404,6 +449,11 @@
                 // Add active
                 link.classList.add('active');
                 document.getElementById(target).classList.add('active');
+                
+                // Load stats when stats section is opened
+                if (target === 'stats' && currentUser) {
+                    renderStats();
+                }
             });
         });
 
@@ -449,6 +499,9 @@
                 // Load user data
                 await loadGoals();
                 await loadJournal();
+                
+                // Set up notifications
+                await setupNotifications();
             } else {
                 loginBtn.style.display = 'inline';
                 userInfo.style.display = 'none';
@@ -458,6 +511,124 @@
                 document.getElementById('journal-entries').innerHTML = '';
             }
         });
+
+        // --- Push Notifications Setup ---
+        async function setupNotifications() {
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    const token = await messaging.getToken({
+                        vapidKey: "BIAkTRN4KwY4b775wFL5SGsjYvlCVEVia6olhpEn2by5LKf7hohw09Q4vJvRPCq1SvLbSrFQHmnVZxgSWXxu1TU"
+                    });
+                    
+                    if (token) {
+                        console.log('FCM Token:', token);
+                        // Store token in Firestore for future use
+                        await db.collection('fcmTokens').doc(currentUser.uid).set({
+                            token: token,
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                        
+                        // Send a test notification
+                        setTimeout(() => {
+                            new Notification('StudySync Ready!', {
+                                body: 'Your study tracker is set up and ready to go! 🚀',
+                                icon: '/favicon.ico'
+                            });
+                        }, 2000);
+                    }
+                }
+            } catch (error) {
+                console.error('Notification setup error:', error);
+            }
+        }
+
+        // --- Analytics Dashboard ---
+        async function renderStats() {
+            if (!currentUser) return;
+
+            try {
+                // 1) Longest streak
+                const pDoc = await db.collection('progress').doc(currentUser.uid).get();
+                const progressData = pDoc.exists ? pDoc.data() : {};
+                const longest = progressData.longestStreak || 7; // Default for demo
+                document.getElementById('streak-counter').innerHTML = `${longest}-day streak 🔥`;
+
+                // 2) Goal completion pie chart
+                const gSnap = await db.collection('goals').doc(currentUser.uid).get();
+                const gArr = gSnap.exists ? gSnap.data().items || [] : [];
+                const completed = gArr.filter(g => g.completed).length;
+                const pending = gArr.length - completed;
+
+                const goalChartCtx = document.getElementById('goalChart').getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (window.goalChart instanceof Chart) {
+                    window.goalChart.destroy();
+                }
+                
+                window.goalChart = new Chart(goalChartCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Completed', 'Pending'],
+                        datasets: [{
+                            data: [completed, pending],
+                            backgroundColor: ['#4CAF50', '#E0E0E0'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+
+                // 3) Hours per subject bar chart
+                const subjects = ['Math', 'Physics', 'Electronics', 'Python', 'Communication'];
+                const hours = progressData.weeklyHours || [4.5, 3.2, 2.8, 1.5, 0.8]; // Demo data
+
+                const timeCtx = document.getElementById('timeChart').getContext('2d');
+                
+                // Destroy existing chart if it exists
+                if (window.timeChart instanceof Chart) {
+                    window.timeChart.destroy();
+                }
+                
+                window.timeChart = new Chart(timeCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: subjects,
+                        datasets: [{
+                            label: 'Hours',
+                            data: hours,
+                            backgroundColor: '#4a90e2',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Hours' }
+                            }
+                        }
+                    }
+                });
+
+                // Update summary stats
+                const totalTime = hours.reduce((a, b) => a + b, 0).toFixed(1);
+                document.getElementById('total-time').textContent = `${totalTime} hours`;
+                document.getElementById('completed-goals').textContent = `${completed}/${gArr.length}`;
+                document.getElementById('best-day').textContent = 'Wednesday'; // Demo
+                document.getElementById('top-subject').textContent = subjects[hours.indexOf(Math.max(...hours))];
+                
+            } catch (error) {
+                console.error('Error rendering stats:', error);
+            }
+        }
 
         // --- Goals Management ---
         const goalsForm = document.getElementById('goal-form');
@@ -474,7 +645,6 @@
                 renderGoals();
             } catch (error) {
                 console.error('Error loading goals:', error);
-                // Fallback to localStorage
                 goalsData = JSON.parse(localStorage.getItem('studyGoals') || '[]');
                 renderGoals();
             }
@@ -491,11 +661,9 @@
                     });
                 } catch (error) {
                     console.error('Error saving goals:', error);
-                    // Fallback to localStorage
                     localStorage.setItem('studyGoals', JSON.stringify(goalsData));
                 }
             } else {
-                // Store locally when offline
                 localStorage.setItem('studyGoals', JSON.stringify(goalsData));
                 localStorage.setItem('goalsPendingSync', 'true');
             }
@@ -573,7 +741,6 @@
                 renderJournal();
             } catch (error) {
                 console.error('Error loading journal:', error);
-                // Fallback to localStorage
                 journalData = JSON.parse(localStorage.getItem('studyJournal') || '[]');
                 renderJournal();
             }
@@ -600,7 +767,6 @@
 
         function renderJournal() {
             journalEntries.innerHTML = '';
-            // Show most recent entries first
             [...journalData].reverse().forEach((entry, idx) => {
                 const li = document.createElement('li');
                 li.style.padding = '8px 0';
@@ -636,7 +802,6 @@
             if (!currentUser || !isOnline) return;
             
             try {
-                // Sync goals if needed
                 if (localStorage.getItem('goalsPendingSync')) {
                     const localGoals = JSON.parse(localStorage.getItem('studyGoals') || '[]');
                     if (localGoals.length > 0) {
@@ -649,7 +814,6 @@
                     }
                 }
                 
-                // Sync journal if needed
                 if (localStorage.getItem('journalPendingSync')) {
                     const localJournal = JSON.parse(localStorage.getItem('studyJournal') || '[]');
                     if (localJournal.length > 0) {
