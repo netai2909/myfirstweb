@@ -31,6 +31,25 @@
             font-size: 1.2rem;
             opacity: 0.85;
         }
+        
+        /* Auth Bar Styles */
+        #auth-bar {
+            text-align: center;
+            padding: 12px;
+            background: linear-gradient(90deg, #ffe4b5, #f0f8ff);
+            border-bottom: 1px solid #ddd;
+            font-size: 0.95rem;
+        }
+        #auth-bar button {
+            margin: 0 8px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        #user-info {
+            color: #2c5aa0;
+            font-weight: 500;
+        }
+        
         nav {
             display: flex;
             justify-content: center;
@@ -117,6 +136,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 1rem;
+            box-sizing: border-box;
         }
         button {
             background-color: #4a90e2;
@@ -154,17 +174,35 @@
             font-size: 1.2rem;
             text-align: center;
         }
+        
+        /* Loading and offline states */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .offline-notice {
+            background: #ffebee;
+            color: #c62828;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
         /* Responsive tweaks */
         @media(max-width: 600px) {
             nav {
                 flex-wrap: wrap;
             }
             nav a {
-                flex: 1 0 100%;
+                flex: 1 0 50%;
                 text-align: center;
+                padding: 12px 15px;
             }
             main {
                 margin: 10px;
+            }
+            header h1 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -174,6 +212,19 @@
         <h1>Welcome to StudySync!</h1>
         <h2 id="quote">"Success is the sum of small efforts, repeated day in and day out."</h2>
     </header>
+    
+    <!-- Authentication Bar -->
+    <div id="auth-bar">
+        <button id="login-btn">🔐 Sign in with Google</button>
+        <span id="user-info" style="display:none;">
+            Welcome back, <strong id="user-name"></strong>! 
+            <button id="logout-btn">Log out</button>
+        </span>
+        <div id="offline-notice" class="offline-notice" style="display:none;">
+            📶 Offline mode - Data will sync when connection returns
+        </div>
+    </div>
+    
     <nav>
         <a href="#" class="active" data-section="home">Home</a>
         <a href="#" data-section="dashboard">Dashboard</a>
@@ -182,6 +233,7 @@
         <a href="#" data-section="motivation">Motivation</a>
         <a href="#" data-section="resources">Resources</a>
     </nav>
+    
     <main>
         <section id="home" class="active">
             <h3>Welcome & Motivation</h3>
@@ -311,8 +363,32 @@
         </section>
     </main>
 
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-firestore-compat.js"></script>
+
     <script>
-        // Navigation handling
+        // --- Firebase Configuration & Initialization ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyArjKxUfvehNSA-GLXuuiOpChe55c4MQDE",
+            authDomain: "studysync-prod-acfc6.firebaseapp.com",
+            projectId: "studysync-prod-acfc6",
+            storageBucket: "studysync-prod-acfc6.firebasestorage.app",
+            messagingSenderId: "372359765372",
+            appId: "1:372359765372:web:bb5252996a4c98597758f9",
+            measurementId: "G-3E4Z5L962V"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Global variables
+        let currentUser = null;
+        let isOnline = navigator.onLine;
+
+        // --- Navigation handling ---
         const navLinks = document.querySelectorAll('nav a');
         const sections = document.querySelectorAll('main section');
 
@@ -331,81 +407,268 @@
             });
         });
 
-        // Study Goals App
+        // --- Authentication Logic ---
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const userInfo = document.getElementById('user-info');
+        const userName = document.getElementById('user-name');
+        const offlineNotice = document.getElementById('offline-notice');
+
+        loginBtn.onclick = async () => {
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                await auth.signInWithPopup(provider);
+            } catch (error) {
+                console.error('Login failed:', error);
+                alert('Login failed. Please try again.');
+            }
+        };
+
+        logoutBtn.onclick = () => auth.signOut();
+
+        // Monitor online/offline status
+        window.addEventListener('online', () => {
+            isOnline = true;
+            offlineNotice.style.display = 'none';
+            if (currentUser) syncOfflineData();
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            offlineNotice.style.display = 'block';
+        });
+
+        // Auth state listener
+        auth.onAuthStateChanged(async user => {
+            currentUser = user;
+            if (user) {
+                userName.textContent = user.displayName ? user.displayName.split(' ')[0] : 'User';
+                loginBtn.style.display = 'none';
+                userInfo.style.display = 'inline';
+                
+                // Load user data
+                await loadGoals();
+                await loadJournal();
+            } else {
+                loginBtn.style.display = 'inline';
+                userInfo.style.display = 'none';
+                
+                // Clear data display
+                document.getElementById('goal-list').innerHTML = '';
+                document.getElementById('journal-entries').innerHTML = '';
+            }
+        });
+
+        // --- Goals Management ---
         const goalsForm = document.getElementById('goal-form');
         const goalInput = document.getElementById('goal-input');
         const goalList = document.getElementById('goal-list');
+        let goalsData = [];
 
-        function loadGoals() {
-            const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
-            goalList.innerHTML = '';
+        async function loadGoals() {
+            if (!currentUser) return;
             
-            goals.forEach((goal, idx) => {
+            try {
+                const doc = await db.collection('goals').doc(currentUser.uid).get();
+                goalsData = doc.exists ? doc.data().items || [] : [];
+                renderGoals();
+            } catch (error) {
+                console.error('Error loading goals:', error);
+                // Fallback to localStorage
+                goalsData = JSON.parse(localStorage.getItem('studyGoals') || '[]');
+                renderGoals();
+            }
+        }
+
+        async function saveGoals() {
+            if (!currentUser) return;
+            
+            if (isOnline) {
+                try {
+                    await db.collection('goals').doc(currentUser.uid).set({ 
+                        items: goalsData,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch (error) {
+                    console.error('Error saving goals:', error);
+                    // Fallback to localStorage
+                    localStorage.setItem('studyGoals', JSON.stringify(goalsData));
+                }
+            } else {
+                // Store locally when offline
+                localStorage.setItem('studyGoals', JSON.stringify(goalsData));
+                localStorage.setItem('goalsPendingSync', 'true');
+            }
+        }
+
+        function renderGoals() {
+            goalList.innerHTML = '';
+            goalsData.forEach((goal, idx) => {
                 const li = document.createElement('li');
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.checked = goal.completed;
                 
-                checkbox.addEventListener('change', () => {
-                    goals[idx].completed = checkbox.checked;
-                    localStorage.setItem('studyGoals', JSON.stringify(goals));
+                checkbox.addEventListener('change', async () => {
+                    goalsData[idx].completed = checkbox.checked;
+                    goalsData[idx].updatedAt = new Date().toISOString();
+                    await saveGoals();
                 });
                 
                 li.appendChild(checkbox);
                 const span = document.createElement('span');
                 span.textContent = goal.text;
+                if (goal.completed) {
+                    span.style.textDecoration = 'line-through';
+                    span.style.opacity = '0.6';
+                }
                 li.appendChild(span);
+                
+                // Add delete button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = '×';
+                deleteBtn.style.marginLeft = 'auto';
+                deleteBtn.style.padding = '2px 8px';
+                deleteBtn.style.fontSize = '16px';
+                deleteBtn.style.background = '#ff4444';
+                deleteBtn.onclick = async () => {
+                    goalsData.splice(idx, 1);
+                    await saveGoals();
+                    renderGoals();
+                };
+                li.appendChild(deleteBtn);
+                
                 goalList.appendChild(li);
             });
         }
 
-        goalsForm.addEventListener('submit', e => {
+        goalsForm.addEventListener('submit', async e => {
             e.preventDefault();
             const newGoal = goalInput.value.trim();
             if (newGoal) {
-                const goals = JSON.parse(localStorage.getItem('studyGoals')) || [];
-                goals.push({text: newGoal, completed: false});
-                localStorage.setItem('studyGoals', JSON.stringify(goals));
+                goalsData.push({
+                    text: newGoal,
+                    completed: false,
+                    createdAt: new Date().toISOString(),
+                    id: Date.now().toString()
+                });
+                await saveGoals();
                 goalInput.value = '';
-                loadGoals();
+                renderGoals();
             }
         });
 
-        loadGoals();
-
-        // Journal App
+        // --- Journal Management ---
         const journalForm = document.getElementById('journal-form');
         const journalText = document.getElementById('journal-text');
         const journalEntries = document.getElementById('journal-entries');
+        let journalData = [];
 
-        function loadJournal() {
-            const journals = JSON.parse(localStorage.getItem('studyJournal')) || [];
-            journalEntries.innerHTML = '';
+        async function loadJournal() {
+            if (!currentUser) return;
             
-            journals.forEach(item => {
+            try {
+                const doc = await db.collection('journal').doc(currentUser.uid).get();
+                journalData = doc.exists ? doc.data().entries || [] : [];
+                renderJournal();
+            } catch (error) {
+                console.error('Error loading journal:', error);
+                // Fallback to localStorage
+                journalData = JSON.parse(localStorage.getItem('studyJournal') || '[]');
+                renderJournal();
+            }
+        }
+
+        async function saveJournal() {
+            if (!currentUser) return;
+            
+            if (isOnline) {
+                try {
+                    await db.collection('journal').doc(currentUser.uid).set({ 
+                        entries: journalData,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch (error) {
+                    console.error('Error saving journal:', error);
+                    localStorage.setItem('studyJournal', JSON.stringify(journalData));
+                }
+            } else {
+                localStorage.setItem('studyJournal', JSON.stringify(journalData));
+                localStorage.setItem('journalPendingSync', 'true');
+            }
+        }
+
+        function renderJournal() {
+            journalEntries.innerHTML = '';
+            // Show most recent entries first
+            [...journalData].reverse().forEach((entry, idx) => {
                 const li = document.createElement('li');
-                li.textContent = item;
-                li.style.padding = '6px 0';
+                li.style.padding = '8px 0';
                 li.style.borderBottom = '1px solid #eee';
+                li.style.fontSize = '0.95rem';
+                
+                const entryText = typeof entry === 'string' ? entry : 
+                    `${new Date(entry.date).toLocaleDateString()}: ${entry.text}`;
+                li.textContent = entryText;
+                
                 journalEntries.appendChild(li);
             });
         }
 
-        journalForm.addEventListener('submit', e => {
+        journalForm.addEventListener('submit', async e => {
             e.preventDefault();
             const entry = journalText.value.trim();
-            if(entry) {
-                const journals = JSON.parse(localStorage.getItem('studyJournal')) || [];
-                journals.push(`${new Date().toLocaleDateString()}: ${entry}`);
-                localStorage.setItem('studyJournal', JSON.stringify(journals));
+            if (entry) {
+                const newEntry = {
+                    text: entry,
+                    date: new Date().toISOString(),
+                    id: Date.now().toString()
+                };
+                journalData.push(newEntry);
+                await saveJournal();
                 journalText.value = '';
-                loadJournal();
+                renderJournal();
             }
         });
 
-        loadJournal();
+        // --- Offline Data Sync ---
+        async function syncOfflineData() {
+            if (!currentUser || !isOnline) return;
+            
+            try {
+                // Sync goals if needed
+                if (localStorage.getItem('goalsPendingSync')) {
+                    const localGoals = JSON.parse(localStorage.getItem('studyGoals') || '[]');
+                    if (localGoals.length > 0) {
+                        await db.collection('goals').doc(currentUser.uid).set({ 
+                            items: localGoals,
+                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                            syncedFromOffline: true
+                        });
+                        localStorage.removeItem('goalsPendingSync');
+                    }
+                }
+                
+                // Sync journal if needed
+                if (localStorage.getItem('journalPendingSync')) {
+                    const localJournal = JSON.parse(localStorage.getItem('studyJournal') || '[]');
+                    if (localJournal.length > 0) {
+                        await db.collection('journal').doc(currentUser.uid).set({ 
+                            entries: localJournal,
+                            lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+                            syncedFromOffline: true
+                        });
+                        localStorage.removeItem('journalPendingSync');
+                    }
+                }
+                
+                console.log('Offline data synced successfully');
+            } catch (error) {
+                console.error('Error syncing offline data:', error);
+            }
+        }
 
-        // Motivation Quotes
+        // --- Motivation Quotes ---
         const quotes = [
             "Success is the sum of small efforts, repeated day in and day out.",
             "Don't watch the clock; do what it does. Keep going.",
@@ -416,7 +679,12 @@
             "Dream it. Wish it. Do it.",
             "Stay positive, work hard, make it happen.",
             "The secret of getting ahead is getting started.",
-            "It's going to be hard, but hard does not mean impossible."
+            "It's going to be hard, but hard does not mean impossible.",
+            "The future belongs to those who believe in the beauty of their dreams.",
+            "Education is the most powerful weapon which you can use to change the world.",
+            "The only way to do great work is to love what you do.",
+            "Success is not final, failure is not fatal; it is the courage to continue that counts.",
+            "Your education is a dress rehearsal for a life that is yours to lead."
         ];
 
         const motivationQuote = document.getElementById('motivation-quote');
@@ -442,13 +710,29 @@
             li.textContent = quotes[index];
             li.style.padding = '5px 0';
             li.style.borderBottom = '1px solid #eee';
-            quoteHistory.appendChild(li);
+            li.style.fontSize = '0.9rem';
+            li.style.fontStyle = 'italic';
+            quoteHistory.insertBefore(li, quoteHistory.firstChild);
         }
 
         newQuoteBtn.addEventListener('click', displayRandomQuote);
         
         // Initialize with a quote
         displayRandomQuote();
+
+        // Update header quote every 30 seconds
+        setInterval(() => {
+            const headerQuote = document.getElementById('quote');
+            const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+            headerQuote.textContent = `"${randomQuote}"`;
+        }, 30000);
+
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!isOnline) {
+                offlineNotice.style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>
